@@ -1,0 +1,1764 @@
+[
+    {
+        "name": "Arduino Uno",
+        "aliases": [
+            "uno",
+            "arduino uno r3"
+        ],
+        "role": "controller",
+        "category": "microcontroller",
+        "voltage": {
+            "min": 7,
+            "max": 12,
+            "recommended": 9
+        },
+        "power_requirement": "medium",
+        "complexity": "low",
+        "requires": [
+            "USB cable or DC power supply"
+        ],
+        "optional": [
+            "external power adapter",
+            "shield modules"
+        ],
+        "compatible_with": [
+            "SIM800L",
+            "sensors",
+            "actuators",
+            "LCD modules"
+        ],
+        "common_mistakes": [
+            "powering high current modules directly from 5V pin",
+            "not using common ground",
+            "overloading IO pins"
+        ],
+        "warnings": [
+            "Do not exceed 12V input",
+            "Limit current draw from IO pins"
+        ],
+        "test_method": "Upload Blink sketch and check onboard LED"
+    },
+    {
+        "name": "Arduino Nano",
+        "aliases": [
+            "nano",
+            "arduino nano v3"
+        ],
+        "role": "controller",
+        "category": "microcontroller",
+        "voltage": {
+            "min": 7,
+            "max": 12,
+            "recommended": 9
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "USB cable (Mini-B) or external power"
+        ],
+        "optional": [
+            "breadboard",
+            "headers"
+        ],
+        "compatible_with": [
+            "SIM800L",
+            "sensors",
+            "actuators",
+            "I2C modules"
+        ],
+        "common_mistakes": [
+            "using unstable power supply",
+            "incorrect driver installation",
+            "overloading 5V regulator"
+        ],
+        "warnings": [
+            "Ensure correct USB driver is installed",
+            "Do not draw high current from onboard regulator"
+        ],
+        "test_method": "Upload Blink sketch and verify LED on pin D13"
+    },
+    {
+        "name": "ESP8266 (NodeMCU)",
+        "aliases": [
+            "esp8266",
+            "nodemcu",
+            "wifi module"
+        ],
+        "role": "controller",
+        "category": "microcontroller",
+        "voltage": {
+            "min": 3.0,
+            "max": 3.6,
+            "recommended": 3.3
+        },
+        "power_requirement": "medium",
+        "complexity": "medium",
+        "requires": [
+            "3.3V regulated power supply",
+            "USB cable"
+        ],
+        "optional": [
+            "external antenna (for ESP-07 variants)"
+        ],
+        "compatible_with": [
+            "SIM800L",
+            "IoT platforms",
+            "sensors",
+            "MQTT servers"
+        ],
+        "common_mistakes": [
+            "supplying 5V to GPIO pins",
+            "insufficient current supply",
+            "not using level shifting with 5V devices"
+        ],
+        "warnings": [
+            "GPIO pins are not 5V tolerant",
+            "Ensure stable 3.3V supply with sufficient current"
+        ],
+        "test_method": "Upload WiFi scan sketch and verify detected networks"
+    },
+    {
+        "name": "SIM800L",
+        "aliases": [
+            "sim800l",
+            "gsm module"
+        ],
+        "role": "communication module",
+        "category": "gsm module",
+        "voltage": {
+            "min": 3.4,
+            "max": 4.4,
+            "recommended": 4.0
+        },
+        "power_requirement": "high (especially during transmission)",
+        "complexity": "medium",
+        "requires": [
+            "3.7V Li-ion battery or regulated power supply",
+            "SIM card"
+        ],
+        "optional": [
+            "antenna",
+            "battery management circuit"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266",
+            "IoT platforms"
+        ],
+        "common_mistakes": [
+            "using unstable power supply",
+            "not providing sufficient current during transmission",
+            "incorrect SIM card insertion"
+        ],
+        "warnings": [
+            "Ensure stable power supply with sufficient current (up to 2A during transmission)",
+            "Use appropriate SIM card (micro or nano)"
+        ],
+        "test_method": "Send AT commands via serial monitor and check for responses"
+    },
+    {
+        "name": "Temperature Sensor (LM35 / DHT11)",
+        "aliases": [
+            "lm35",
+            "dht11",
+            "temperature sensor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.0,
+            "max": 5.5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "pull-up resistor (for DHT11)"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "confusing analog (LM35) vs digital (DHT11) output",
+            "missing pull-up resistor for DHT11",
+            "incorrect library usage"
+        ],
+        "warnings": [
+            "DHT11 has slow response rate",
+            "LM35 requires stable analog reference"
+        ],
+        "test_method": "Read temperature values and verify with room temperature"
+    },
+    {
+        "name": "Humidity Sensor",
+        "aliases": [
+            "humidity module",
+            "dht11 humidity",
+            "dht22"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.0,
+            "max": 5.5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "pull-up resistor"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not waiting between readings",
+            "wrong pin configuration"
+        ],
+        "warnings": [
+            "Avoid moisture exposure beyond limits"
+        ],
+        "test_method": "Blow air or change environment humidity and observe readings"
+    },
+    {
+        "name": "Alcohol Sensor (MQ-3)",
+        "aliases": [
+            "mq3",
+            "alcohol gas sensor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "calibration setup"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "not preheating sensor",
+            "incorrect calibration"
+        ],
+        "warnings": [
+            "Consumes high current",
+            "Sensitive to multiple gases"
+        ],
+        "test_method": "Expose to alcohol vapor and check analog output"
+    },
+    {
+        "name": "Gas Sensor (MQ-2)",
+        "aliases": [
+            "mq2",
+            "smoke sensor",
+            "gas detector"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "calibration setup"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "skipping warm-up time",
+            "using without calibration"
+        ],
+        "warnings": [
+            "High power consumption",
+            "Detects multiple gases"
+        ],
+        "test_method": "Expose to LPG/smoke and observe readings"
+    },
+    {
+        "name": "Motion Sensor (PIR)",
+        "aliases": [
+            "pir",
+            "motion detector"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "mounting enclosure"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not allowing sensor stabilization time",
+            "incorrect sensitivity adjustment"
+        ],
+        "warnings": [
+            "Sensitive to temperature changes"
+        ],
+        "test_method": "Move in front of sensor and check digital output"
+    },
+    {
+        "name": "Ultrasonic Sensor (HC-SR04)",
+        "aliases": [
+            "hc-sr04",
+            "ultrasonic distance sensor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "level shifter for ESP8266"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not handling echo pin voltage for 3.3V boards",
+            "incorrect timing calculation"
+        ],
+        "warnings": [
+            "Echo pin outputs 5V"
+        ],
+        "test_method": "Measure known distance and verify output"
+    },
+    {
+        "name": "Light Sensor (LDR)",
+        "aliases": [
+            "ldr",
+            "photoresistor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "resistor (voltage divider)",
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not using voltage divider",
+            "incorrect analog reading"
+        ],
+        "warnings": [
+            "Sensitive to ambient light changes"
+        ],
+        "test_method": "Cover and expose to light, observe value change"
+    },
+    {
+        "name": "Sound Sensor",
+        "aliases": [
+            "microphone module",
+            "sound detector"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "amplifier module"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not adjusting sensitivity",
+            "misinterpreting analog vs digital output"
+        ],
+        "warnings": [
+            "Affected by ambient noise"
+        ],
+        "test_method": "Clap near sensor and observe output"
+    },
+    {
+        "name": "Flame Sensor",
+        "aliases": [
+            "flame detector",
+            "fire sensor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong sensitivity setting",
+            "false triggers from sunlight"
+        ],
+        "warnings": [
+            "Sensitive to IR light sources"
+        ],
+        "test_method": "Expose to flame/lighter and check response"
+    },
+    {
+        "name": "Rain Sensor",
+        "aliases": [
+            "rain module",
+            "water detector"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "corrosion of sensor plate",
+            "improper threshold adjustment"
+        ],
+        "warnings": [
+            "Prone to rust over time"
+        ],
+        "test_method": "Drop water on sensor and observe output"
+    },
+    {
+        "name": "Soil Moisture Sensor",
+        "aliases": [
+            "soil sensor",
+            "moisture probe"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "using without calibration",
+            "corrosion due to continuous power"
+        ],
+        "warnings": [
+            "Probes degrade over time"
+        ],
+        "test_method": "Insert in wet/dry soil and compare readings"
+    },
+    {
+        "name": "IR Sensor (Obstacle Detection)",
+        "aliases": [
+            "ir sensor",
+            "obstacle sensor"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not adjusting potentiometer",
+            "interference from sunlight"
+        ],
+        "warnings": [
+            "Affected by ambient IR light"
+        ],
+        "test_method": "Place object in front and check detection signal"
+    },
+    {
+        "name": "LED",
+        "aliases": [
+            "light emitting diode",
+            "indicator led"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 1.8,
+            "max": 3.3,
+            "recommended": 2.2
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "current limiting resistor",
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not using resistor",
+            "reversing polarity"
+        ],
+        "warnings": [
+            "Excess current can burn LED"
+        ],
+        "test_method": "Connect with resistor and verify it glows"
+    },
+    {
+        "name": "Buzzer",
+        "aliases": [
+            "piezo buzzer",
+            "beeper"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "confusing active vs passive buzzer",
+            "wrong pin connection"
+        ],
+        "warnings": [
+            "Passive buzzers need PWM signal"
+        ],
+        "test_method": "Apply HIGH signal and listen for sound"
+    },
+    {
+        "name": "Relay Module",
+        "aliases": [
+            "relay",
+            "5v relay module"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "medium",
+        "complexity": "medium",
+        "requires": [
+            "microcontroller",
+            "external load power source"
+        ],
+        "optional": [
+            "flyback diode (if bare relay)"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "connecting high voltage incorrectly",
+            "not isolating load circuit",
+            "wrong wiring (NO/NC)"
+        ],
+        "warnings": [
+            "Can switch high voltage/current",
+            "Risk of electric shock"
+        ],
+        "test_method": "Trigger relay and listen for clicking sound"
+    },
+    {
+        "name": "LCD 16x2",
+        "aliases": [
+            "16x2 display",
+            "character lcd"
+        ],
+        "role": "output",
+        "category": "display",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [
+            "microcontroller",
+            "multiple GPIO pins",
+            "contrast potentiometer"
+        ],
+        "optional": [
+            "I2C module"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "incorrect pin wiring",
+            "contrast not adjusted",
+            "missing library"
+        ],
+        "warnings": [
+            "Requires many pins in parallel mode"
+        ],
+        "test_method": "Display 'Hello World' text"
+    },
+    {
+        "name": "I2C LCD Module",
+        "aliases": [
+            "i2c lcd",
+            "lcd with i2c backpack"
+        ],
+        "role": "output",
+        "category": "display",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller",
+            "I2C interface (SDA, SCL)"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong I2C address",
+            "incorrect wiring of SDA/SCL"
+        ],
+        "warnings": [
+            "Address may vary (0x27, 0x3F)"
+        ],
+        "test_method": "Scan I2C address and print text"
+    },
+    {
+        "name": "7 Segment Display",
+        "aliases": [
+            "7 segment",
+            "seven segment display"
+        ],
+        "role": "output",
+        "category": "display",
+        "voltage": {
+            "min": 2,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [
+            "current limiting resistors",
+            "microcontroller"
+        ],
+        "optional": [
+            "driver IC (like MAX7219)"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not identifying common anode/cathode",
+            "missing resistors",
+            "incorrect segment mapping"
+        ],
+        "warnings": [
+            "Multiple pins required without driver IC"
+        ],
+        "test_method": "Display digits 0-9 sequentially"
+    },
+    {
+        "name": "Servo Motor",
+        "aliases": [
+            "servo",
+            "sg90"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 4.8,
+            "max": 6,
+            "recommended": 5
+        },
+        "power_requirement": "medium",
+        "complexity": "low",
+        "requires": [
+            "PWM signal",
+            "external power (recommended)"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "powering directly from microcontroller",
+            "incorrect PWM signal"
+        ],
+        "warnings": [
+            "Draws high current under load"
+        ],
+        "test_method": "Rotate between 0° and 180°"
+    },
+    {
+        "name": "DC Motor",
+        "aliases": [
+            "dc motor",
+            "motor"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 3,
+            "max": 12,
+            "recommended": 6
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "motor driver (L298N/L293D)",
+            "external power supply"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "connecting directly to microcontroller",
+            "not using driver circuit"
+        ],
+        "warnings": [
+            "High current can damage controller",
+            "Back EMF risk"
+        ],
+        "test_method": "Run motor using driver and verify rotation"
+    },
+    {
+        "name": "GSM SIM800L",
+        "aliases": [
+            "gsm",
+            "sim800",
+            "sim module"
+        ],
+        "role": "communication",
+        "category": "module",
+        "voltage": {
+            "min": 3.7,
+            "max": 4.2,
+            "recommended": 4
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "4V regulated power supply",
+            "SIM card"
+        ],
+        "optional": [
+            "antenna"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "powering from Arduino 5V",
+            "insufficient current supply",
+            "no common ground"
+        ],
+        "warnings": [
+            "Do not connect directly to 5V pin",
+            "Requires high current (~2A bursts)"
+        ],
+        "test_method": "Send AT command and check for OK response"
+    },
+    {
+        "name": "Bluetooth Module (HC-05)",
+        "aliases": [
+            "hc05",
+            "bluetooth module",
+            "bt module"
+        ],
+        "role": "communication",
+        "category": "module",
+        "voltage": {
+            "min": 3.6,
+            "max": 6,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "voltage divider for RX pin"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "connecting 5V directly to RX pin",
+            "wrong baud rate",
+            "not pairing correctly"
+        ],
+        "warnings": [
+            "RX pin is 3.3V logic level",
+            "Use voltage divider for safe operation"
+        ],
+        "test_method": "Pair with phone and send/receive data via serial"
+    },
+    {
+        "name": "WiFi Module",
+        "aliases": [
+            "esp8266 wifi",
+            "esp-01",
+            "wifi module"
+        ],
+        "role": "communication",
+        "category": "module",
+        "voltage": {
+            "min": 3.0,
+            "max": 3.6,
+            "recommended": 3.3
+        },
+        "power_requirement": "medium",
+        "complexity": "medium",
+        "requires": [
+            "3.3V regulated power supply",
+            "microcontroller"
+        ],
+        "optional": [
+            "logic level shifter"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266 (standalone use)"
+        ],
+        "common_mistakes": [
+            "powering with 5V",
+            "insufficient current supply",
+            "incorrect AT firmware usage"
+        ],
+        "warnings": [
+            "Not 5V tolerant",
+            "Needs stable 3.3V supply (~300mA peaks)"
+        ],
+        "test_method": "Connect to WiFi and ping or send AT commands"
+    },
+    {
+        "name": "Resistor",
+        "aliases": [
+            "resistor",
+            "ohmic resistor"
+        ],
+        "role": "passive",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 250,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266",
+            "all circuits"
+        ],
+        "common_mistakes": [
+            "using wrong resistance value",
+            "not checking power rating",
+            "incorrect color code reading"
+        ],
+        "warnings": [
+            "Exceeding power rating may cause overheating"
+        ],
+        "test_method": "Measure resistance using multimeter"
+    },
+    {
+        "name": "Breadboard",
+        "aliases": [
+            "protoboard",
+            "bread board"
+        ],
+        "role": "prototyping",
+        "category": "tool",
+        "voltage": {
+            "min": 0,
+            "max": 12,
+            "recommended": 5
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [
+            "jumper wires"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "all components"
+        ],
+        "common_mistakes": [
+            "misunderstanding internal connections",
+            "loose connections",
+            "using for high current circuits"
+        ],
+        "warnings": [
+            "Not suitable for high current applications"
+        ],
+        "test_method": "Check continuity between rows/columns"
+    },
+    {
+        "name": "Jumper Wires",
+        "aliases": [
+            "jumper",
+            "connecting wires"
+        ],
+        "role": "connection",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 12,
+            "recommended": 5
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [],
+        "optional": [],
+        "compatible_with": [
+            "breadboard",
+            "Arduino",
+            "modules"
+        ],
+        "common_mistakes": [
+            "loose connections",
+            "wrong type (male-female mismatch)"
+        ],
+        "warnings": [
+            "Poor quality wires may cause intermittent faults"
+        ],
+        "test_method": "Check continuity using multimeter"
+    },
+    {
+        "name": "Power Supply (5V regulated)",
+        "aliases": [
+            "5v supply",
+            "regulated 5v"
+        ],
+        "role": "power",
+        "category": "module",
+        "voltage": {
+            "min": 5,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "high",
+        "complexity": "low",
+        "requires": [
+            "AC/DC source"
+        ],
+        "optional": [
+            "filter capacitors"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "sensors",
+            "modules"
+        ],
+        "common_mistakes": [
+            "using unregulated supply",
+            "insufficient current rating"
+        ],
+        "warnings": [
+            "Overcurrent may damage components"
+        ],
+        "test_method": "Measure output voltage using multimeter"
+    },
+    {
+        "name": "Power Supply (4V regulated)",
+        "aliases": [
+            "4v supply",
+            "gsm power supply"
+        ],
+        "role": "power",
+        "category": "module",
+        "voltage": {
+            "min": 3.7,
+            "max": 4.2,
+            "recommended": 4
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "DC source"
+        ],
+        "optional": [
+            "capacitors for stabilization"
+        ],
+        "compatible_with": [
+            "SIM800L"
+        ],
+        "common_mistakes": [
+            "using 5V instead of 4V",
+            "low current supply"
+        ],
+        "warnings": [
+            "Must handle high current spikes (~2A)"
+        ],
+        "test_method": "Check stable 4V output under load"
+    },
+    {
+        "name": "Battery",
+        "aliases": [
+            "battery",
+            "li-ion battery"
+        ],
+        "role": "power",
+        "category": "component",
+        "voltage": {
+            "min": 3.0,
+            "max": 12,
+            "recommended": 3.7
+        },
+        "power_requirement": "source",
+        "complexity": "low",
+        "requires": [
+            "charging module (if rechargeable)"
+        ],
+        "optional": [
+            "battery holder"
+        ],
+        "compatible_with": [
+            "all portable circuits"
+        ],
+        "common_mistakes": [
+            "over-discharging",
+            "wrong polarity connection",
+            "using without protection circuit"
+        ],
+        "warnings": [
+            "Risk of short circuit and overheating",
+            "Use proper charging circuit"
+        ],
+        "test_method": "Measure voltage and discharge behavior"
+    },
+    {
+        "name": "Voltage Regulator (AMS1117 / LM2596)",
+        "aliases": [
+            "voltage regulator",
+            "buck converter",
+            "ams1117",
+            "lm2596"
+        ],
+        "role": "power",
+        "category": "module",
+        "voltage": {
+            "min": 1.5,
+            "max": 24,
+            "recommended": 5
+        },
+        "power_requirement": "medium",
+        "complexity": "medium",
+        "requires": [
+            "input power source"
+        ],
+        "optional": [
+            "heatsink"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "ESP8266",
+            "SIM800L",
+            "sensors"
+        ],
+        "common_mistakes": [
+            "wrong output voltage setting",
+            "overheating due to high load",
+            "incorrect wiring"
+        ],
+        "warnings": [
+            "Linear regulators (AMS1117) dissipate heat",
+            "Ensure proper voltage adjustment"
+        ],
+        "test_method": "Adjust and verify output voltage with multimeter"
+    },
+    {
+        "name": "I2C Backpack",
+        "aliases": [
+            "i2c adapter",
+            "lcd i2c module"
+        ],
+        "role": "interface",
+        "category": "module",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "LCD 16x2"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong I2C address",
+            "incorrect SDA/SCL connection"
+        ],
+        "warnings": [
+            "Address may differ between modules"
+        ],
+        "test_method": "Run I2C scanner and detect module address"
+    },
+    {
+        "name": "OLED Display (128x64)",
+        "aliases": [
+            "oled display",
+            "ssd1306",
+            "oled 128x64"
+        ],
+        "role": "output",
+        "category": "display",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 3.3
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "I2C interface (SDA, SCL)"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong I2C address",
+            "missing library"
+        ],
+        "warnings": [
+            "OLED burn-in with static images"
+        ],
+        "test_method": "Display graphics and text on screen"
+    },
+    {
+        "name": "Motor Driver (L298N)",
+        "aliases": [
+            "l298n",
+            "motor controller",
+            "h-bridge driver"
+        ],
+        "role": "output",
+        "category": "module",
+        "voltage": {
+            "min": 5,
+            "max": 35,
+            "recommended": 12
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "DC motor",
+            "external power supply"
+        ],
+        "optional": [
+            "heat sink for high loads"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not connecting common ground",
+            "exceeding current rating",
+            "confusing IN/OUT pins"
+        ],
+        "warnings": [
+            "Can handle 2A per channel continuous"
+        ],
+        "test_method": "Control motor speed and direction"
+    },
+    {
+        "name": "Stepper Motor",
+        "aliases": [
+            "stepper",
+            "step motor",
+            "nema17"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 12,
+            "max": 24,
+            "recommended": 12
+        },
+        "power_requirement": "high",
+        "complexity": "medium",
+        "requires": [
+            "stepper driver module",
+            "external power supply"
+        ],
+        "optional": [
+            "mechanical coupling"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "wrong winding connection",
+            "insufficient current supply"
+        ],
+        "warnings": [
+            "Coil windings must be connected correctly"
+        ],
+        "test_method": "Rotate shaft in steps"
+    },
+    {
+        "name": "IR Receiver Module",
+        "aliases": [
+            "ir receiver",
+            "ir rx",
+            "remote receiver"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [
+            "IR remote"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong pin connection",
+            "missing library"
+        ],
+        "warnings": [
+            "Works only in line of sight"
+        ],
+        "test_method": "Receive IR signal from remote"
+    },
+    {
+        "name": "Push Button",
+        "aliases": [
+            "button",
+            "tactile switch",
+            "momentary switch"
+        ],
+        "role": "input",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 12,
+            "recommended": 5
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [
+            "pull-up/pull-down resistor",
+            "microcontroller"
+        ],
+        "optional": [
+            "debounce capacitor"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "no debounce circuit",
+            "wrong resistor type"
+        ],
+        "warnings": [
+            "Bouncing can cause false triggers"
+        ],
+        "test_method": "Press button and read digital input"
+    },
+    {
+        "name": "Potentiometer",
+        "aliases": [
+            "pot",
+            "variable resistor",
+            "rheostat"
+        ],
+        "role": "input",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 12,
+            "recommended": 5
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [
+            "microcontroller"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not connecting wiper correctly",
+            "noise in analog reading"
+        ],
+        "warnings": [
+            "Produces noisy analog output"
+        ],
+        "test_method": "Rotate and observe analog value changes"
+    },
+    {
+        "name": "Real-Time Clock (DS1307)",
+        "aliases": [
+            "rtc module",
+            "ds1307",
+            "time module"
+        ],
+        "role": "input",
+        "category": "module",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [
+            "I2C interface",
+            "backup battery"
+        ],
+        "optional": [
+            "crystal oscillator"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not setting time initially",
+            "low battery"
+        ],
+        "warnings": [
+            "Requires backup battery for power loss"
+        ],
+        "test_method": "Read time and verify accuracy"
+    },
+    {
+        "name": "ADC Module (ADS1115)",
+        "aliases": [
+            "ads1115",
+            "adc converter",
+            "16-bit adc"
+        ],
+        "role": "input",
+        "category": "module",
+        "voltage": {
+            "min": 2.0,
+            "max": 5.5,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [
+            "I2C interface"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong gain setting",
+            "incorrect I2C address"
+        ],
+        "warnings": [
+            "Requires proper signal conditioning for high voltages"
+        ],
+        "test_method": "Read analog values via I2C"
+    },
+    {
+        "name": "Shift Register (74HC595)",
+        "aliases": [
+            "74hc595",
+            "shift register",
+            "sipo"
+        ],
+        "role": "output",
+        "category": "component",
+        "voltage": {
+            "min": 2,
+            "max": 6,
+            "recommended": 5
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [
+            "microcontroller",
+            "SPI interface"
+        ],
+        "optional": [
+            "current limiting resistors"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "wrong pin sequence",
+            "timing issues"
+        ],
+        "warnings": [
+            "Limited output current per pin"
+        ],
+        "test_method": "Toggle output pins sequentially"
+    },
+    {
+        "name": "Accelerometer/Gyro (MPU6050)",
+        "aliases": [
+            "mpu6050",
+            "gyroscope",
+            "imu module"
+        ],
+        "role": "input",
+        "category": "sensor",
+        "voltage": {
+            "min": 3.0,
+            "max": 5,
+            "recommended": 3.3
+        },
+        "power_requirement": "low",
+        "complexity": "hard",
+        "requires": [
+            "I2C interface"
+        ],
+        "optional": [
+            "calibration setup"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not calibrating properly",
+            "ignoring temperature effects"
+        ],
+        "warnings": [
+            "Requires careful data interpretation"
+        ],
+        "test_method": "Read acceleration and rotation data"
+    },
+    {
+        "name": "Vibration Motor",
+        "aliases": [
+            "vibration motor",
+            "haptic motor"
+        ],
+        "role": "output",
+        "category": "actuator",
+        "voltage": {
+            "min": 3,
+            "max": 5,
+            "recommended": 3.3
+        },
+        "power_requirement": "medium",
+        "complexity": "low",
+        "requires": [
+            "transistor or driver"
+        ],
+        "optional": [],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano",
+            "ESP8266"
+        ],
+        "common_mistakes": [
+            "not using driver",
+            "high current draw"
+        ],
+        "warnings": [
+            "Cannot be powered directly from GPIO"
+        ],
+        "test_method": "Apply power and verify vibration"
+    },
+    {
+        "name": "Capacitor",
+        "aliases": [
+            "capacitor",
+            "electrolytic cap",
+            "ceramic cap"
+        ],
+        "role": "passive",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 400,
+            "recommended": 50
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [],
+        "optional": [],
+        "compatible_with": [
+            "all circuits"
+        ],
+        "common_mistakes": [
+            "wrong polarity on electrolytic caps",
+            "exceeding voltage rating"
+        ],
+        "warnings": [
+            "Electrolytic caps can explode if reversed"
+        ],
+        "test_method": "Measure capacitance using multimeter"
+    },
+    {
+        "name": "Diode",
+        "aliases": [
+            "diode",
+            "1n4007"
+        ],
+        "role": "passive",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 1000,
+            "recommended": 12
+        },
+        "power_requirement": "none",
+        "complexity": "low",
+        "requires": [],
+        "optional": [],
+        "compatible_with": [
+            "all circuits"
+        ],
+        "common_mistakes": [
+            "wrong polarity (reverse blocking)",
+            "exceeding current rating"
+        ],
+        "warnings": [
+            "Has forward voltage drop (~0.7V for silicon)"
+        ],
+        "test_method": "Verify one-way current flow"
+    },
+    {
+        "name": "NFC/RFID Module",
+        "aliases": [
+            "rfid module",
+            "nfc reader",
+            "mfrc522"
+        ],
+        "role": "input",
+        "category": "module",
+        "voltage": {
+            "min": 3.3,
+            "max": 5,
+            "recommended": 3.3
+        },
+        "power_requirement": "low",
+        "complexity": "hard",
+        "requires": [
+            "SPI interface"
+        ],
+        "optional": [
+            "RFID tags"
+        ],
+        "compatible_with": [
+            "Arduino Uno",
+            "Arduino Nano"
+        ],
+        "common_mistakes": [
+            "wrong SPI pins",
+            "missing library"
+        ],
+        "warnings": [
+            "Limited read range (~10cm)"
+        ],
+        "test_method": "Read UID from RFID card"
+    },
+    {
+        "name": "Transistor",
+        "aliases": [
+            "transistor",
+            "bjt",
+            "2n2222"
+        ],
+        "role": "passive",
+        "category": "component",
+        "voltage": {
+            "min": 0,
+            "max": 100,
+            "recommended": 12
+        },
+        "power_requirement": "low",
+        "complexity": "medium",
+        "requires": [],
+        "optional": [
+            "base resistor"
+        ],
+        "compatible_with": [
+            "all circuits"
+        ],
+        "common_mistakes": [
+            "not using base resistor",
+            "exceeding max current rating"
+        ],
+        "warnings": [
+            "Pin configuration varies (NPN vs PNP)"
+        ],
+        "test_method": "Verify amplification and switching"
+    }
+]

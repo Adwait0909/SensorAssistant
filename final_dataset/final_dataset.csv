@@ -1,0 +1,501 @@
+id,components,project_name,project_type,category,difficulty,has_controller,has_sensor,has_output,has_comm,component_count,score_label
+1,"arduino uno, dht11, lcd",Temperature Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+2,"arduino uno, dht11, lcd, wifi module",IoT Temperature Monitor,IoT System,communication,medium,1,1,1,1,4,10
+3,"arduino uno, mq2, buzzer",Gas Alert System,Alert System,safety,medium,1,1,1,0,3,7
+4,"arduino uno, mq2, buzzer, gsm sim800l",Gas SMS Alert,IoT System,safety,high,1,1,1,1,4,10
+5,"arduino nano, pir, led",Motion Detection Light,Control System,control,low,1,1,1,0,3,7
+6,"arduino nano, pir, led, bluetooth hc05",Bluetooth Motion Light,IoT System,control,medium,1,1,1,1,4,10
+7,"arduino uno, ldr, relay",Light Control System,Control System,control,medium,1,1,1,0,3,7
+8,"arduino uno, ldr, relay, wifi module",IoT Light Control,IoT System,control,high,1,1,1,1,4,10
+9,"arduino uno, ultrasonic, lcd",Distance Monitor,Monitoring System,monitoring,medium,1,1,1,0,3,7
+10,"arduino uno, ultrasonic, lcd, wifi module",IoT Distance Monitor,IoT System,communication,high,1,1,1,1,4,10
+11,"arduino uno, soil moisture, relay",Soil Moisture Control,Control System,control,medium,1,1,1,0,3,7
+12,"arduino uno, soil moisture, relay, wifi module",IoT Soil Control,IoT System,control,high,1,1,1,1,4,10
+13,"arduino uno, flame sensor, buzzer",Fire Alert System,Alert System,safety,medium,1,1,1,0,3,7
+14,"arduino uno, flame sensor, buzzer, gsm sim800l",Fire SMS Alert,IoT System,safety,high,1,1,1,1,4,10
+15,"arduino nano, dht11",Temp Sensor Basic,Monitoring System,monitoring,low,1,1,0,0,2,5
+16,"arduino uno, pir",Motion Sensor Basic,Monitoring System,monitoring,low,1,1,0,0,2,5
+17,"arduino uno, mq2",Gas Sensor Basic,Monitoring System,safety,low,1,1,0,0,2,5
+18,"arduino uno, dht11, lcd, buzzer",Temp Alert Display,Alert System,alert,medium,1,1,1,0,4,7
+19,"arduino uno, dht11, lcd, buzzer, wifi module",IoT Temp Alert Display,IoT System,alert,high,1,1,1,1,5,10
+20,"arduino uno, dht11, lcd, buzzer, wifi module, gsm sim800l",Dual IoT Temp System,IoT System,communication,high,1,1,1,1,6,10
+21,"arduino nano, ldr",Light Sensor Basic,Monitoring System,monitoring,low,1,1,0,0,2,5
+22,"arduino nano, ultrasonic",Distance Sensor Basic,Monitoring System,monitoring,low,1,1,0,0,2,5
+23,"arduino nano, soil moisture",Soil Sensor Basic,Monitoring System,monitoring,low,1,1,0,0,2,5
+24,"arduino uno, pir, buzzer",Motion Alarm,Alert System,alert,medium,1,1,1,0,3,7
+25,"arduino uno, pir, buzzer, wifi module",IoT Motion Alarm,IoT System,alert,high,1,1,1,1,4,10
+26,"arduino uno, ldr, led",Light LED System,Control System,control,low,1,1,1,0,3,7
+27,"arduino uno, ldr, led, wifi module",IoT Light LED,IoT System,control,medium,1,1,1,1,4,10
+28,"arduino uno, ultrasonic, buzzer",Distance Alarm,Alert System,alert,medium,1,1,1,0,3,7
+29,"arduino uno, ultrasonic, buzzer, gsm sim800l",Distance SMS Alert,IoT System,alert,high,1,1,1,1,4,10
+30,"arduino nano, flame sensor",Fire Sensor Basic,Monitoring System,safety,low,1,1,0,0,2,5
+31,"dht11, lcd",Broken Temp Display,Monitoring System,monitoring,low,0,1,1,0,2,1
+32,"mq2, buzzer",Broken Gas Alarm,Alert System,safety,low,0,1,1,0,2,1
+33,"pir, led",Broken Motion Light,Control System,control,low,0,1,1,0,2,1
+34,"ldr, relay",Broken Light Control,Control System,control,low,0,1,1,0,2,1
+35,"ultrasonic, lcd",Broken Distance Display,Monitoring System,monitoring,low,0,1,1,0,2,1
+36,"soil moisture, relay",Broken Soil Control,Control System,control,low,0,1,1,0,2,1
+37,"flame sensor, buzzer",Broken Fire Alarm,Alert System,safety,low,0,1,1,0,2,1
+38,"dht11",Sensor Only Temp,Monitoring System,monitoring,low,0,1,0,0,1,1
+39,"mq2",Sensor Only Gas,Monitoring System,safety,low,0,1,0,0,1,1
+40,"pir",Sensor Only Motion,Monitoring System,monitoring,low,0,1,0,0,1,1
+41,"lcd",Output Only LCD,Monitoring System,monitoring,low,0,0,1,0,1,1
+42,"buzzer",Output Only Buzzer,Alert System,alert,low,0,0,1,0,1,1
+43,"relay",Output Only Relay,Control System,control,low,0,0,1,0,1,1
+44,"wifi module",Comm Only WiFi,IoT System,communication,low,0,0,0,1,1,1
+45,"gsm sim800l",Comm Only GSM,IoT System,communication,low,0,0,0,1,1,1
+46,"bluetooth hc05",Comm Only Bluetooth,IoT System,communication,low,0,0,0,1,1,1
+47,"arduino uno, lcd",Display System,Monitoring System,monitoring,low,1,0,1,0,2,5
+48,"arduino uno, buzzer",Alarm System,Alert System,alert,low,1,0,1,0,2,5
+49,"arduino uno, relay",Control Relay System,Control System,control,low,1,0,1,0,2,5
+50,"arduino uno, wifi module",IoT Basic Control,IoT System,communication,low,1,0,0,1,2,6
+51,"arduino uno, gsm sim800l",GSM Control Basic,IoT System,communication,low,1,0,0,1,2,6
+52,"arduino uno, bluetooth hc05",Bluetooth Control Basic,IoT System,communication,low,1,0,0,1,2,6
+53,"arduino uno, dht11, lcd, relay",Temp Control Display,Control System,control,medium,1,1,1,0,4,7
+54,"arduino uno, mq2, lcd, relay",Gas Control Display,Control System,safety,medium,1,1,1,0,4,7
+55,"arduino uno, pir, lcd, relay",Motion Control Display,Control System,control,medium,1,1,1,0,4,7
+56,"arduino uno, ldr, lcd, relay",Light Control Display,Control System,control,medium,1,1,1,0,4,7
+57,"arduino uno, ultrasonic, lcd, relay",Distance Control Display,Control System,control,medium,1,1,1,0,4,7
+58,"arduino uno, dht11, lcd, relay, wifi module",IoT Temp Control Display,IoT System,control,high,1,1,1,1,5,10
+59,"arduino uno, mq2, lcd, relay, wifi module",IoT Gas Control Display,IoT System,safety,high,1,1,1,1,5,10
+60,"arduino uno, pir, lcd, relay, wifi module",IoT Motion Control Display,IoT System,control,high,1,1,1,1,5,10
+61,"arduino uno, ldr, lcd, relay, wifi module",IoT Light Control Display,IoT System,control,high,1,1,1,1,5,10
+62,"arduino uno, ultrasonic, lcd, relay, wifi module",IoT Distance Control Display,IoT System,control,high,1,1,1,1,5,10
+63,"arduino nano, dht11, oled",Temp OLED Monitor,Monitoring System,monitoring,medium,1,1,1,0,3,7
+64,"arduino nano, dht11, oled, wifi module",IoT Temp OLED,IoT System,communication,high,1,1,1,1,4,10
+65,"arduino nano, mq2, oled",Gas OLED Monitor,Monitoring System,safety,medium,1,1,1,0,3,7
+66,"arduino nano, mq2, oled, wifi module",IoT Gas OLED,IoT System,safety,high,1,1,1,1,4,10
+67,"arduino nano, pir, oled",Motion OLED Monitor,Monitoring System,monitoring,medium,1,1,1,0,3,7
+68,"arduino nano, pir, oled, wifi module",IoT Motion OLED,IoT System,communication,high,1,1,1,1,4,10
+69,"arduino nano, ldr, oled",Light OLED Monitor,Monitoring System,monitoring,medium,1,1,1,0,3,7
+70,"arduino nano, ldr, oled, wifi module",IoT Light OLED,IoT System,communication,high,1,1,1,1,4,10
+71,"arduino uno, soil moisture, oled",Soil OLED Monitor,Monitoring System,monitoring,medium,1,1,1,0,3,7
+72,"arduino uno, soil moisture, oled, wifi module",IoT Soil OLED,IoT System,monitoring,high,1,1,1,1,4,10
+73,"arduino uno, flame sensor, oled",Fire OLED Monitor,Monitoring System,safety,medium,1,1,1,0,3,7
+74,"arduino uno, flame sensor, oled, wifi module",IoT Fire OLED,IoT System,safety,high,1,1,1,1,4,10
+75,"arduino uno, dht11, mq2, lcd",Env Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+76,"arduino uno, dht11, mq2, lcd, wifi module",IoT Env Monitor,IoT System,multi-sensor,high,1,1,1,1,5,10
+77,"arduino uno, dht11, pir, lcd",Temp Motion Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+78,"arduino uno, dht11, pir, lcd, wifi module",IoT Temp Motion,IoT System,multi-sensor,high,1,1,1,1,5,10
+79,"arduino uno, dht11, ldr, lcd",Temp Light Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+80,"arduino uno, dht11, ldr, lcd, wifi module",IoT Temp Light,IoT System,multi-sensor,high,1,1,1,1,5,10
+81,"arduino uno, dht11, soil moisture, lcd",Temp Soil Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+82,"arduino uno, dht11, soil moisture, lcd, wifi module",IoT Temp Soil,IoT System,multi-sensor,high,1,1,1,1,5,10
+83,"arduino uno, mq2, pir, lcd",Gas Motion Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+84,"arduino uno, mq2, pir, lcd, wifi module",IoT Gas Motion,IoT System,multi-sensor,high,1,1,1,1,5,10
+85,"arduino uno, mq2, ldr, lcd",Gas Light Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+86,"arduino uno, mq2, ldr, lcd, wifi module",IoT Gas Light,IoT System,multi-sensor,high,1,1,1,1,5,10
+87,"arduino uno, mq2, soil moisture, lcd",Gas Soil Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+88,"arduino uno, mq2, soil moisture, lcd, wifi module",IoT Gas Soil,IoT System,multi-sensor,high,1,1,1,1,5,10
+89,"arduino uno, pir, ldr, lcd",Motion Light Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+90,"arduino uno, pir, ldr, lcd, wifi module",IoT Motion Light,IoT System,multi-sensor,high,1,1,1,1,5,10
+91,"arduino uno, pir, soil moisture, lcd",Motion Soil Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+92,"arduino uno, pir, soil moisture, lcd, wifi module",IoT Motion Soil,IoT System,multi-sensor,high,1,1,1,1,5,10
+93,"arduino uno, ldr, soil moisture, lcd",Light Soil Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,4,7
+94,"arduino uno, ldr, soil moisture, lcd, wifi module",IoT Light Soil,IoT System,multi-sensor,high,1,1,1,1,5,10
+95,"arduino uno, dht11, mq2, pir, lcd",Env Multi Monitor,Multi-Sensor System,multi-sensor,high,1,1,1,0,5,8
+96,"arduino uno, dht11, mq2, pir, lcd, wifi module",IoT Env Multi Monitor,IoT System,multi-sensor,high,1,1,1,1,6,10
+97,"arduino uno, dht11, mq2, pir, ldr, lcd",Full Sensor Monitor,Multi-Sensor System,multi-sensor,high,1,1,1,0,6,8
+98,"arduino uno, dht11, mq2, pir, ldr, lcd, wifi module",Full IoT Sensor Monitor,IoT System,multi-sensor,high,1,1,1,1,7,10
+99,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd",Advanced Sensor System,Multi-Sensor System,multi-sensor,high,1,1,1,0,7,9
+100,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd, wifi module",Advanced IoT Sensor System,IoT System,multi-sensor,high,1,1,1,1,8,10
+101,"arduino uno, dht11, led",Temperature LED Indicator,Monitoring System,monitoring,low,1,1,1,0,3,7
+102,"arduino uno, dht11, led, wifi module",IoT Temperature LED Indicator,IoT System,communication,medium,1,1,1,1,4,10
+103,"arduino nano, mq2, led",Gas LED Alert,Alert System,safety,medium,1,1,1,0,3,7
+104,"arduino nano, mq2, led, gsm sim800l",Gas LED SMS Alert,IoT System,safety,high,1,1,1,1,4,10
+105,"arduino uno, pir, relay",Motion Relay Control,Control System,control,medium,1,1,1,0,3,7
+106,"arduino uno, pir, relay, bluetooth hc05",Bluetooth Motion Relay,IoT System,control,medium,1,1,1,1,4,10
+107,"arduino nano, ldr, buzzer",Light Alarm System,Alert System,alert,medium,1,1,1,0,3,7
+108,"arduino nano, ldr, buzzer, wifi module",IoT Light Alarm,IoT System,alert,high,1,1,1,1,4,10
+109,"arduino uno, ultrasonic, relay",Distance Control System,Control System,control,medium,1,1,1,0,3,7
+110,"arduino uno, ultrasonic, relay, gsm sim800l",Distance SMS Control,IoT System,control,high,1,1,1,1,4,10
+111,"arduino nano, soil moisture, buzzer",Soil Moisture Alarm,Alert System,alert,medium,1,1,1,0,3,7
+112,"arduino nano, soil moisture, buzzer, wifi module",IoT Soil Alarm,IoT System,alert,high,1,1,1,1,4,10
+113,"arduino uno, flame sensor, relay",Fire Control System,Control System,safety,medium,1,1,1,0,3,7
+114,"arduino uno, flame sensor, relay, gsm sim800l",Fire SMS Control,IoT System,safety,high,1,1,1,1,4,10
+115,"arduino uno, dht11, oled",Temperature OLED Display,Monitoring System,monitoring,medium,1,1,1,0,3,7
+116,"arduino uno, dht11, oled, wifi module",IoT Temperature OLED,IoT System,communication,high,1,1,1,1,4,10
+117,"arduino nano, mq2, oled",Gas OLED Display,Monitoring System,safety,medium,1,1,1,0,3,7
+118,"arduino nano, mq2, oled, wifi module",IoT Gas OLED Display,IoT System,safety,high,1,1,1,1,4,10
+119,"arduino uno, pir, oled",Motion OLED Display,Monitoring System,monitoring,medium,1,1,1,0,3,7
+120,"arduino uno, pir, oled, bluetooth hc05",Bluetooth Motion OLED,IoT System,communication,high,1,1,1,1,4,10
+121,"arduino nano, ldr, oled",Light OLED Display,Monitoring System,monitoring,medium,1,1,1,0,3,7
+122,"arduino nano, ldr, oled, wifi module",IoT Light OLED Display,IoT System,communication,high,1,1,1,1,4,10
+123,"arduino uno, ultrasonic, oled",Distance OLED Display,Monitoring System,monitoring,medium,1,1,1,0,3,7
+124,"arduino uno, ultrasonic, oled, wifi module",IoT Distance OLED Display,IoT System,communication,high,1,1,1,1,4,10
+125,"arduino nano, soil moisture, oled",Soil OLED Display,Monitoring System,monitoring,medium,1,1,1,0,3,7
+126,"arduino nano, soil moisture, oled, wifi module",IoT Soil OLED Display,IoT System,monitoring,high,1,1,1,1,4,10
+127,"arduino uno, flame sensor, oled",Fire OLED Display,Monitoring System,safety,medium,1,1,1,0,3,7
+128,"arduino uno, flame sensor, oled, gsm sim800l",Fire SMS OLED Display,IoT System,safety,high,1,1,1,1,4,10
+129,"arduino uno, dht11, relay",Temperature Control System,Control System,control,medium,1,1,1,0,3,7
+130,"arduino uno, dht11, relay, wifi module",IoT Temperature Control,IoT System,control,high,1,1,1,1,4,10
+131,"arduino nano, mq2, relay",Gas Control System,Control System,safety,medium,1,1,1,0,3,7
+132,"arduino nano, mq2, relay, gsm sim800l",Gas SMS Control System,IoT System,safety,high,1,1,1,1,4,10
+133,"arduino uno, pir, buzzer, led",Motion Dual Alert,Alert System,alert,medium,1,1,1,0,4,7
+134,"arduino uno, pir, buzzer, led, wifi module",IoT Motion Dual Alert,IoT System,alert,high,1,1,1,1,5,10
+135,"arduino nano, ldr, relay, led",Light Dual Control,Control System,control,medium,1,1,1,0,4,7
+136,"arduino nano, ldr, relay, led, wifi module",IoT Light Dual Control,IoT System,control,high,1,1,1,1,5,10
+137,"arduino uno, ultrasonic, buzzer, led",Distance Dual Alert,Alert System,alert,medium,1,1,1,0,4,7
+138,"arduino uno, ultrasonic, buzzer, led, gsm sim800l",Distance SMS Dual Alert,IoT System,alert,high,1,1,1,1,5,10
+139,"arduino nano, soil moisture, relay, led",Soil Dual Control,Control System,control,medium,1,1,1,0,4,7
+140,"arduino nano, soil moisture, relay, led, wifi module",IoT Soil Dual Control,IoT System,control,high,1,1,1,1,5,10
+141,"arduino uno, flame sensor, buzzer, led",Fire Dual Alert,Alert System,safety,medium,1,1,1,0,4,7
+142,"arduino uno, flame sensor, buzzer, led, gsm sim800l",Fire SMS Dual Alert,IoT System,safety,high,1,1,1,1,5,10
+143,"arduino uno, dht11, mq2, lcd, buzzer",Temp Gas Alert System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+144,"arduino uno, dht11, mq2, lcd, buzzer, wifi module",IoT Temp Gas Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+145,"arduino nano, dht11, pir, lcd, buzzer",Temp Motion Alert System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+146,"arduino nano, dht11, pir, lcd, buzzer, wifi module",IoT Temp Motion Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+147,"arduino uno, dht11, ldr, lcd, relay",Temp Light Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+148,"arduino uno, dht11, ldr, lcd, relay, wifi module",IoT Temp Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+149,"arduino nano, dht11, soil moisture, lcd, relay",Temp Soil Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+150,"arduino nano, dht11, soil moisture, lcd, relay, wifi module",IoT Temp Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+151,"arduino uno, mq2, pir, lcd, buzzer",Gas Motion Alert System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+152,"arduino uno, mq2, pir, lcd, buzzer, gsm sim800l",Gas Motion SMS Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+153,"arduino nano, mq2, ldr, lcd, relay",Gas Light Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+154,"arduino nano, mq2, ldr, lcd, relay, wifi module",IoT Gas Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+155,"arduino uno, mq2, soil moisture, lcd, relay",Gas Soil Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+156,"arduino uno, mq2, soil moisture, lcd, relay, wifi module",IoT Gas Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+157,"arduino nano, pir, ldr, lcd, relay",Motion Light Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+158,"arduino nano, pir, ldr, lcd, relay, wifi module",IoT Motion Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+159,"arduino uno, pir, soil moisture, lcd, relay",Motion Soil Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+160,"arduino uno, pir, soil moisture, lcd, relay, wifi module",IoT Motion Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+161,"arduino nano, ldr, soil moisture, lcd, relay",Light Soil Control System,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+162,"arduino nano, ldr, soil moisture, lcd, relay, wifi module",IoT Light Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+163,"arduino uno, dht11, mq2, pir, lcd",Env Monitoring System,Multi-Sensor System,multi-sensor,high,1,1,1,0,5,8
+164,"arduino uno, dht11, mq2, pir, lcd, wifi module",IoT Env Monitoring System,IoT System,multi-sensor,high,1,1,1,1,6,10
+165,"arduino uno, dht11, mq2, pir, ldr, lcd",Advanced Env Monitor,Multi-Sensor System,multi-sensor,high,1,1,1,0,6,8
+166,"arduino uno, dht11, mq2, pir, ldr, lcd, wifi module",Advanced IoT Env Monitor,IoT System,multi-sensor,high,1,1,1,1,7,10
+167,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd",Full Env Monitor,Multi-Sensor System,multi-sensor,high,1,1,1,0,7,9
+168,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd, wifi module",Full IoT Env Monitor,IoT System,multi-sensor,high,1,1,1,1,8,10
+169,"dht11, oled",Broken Temp OLED,Monitoring System,monitoring,low,0,1,1,0,2,1
+170,"mq2, oled",Broken Gas OLED,Monitoring System,safety,low,0,1,1,0,2,1
+171,"pir, oled",Broken Motion OLED,Monitoring System,monitoring,low,0,1,1,0,2,1
+172,"ldr, oled",Broken Light OLED,Monitoring System,monitoring,low,0,1,1,0,2,1
+173,"ultrasonic, oled",Broken Distance OLED,Monitoring System,monitoring,low,0,1,1,0,2,1
+174,"soil moisture, oled",Broken Soil OLED,Monitoring System,monitoring,low,0,1,1,0,2,1
+175,"flame sensor, oled",Broken Fire OLED,Monitoring System,safety,low,0,1,1,0,2,1
+176,"lcd, wifi module",Display Comm Broken,IoT System,communication,low,0,0,1,1,2,2
+177,"buzzer, wifi module",Alarm Comm Broken,IoT System,communication,low,0,0,1,1,2,2
+178,"relay, wifi module",Control Comm Broken,IoT System,communication,low,0,0,1,1,2,2
+179,"lcd, gsm sim800l",LCD GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+180,"buzzer, gsm sim800l",Buzzer GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+181,"relay, gsm sim800l",Relay GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+182,"lcd, bluetooth hc05",LCD Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+183,"buzzer, bluetooth hc05",Buzzer Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+184,"relay, bluetooth hc05",Relay Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+185,"dht11, wifi module",Sensor WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+186,"mq2, wifi module",Gas WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+187,"pir, wifi module",Motion WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+188,"ldr, wifi module",Light WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+189,"ultrasonic, wifi module",Distance WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+190,"soil moisture, wifi module",Soil WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+191,"flame sensor, wifi module",Fire WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+192,"dht11, gsm sim800l",Temp GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+193,"mq2, gsm sim800l",Gas GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+194,"pir, gsm sim800l",Motion GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+195,"ldr, gsm sim800l",Light GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+196,"ultrasonic, gsm sim800l",Distance GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+197,"soil moisture, gsm sim800l",Soil GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+198,"flame sensor, gsm sim800l",Fire GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+199,"dht11, bluetooth hc05",Temp Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+200,"mq2, bluetooth hc05",Gas Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+201,"arduino uno, dht11, lcd",Temperature Display System,Monitoring System,monitoring,low,1,1,1,0,3,7
+202,"arduino uno, dht11, lcd, wifi module",IoT Temperature Display,IoT System,communication,medium,1,1,1,1,4,10
+203,"arduino nano, mq2, buzzer",Gas Alarm System,Alert System,safety,medium,1,1,1,0,3,7
+204,"arduino nano, mq2, buzzer, gsm sim800l",Gas SMS Alarm,IoT System,safety,high,1,1,1,1,4,10
+205,"arduino uno, pir, led",Motion LED Alert,Alert System,alert,low,1,1,1,0,3,7
+206,"arduino uno, pir, led, bluetooth hc05",Bluetooth Motion LED,IoT System,communication,medium,1,1,1,1,4,10
+207,"arduino nano, ldr, relay",Light Relay Control,Control System,control,medium,1,1,1,0,3,7
+208,"arduino nano, ldr, relay, wifi module",IoT Light Relay Control,IoT System,control,high,1,1,1,1,4,10
+209,"arduino uno, ultrasonic, buzzer",Distance Buzzer Alert,Alert System,alert,medium,1,1,1,0,3,7
+210,"arduino uno, ultrasonic, buzzer, gsm sim800l",Distance SMS Alert,IoT System,alert,high,1,1,1,1,4,10
+211,"arduino nano, soil moisture, relay",Soil Moisture Control,Control System,control,medium,1,1,1,0,3,7
+212,"arduino nano, soil moisture, relay, wifi module",IoT Soil Control,IoT System,control,high,1,1,1,1,4,10
+213,"arduino uno, flame sensor, buzzer",Fire Alarm System,Alert System,safety,medium,1,1,1,0,3,7
+214,"arduino uno, flame sensor, buzzer, gsm sim800l",Fire SMS Alarm,IoT System,safety,high,1,1,1,1,4,10
+215,"arduino uno, dht11, led, buzzer",Temp Dual Alert,Alert System,alert,medium,1,1,1,0,4,7
+216,"arduino uno, dht11, led, buzzer, wifi module",IoT Temp Dual Alert,IoT System,alert,high,1,1,1,1,5,10
+217,"arduino nano, mq2, led, buzzer",Gas Dual Alert,Alert System,safety,medium,1,1,1,0,4,7
+218,"arduino nano, mq2, led, buzzer, gsm sim800l",Gas SMS Dual Alert,IoT System,safety,high,1,1,1,1,5,10
+219,"arduino uno, pir, led, buzzer",Motion Dual Alert,Alert System,alert,medium,1,1,1,0,4,7
+220,"arduino uno, pir, led, buzzer, bluetooth hc05",Bluetooth Motion Alert,IoT System,alert,medium,1,1,1,1,5,10
+221,"arduino nano, ldr, led, relay",Light Control System,Control System,control,medium,1,1,1,0,4,7
+222,"arduino nano, ldr, led, relay, wifi module",IoT Light Control System,IoT System,control,high,1,1,1,1,5,10
+223,"arduino uno, ultrasonic, led, buzzer",Distance Dual Alert,Alert System,alert,medium,1,1,1,0,4,7
+224,"arduino uno, ultrasonic, led, buzzer, gsm sim800l",Distance SMS Dual Alert,IoT System,alert,high,1,1,1,1,5,10
+225,"arduino nano, soil moisture, led, relay",Soil Control System,Control System,control,medium,1,1,1,0,4,7
+226,"arduino nano, soil moisture, led, relay, wifi module",IoT Soil Control System,IoT System,control,high,1,1,1,1,5,10
+227,"arduino uno, flame sensor, led, buzzer",Fire Dual Alert,Alert System,safety,medium,1,1,1,0,4,7
+228,"arduino uno, flame sensor, led, buzzer, gsm sim800l",Fire SMS Dual Alert,IoT System,safety,high,1,1,1,1,5,10
+229,"arduino uno, dht11, mq2, lcd, buzzer",Temp Gas Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+230,"arduino uno, dht11, mq2, lcd, buzzer, wifi module",IoT Temp Gas Monitor,IoT System,multi-sensor,high,1,1,1,1,6,10
+231,"arduino nano, dht11, pir, lcd, buzzer",Temp Motion Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+232,"arduino nano, dht11, pir, lcd, buzzer, wifi module",IoT Temp Motion Monitor,IoT System,multi-sensor,high,1,1,1,1,6,10
+233,"arduino uno, dht11, ldr, lcd, relay",Temp Light Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+234,"arduino uno, dht11, ldr, lcd, relay, wifi module",IoT Temp Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+235,"arduino nano, dht11, soil moisture, lcd, relay",Temp Soil Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+236,"arduino nano, dht11, soil moisture, lcd, relay, wifi module",IoT Temp Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+237,"arduino uno, mq2, pir, lcd, buzzer",Gas Motion Monitor,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+238,"arduino uno, mq2, pir, lcd, buzzer, gsm sim800l",Gas Motion SMS Monitor,IoT System,multi-sensor,high,1,1,1,1,6,10
+239,"arduino nano, mq2, ldr, lcd, relay",Gas Light Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+240,"arduino nano, mq2, ldr, lcd, relay, wifi module",IoT Gas Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+241,"arduino uno, mq2, soil moisture, lcd, relay",Gas Soil Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+242,"arduino uno, mq2, soil moisture, lcd, relay, wifi module",IoT Gas Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+243,"arduino nano, pir, ldr, lcd, relay",Motion Light Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+244,"arduino nano, pir, ldr, lcd, relay, wifi module",IoT Motion Light Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+245,"arduino uno, pir, soil moisture, lcd, relay",Motion Soil Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+246,"arduino uno, pir, soil moisture, lcd, relay, wifi module",IoT Motion Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+247,"arduino nano, ldr, soil moisture, lcd, relay",Light Soil Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+248,"arduino nano, ldr, soil moisture, lcd, relay, wifi module",IoT Light Soil Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+249,"arduino uno, dht11, mq2, pir, lcd",Env Monitor Basic,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+250,"arduino uno, dht11, mq2, pir, lcd, wifi module",IoT Env Monitor Basic,IoT System,multi-sensor,high,1,1,1,1,6,10
+251,"arduino uno, dht11, mq2, pir, ldr, lcd",Env Monitor Plus,Multi-Sensor System,multi-sensor,high,1,1,1,0,6,8
+252,"arduino uno, dht11, mq2, pir, ldr, lcd, wifi module",IoT Env Monitor Plus,IoT System,multi-sensor,high,1,1,1,1,7,10
+253,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd",Env Monitor Pro,Multi-Sensor System,multi-sensor,high,1,1,1,0,7,9
+254,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd, wifi module",IoT Env Monitor Pro,IoT System,multi-sensor,high,1,1,1,1,8,10
+255,"dht11, lcd",Broken Temp LCD,Monitoring System,monitoring,low,0,1,1,0,2,1
+256,"mq2, lcd",Broken Gas LCD,Monitoring System,safety,low,0,1,1,0,2,1
+257,"pir, lcd",Broken Motion LCD,Monitoring System,monitoring,low,0,1,1,0,2,1
+258,"ldr, lcd",Broken Light LCD,Monitoring System,monitoring,low,0,1,1,0,2,1
+259,"ultrasonic, lcd",Broken Distance LCD,Monitoring System,monitoring,low,0,1,1,0,2,1
+260,"soil moisture, lcd",Broken Soil LCD,Monitoring System,monitoring,low,0,1,1,0,2,1
+261,"flame sensor, lcd",Broken Fire LCD,Monitoring System,safety,low,0,1,1,0,2,1
+262,"led, wifi module",LED WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+263,"buzzer, wifi module",Buzzer WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+264,"relay, wifi module",Relay WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+265,"led, gsm sim800l",LED GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+266,"buzzer, gsm sim800l",Buzzer GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+267,"relay, gsm sim800l",Relay GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+268,"led, bluetooth hc05",LED Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+269,"buzzer, bluetooth hc05",Buzzer Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+270,"relay, bluetooth hc05",Relay Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+271,"dht11, wifi module",Temp WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+272,"mq2, wifi module",Gas WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+273,"pir, wifi module",Motion WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+274,"ldr, wifi module",Light WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+275,"ultrasonic, wifi module",Distance WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+276,"soil moisture, wifi module",Soil WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+277,"flame sensor, wifi module",Fire WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+278,"dht11, gsm sim800l",Temp GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+279,"mq2, gsm sim800l",Gas GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+280,"pir, gsm sim800l",Motion GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+281,"ldr, gsm sim800l",Light GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+282,"ultrasonic, gsm sim800l",Distance GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+283,"soil moisture, gsm sim800l",Soil GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+284,"flame sensor, gsm sim800l",Fire GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+285,"dht11, bluetooth hc05",Temp Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+286,"mq2, bluetooth hc05",Gas Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+287,"pir, bluetooth hc05",Motion Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+288,"ldr, bluetooth hc05",Light Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+289,"ultrasonic, bluetooth hc05",Distance Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+290,"soil moisture, bluetooth hc05",Soil Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+291,"flame sensor, bluetooth hc05",Fire Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+292,"lcd, led",Display LED Broken,Monitoring System,monitoring,low,0,0,1,0,2,1
+293,"lcd, buzzer",Display Buzzer Broken,Alert System,alert,low,0,0,1,0,2,1
+294,"lcd, relay",Display Relay Broken,Control System,control,low,0,0,1,0,2,1
+295,"oled, led",OLED LED Broken,Monitoring System,monitoring,low,0,0,1,0,2,1
+296,"oled, buzzer",OLED Buzzer Broken,Alert System,alert,low,0,0,1,0,2,1
+297,"oled, relay",OLED Relay Broken,Control System,control,low,0,0,1,0,2,1
+298,"dht11, mq2",Sensors Only Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+299,"pir, ldr",Dual Sensor Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+300,"ultrasonic, soil moisture",Distance Soil Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+301,"arduino uno, dht11, led",Temp LED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+302,"arduino uno, dht11, led, wifi module",IoT Temp LED Monitor,IoT System,communication,medium,1,1,1,1,4,10
+303,"arduino nano, mq2, buzzer",Gas Buzzer Alert,Alert System,safety,medium,1,1,1,0,3,7
+304,"arduino nano, mq2, buzzer, gsm sim800l",Gas SMS Alert System,IoT System,safety,high,1,1,1,1,4,10
+305,"arduino uno, pir, relay",Motion Relay System,Control System,control,medium,1,1,1,0,3,7
+306,"arduino uno, pir, relay, bluetooth hc05",Bluetooth Motion Relay System,IoT System,control,medium,1,1,1,1,4,10
+307,"arduino nano, ldr, buzzer",Light Buzzer Alert,Alert System,alert,medium,1,1,1,0,3,7
+308,"arduino nano, ldr, buzzer, wifi module",IoT Light Alert System,IoT System,alert,high,1,1,1,1,4,10
+309,"arduino uno, ultrasonic, relay",Distance Relay Control,Control System,control,medium,1,1,1,0,3,7
+310,"arduino uno, ultrasonic, relay, gsm sim800l",Distance SMS Control,IoT System,control,high,1,1,1,1,4,10
+311,"arduino nano, soil moisture, buzzer",Soil Alarm System,Alert System,alert,medium,1,1,1,0,3,7
+312,"arduino nano, soil moisture, buzzer, wifi module",IoT Soil Alarm System,IoT System,alert,high,1,1,1,1,4,10
+313,"arduino uno, flame sensor, relay",Fire Relay Control,Control System,safety,medium,1,1,1,0,3,7
+314,"arduino uno, flame sensor, relay, gsm sim800l",Fire SMS Control,IoT System,safety,high,1,1,1,1,4,10
+315,"arduino uno, dht11, lcd, buzzer",Temp LCD Alert,Alert System,alert,medium,1,1,1,0,4,7
+316,"arduino uno, dht11, lcd, buzzer, wifi module",IoT Temp LCD Alert,IoT System,alert,high,1,1,1,1,5,10
+317,"arduino nano, mq2, lcd, buzzer",Gas LCD Alert,Alert System,safety,medium,1,1,1,0,4,7
+318,"arduino nano, mq2, lcd, buzzer, gsm sim800l",Gas SMS LCD Alert,IoT System,safety,high,1,1,1,1,5,10
+319,"arduino uno, pir, lcd, buzzer",Motion LCD Alert,Alert System,alert,medium,1,1,1,0,4,7
+320,"arduino uno, pir, lcd, buzzer, bluetooth hc05",Bluetooth Motion LCD Alert,IoT System,alert,medium,1,1,1,1,5,10
+321,"arduino nano, ldr, lcd, relay",Light LCD Control,Control System,control,medium,1,1,1,0,4,7
+322,"arduino nano, ldr, lcd, relay, wifi module",IoT Light LCD Control,IoT System,control,high,1,1,1,1,5,10
+323,"arduino uno, ultrasonic, lcd, buzzer",Distance LCD Alert,Alert System,alert,medium,1,1,1,0,4,7
+324,"arduino uno, ultrasonic, lcd, buzzer, gsm sim800l",Distance SMS LCD Alert,IoT System,alert,high,1,1,1,1,5,10
+325,"arduino nano, soil moisture, lcd, relay",Soil LCD Control,Control System,control,medium,1,1,1,0,4,7
+326,"arduino nano, soil moisture, lcd, relay, wifi module",IoT Soil LCD Control,IoT System,control,high,1,1,1,1,5,10
+327,"arduino uno, flame sensor, lcd, buzzer",Fire LCD Alert,Alert System,safety,medium,1,1,1,0,4,7
+328,"arduino uno, flame sensor, lcd, buzzer, gsm sim800l",Fire SMS LCD Alert,IoT System,safety,high,1,1,1,1,5,10
+329,"arduino uno, dht11, mq2, lcd, relay",Temp Gas Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+330,"arduino uno, dht11, mq2, lcd, relay, wifi module",IoT Temp Gas Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+331,"arduino nano, dht11, pir, lcd, relay",Temp Motion Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+332,"arduino nano, dht11, pir, lcd, relay, wifi module",IoT Temp Motion Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+333,"arduino uno, dht11, ldr, lcd, buzzer",Temp Light Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+334,"arduino uno, dht11, ldr, lcd, buzzer, wifi module",IoT Temp Light Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+335,"arduino nano, dht11, soil moisture, lcd, buzzer",Temp Soil Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+336,"arduino nano, dht11, soil moisture, lcd, buzzer, wifi module",IoT Temp Soil Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+337,"arduino uno, mq2, pir, lcd, relay",Gas Motion Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+338,"arduino uno, mq2, pir, lcd, relay, gsm sim800l",Gas Motion SMS Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+339,"arduino nano, mq2, ldr, lcd, buzzer",Gas Light Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+340,"arduino nano, mq2, ldr, lcd, buzzer, wifi module",IoT Gas Light Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+341,"arduino uno, mq2, soil moisture, lcd, buzzer",Gas Soil Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+342,"arduino uno, mq2, soil moisture, lcd, buzzer, wifi module",IoT Gas Soil Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+343,"arduino nano, pir, ldr, lcd, buzzer",Motion Light Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+344,"arduino nano, pir, ldr, lcd, buzzer, wifi module",IoT Motion Light Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+345,"arduino uno, pir, soil moisture, lcd, buzzer",Motion Soil Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+346,"arduino uno, pir, soil moisture, lcd, buzzer, wifi module",IoT Motion Soil Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+347,"arduino nano, ldr, soil moisture, lcd, buzzer",Light Soil Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+348,"arduino nano, ldr, soil moisture, lcd, buzzer, wifi module",IoT Light Soil Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+349,"arduino uno, dht11, mq2, pir, lcd",Env Monitor Basic,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+350,"arduino uno, dht11, mq2, pir, lcd, wifi module",IoT Env Monitor Basic,IoT System,multi-sensor,high,1,1,1,1,6,10
+351,"arduino uno, dht11, mq2, pir, ldr, lcd",Env Monitor Plus,Multi-Sensor System,multi-sensor,high,1,1,1,0,6,8
+352,"arduino uno, dht11, mq2, pir, ldr, lcd, wifi module",IoT Env Monitor Plus,IoT System,multi-sensor,high,1,1,1,1,7,10
+353,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd",Env Monitor Pro,Multi-Sensor System,multi-sensor,high,1,1,1,0,7,9
+354,"arduino uno, dht11, mq2, pir, ldr, soil moisture, lcd, wifi module",IoT Env Monitor Pro,IoT System,multi-sensor,high,1,1,1,1,8,10
+355,"dht11, led",Temp LED Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+356,"mq2, led",Gas LED Broken,Monitoring System,safety,low,0,1,1,0,2,1
+357,"pir, led",Motion LED Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+358,"ldr, led",Light LED Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+359,"ultrasonic, led",Distance LED Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+360,"soil moisture, led",Soil LED Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+361,"flame sensor, led",Fire LED Broken,Monitoring System,safety,low,0,1,1,0,2,1
+362,"led, wifi module",LED WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+363,"buzzer, wifi module",Buzzer WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+364,"relay, wifi module",Relay WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+365,"led, gsm sim800l",LED GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+366,"buzzer, gsm sim800l",Buzzer GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+367,"relay, gsm sim800l",Relay GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+368,"led, bluetooth hc05",LED Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+369,"buzzer, bluetooth hc05",Buzzer Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+370,"relay, bluetooth hc05",Relay Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+371,"dht11, wifi module",Temp WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+372,"mq2, wifi module",Gas WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+373,"pir, wifi module",Motion WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+374,"ldr, wifi module",Light WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+375,"ultrasonic, wifi module",Distance WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+376,"soil moisture, wifi module",Soil WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+377,"flame sensor, wifi module",Fire WiFi Broken,IoT System,communication,low,0,1,0,1,2,1
+378,"dht11, gsm sim800l",Temp GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+379,"mq2, gsm sim800l",Gas GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+380,"pir, gsm sim800l",Motion GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+381,"ldr, gsm sim800l",Light GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+382,"ultrasonic, gsm sim800l",Distance GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+383,"soil moisture, gsm sim800l",Soil GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+384,"flame sensor, gsm sim800l",Fire GSM Broken,IoT System,communication,low,0,1,0,1,2,1
+385,"dht11, bluetooth hc05",Temp Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+386,"mq2, bluetooth hc05",Gas Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+387,"pir, bluetooth hc05",Motion Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+388,"ldr, bluetooth hc05",Light Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+389,"ultrasonic, bluetooth hc05",Distance Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+390,"soil moisture, bluetooth hc05",Soil Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+391,"flame sensor, bluetooth hc05",Fire Bluetooth Broken,IoT System,communication,low,0,1,0,1,2,1
+392,"lcd, led",LCD LED Broken,Monitoring System,monitoring,low,0,0,1,0,2,1
+393,"lcd, buzzer",LCD Buzzer Broken,Alert System,alert,low,0,0,1,0,2,1
+394,"lcd, relay",LCD Relay Broken,Control System,control,low,0,0,1,0,2,1
+395,"oled, led",OLED LED Broken,Monitoring System,monitoring,low,0,0,1,0,2,1
+396,"oled, buzzer",OLED Buzzer Broken,Alert System,alert,low,0,0,1,0,2,1
+397,"oled, relay",OLED Relay Broken,Control System,control,low,0,0,1,0,2,1
+398,"dht11, mq2",Sensors Only Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+399,"pir, ldr",Dual Sensor Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+400,"ultrasonic, soil moisture",Distance Soil Broken,Monitoring System,monitoring,low,0,1,0,0,2,1
+401,"arduino uno, dht11, lcd",Temp Display System,Monitoring System,monitoring,low,1,1,1,0,3,7
+402,"arduino uno, dht11, lcd, wifi module",IoT Temp Display System,IoT System,communication,medium,1,1,1,1,4,10
+403,"arduino nano, mq2, led",Gas Indicator System,Alert System,safety,low,1,1,1,0,3,7
+404,"arduino nano, mq2, led, gsm sim800l",Gas GSM Indicator,IoT System,safety,medium,1,1,1,1,4,10
+405,"arduino uno, pir, buzzer",Motion Alarm System,Alert System,alert,low,1,1,1,0,3,7
+406,"arduino uno, pir, buzzer, bluetooth hc05",Bluetooth Motion Alarm,IoT System,alert,medium,1,1,1,1,4,10
+407,"arduino nano, ldr, led",Light Indicator System,Monitoring System,monitoring,low,1,1,1,0,3,7
+408,"arduino nano, ldr, led, wifi module",IoT Light Indicator,IoT System,communication,medium,1,1,1,1,4,10
+409,"arduino uno, ultrasonic, buzzer",Distance Alert System,Alert System,alert,low,1,1,1,0,3,7
+410,"arduino uno, ultrasonic, buzzer, gsm sim800l",Distance GSM Alert,IoT System,alert,medium,1,1,1,1,4,10
+411,"arduino nano, soil moisture, relay",Soil Control System,Control System,control,medium,1,1,1,0,3,7
+412,"arduino nano, soil moisture, relay, wifi module",IoT Soil Control System,IoT System,control,high,1,1,1,1,4,10
+413,"arduino uno, flame sensor, buzzer",Fire Alarm System,Alert System,safety,low,1,1,1,0,3,7
+414,"arduino uno, flame sensor, buzzer, gsm sim800l",Fire GSM Alarm,IoT System,safety,medium,1,1,1,1,4,10
+415,"arduino uno, dht11, oled",Temp OLED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+416,"arduino uno, dht11, oled, wifi module",IoT Temp OLED Monitor,IoT System,communication,medium,1,1,1,1,4,10
+417,"arduino nano, mq2, oled",Gas OLED Monitor,Monitoring System,safety,low,1,1,1,0,3,7
+418,"arduino nano, mq2, oled, gsm sim800l",Gas GSM OLED Monitor,IoT System,safety,medium,1,1,1,1,4,10
+419,"arduino uno, pir, oled",Motion OLED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+420,"arduino uno, pir, oled, bluetooth hc05",Motion Bluetooth OLED,IoT System,communication,medium,1,1,1,1,4,10
+421,"arduino nano, ldr, oled",Light OLED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+422,"arduino nano, ldr, oled, wifi module",IoT Light OLED Monitor,IoT System,communication,medium,1,1,1,1,4,10
+423,"arduino uno, ultrasonic, oled",Distance OLED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+424,"arduino uno, ultrasonic, oled, gsm sim800l",Distance GSM OLED Monitor,IoT System,communication,medium,1,1,1,1,4,10
+425,"arduino nano, soil moisture, oled",Soil OLED Monitor,Monitoring System,monitoring,low,1,1,1,0,3,7
+426,"arduino nano, soil moisture, oled, wifi module",IoT Soil OLED Monitor,IoT System,communication,medium,1,1,1,1,4,10
+427,"arduino uno, flame sensor, oled",Fire OLED Monitor,Monitoring System,safety,low,1,1,1,0,3,7
+428,"arduino uno, flame sensor, oled, gsm sim800l",Fire GSM OLED Monitor,IoT System,safety,medium,1,1,1,1,4,10
+429,"arduino uno, dht11, mq2, oled, buzzer",Temp Gas OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+430,"arduino uno, dht11, mq2, oled, buzzer, wifi module",IoT Temp Gas OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+431,"arduino nano, dht11, pir, oled, buzzer",Temp Motion OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+432,"arduino nano, dht11, pir, oled, buzzer, wifi module",IoT Temp Motion OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+433,"arduino uno, dht11, ldr, oled, buzzer",Temp Light OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+434,"arduino uno, dht11, ldr, oled, buzzer, wifi module",IoT Temp Light OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+435,"arduino nano, dht11, soil moisture, oled, buzzer",Temp Soil OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+436,"arduino nano, dht11, soil moisture, oled, buzzer, wifi module",IoT Temp Soil OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+437,"arduino uno, mq2, pir, oled, relay",Gas Motion OLED Control,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+438,"arduino uno, mq2, pir, oled, relay, gsm sim800l",Gas Motion GSM OLED Control,IoT System,multi-sensor,high,1,1,1,1,6,10
+439,"arduino nano, mq2, ldr, oled, buzzer",Gas Light OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+440,"arduino nano, mq2, ldr, oled, buzzer, wifi module",IoT Gas Light OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+441,"arduino uno, mq2, soil moisture, oled, buzzer",Gas Soil OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+442,"arduino uno, mq2, soil moisture, oled, buzzer, wifi module",IoT Gas Soil OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+443,"arduino nano, pir, ldr, oled, buzzer",Motion Light OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+444,"arduino nano, pir, ldr, oled, buzzer, wifi module",IoT Motion Light OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+445,"arduino uno, pir, soil moisture, oled, buzzer",Motion Soil OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+446,"arduino uno, pir, soil moisture, oled, buzzer, wifi module",IoT Motion Soil OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+447,"arduino nano, ldr, soil moisture, oled, buzzer",Light Soil OLED Alert,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+448,"arduino nano, ldr, soil moisture, oled, buzzer, wifi module",IoT Light Soil OLED Alert,IoT System,multi-sensor,high,1,1,1,1,6,10
+449,"arduino uno, dht11, mq2, pir, oled",Env OLED Basic,Multi-Sensor System,multi-sensor,medium,1,1,1,0,5,8
+450,"arduino uno, dht11, mq2, pir, oled, wifi module",IoT Env OLED Basic,IoT System,multi-sensor,high,1,1,1,1,6,10
+451,"arduino uno, dht11, mq2, pir, ldr, oled",Env OLED Plus,Multi-Sensor System,multi-sensor,high,1,1,1,0,6,8
+452,"arduino uno, dht11, mq2, pir, ldr, oled, wifi module",IoT Env OLED Plus,IoT System,multi-sensor,high,1,1,1,1,7,10
+453,"arduino uno, dht11, mq2, pir, ldr, soil moisture, oled",Env OLED Pro,Multi-Sensor System,multi-sensor,high,1,1,1,0,7,9
+454,"arduino uno, dht11, mq2, pir, ldr, soil moisture, oled, wifi module",IoT Env OLED Pro,IoT System,multi-sensor,high,1,1,1,1,8,10
+455,"lcd",LCD Only Broken,Monitoring System,monitoring,low,0,0,1,0,1,1
+456,"oled",OLED Only Broken,Monitoring System,monitoring,low,0,0,1,0,1,1
+457,"led",LED Only Broken,Monitoring System,monitoring,low,0,0,1,0,1,1
+458,"buzzer",Buzzer Only Broken,Alert System,alert,low,0,0,1,0,1,1
+459,"relay",Relay Only Broken,Control System,control,low,0,0,1,0,1,1
+460,"wifi module",WiFi Only Broken,IoT System,communication,low,0,0,0,1,1,1
+461,"gsm sim800l",GSM Only Broken,IoT System,communication,low,0,0,0,1,1,1
+462,"bluetooth hc05",Bluetooth Only Broken,IoT System,communication,low,0,0,0,1,1,1
+463,"dht11",Temp Only Broken,Monitoring System,monitoring,low,0,1,0,0,1,1
+464,"mq2",Gas Only Broken,Monitoring System,safety,low,0,1,0,0,1,1
+465,"pir",Motion Only Broken,Monitoring System,monitoring,low,0,1,0,0,1,1
+466,"ldr",Light Only Broken,Monitoring System,monitoring,low,0,1,0,0,1,1
+467,"ultrasonic",Distance Only Broken,Monitoring System,monitoring,low,0,1,0,0,1,1
+468,"soil moisture",Soil Only Broken,Monitoring System,monitoring,low,0,1,0,0,1,1
+469,"flame sensor",Fire Only Broken,Monitoring System,safety,low,0,1,0,0,1,1
+470,"lcd, wifi module",LCD WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+471,"oled, wifi module",OLED WiFi Broken,IoT System,communication,low,0,0,1,1,2,2
+472,"led, wifi module",LED WiFi Broken 2,IoT System,communication,low,0,0,1,1,2,2
+473,"buzzer, wifi module",Buzzer WiFi Broken 2,IoT System,communication,low,0,0,1,1,2,2
+474,"relay, wifi module",Relay WiFi Broken 2,IoT System,communication,low,0,0,1,1,2,2
+475,"lcd, gsm sim800l",LCD GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+476,"oled, gsm sim800l",OLED GSM Broken,IoT System,communication,low,0,0,1,1,2,2
+477,"led, gsm sim800l",LED GSM Broken 2,IoT System,communication,low,0,0,1,1,2,2
+478,"buzzer, gsm sim800l",Buzzer GSM Broken 2,IoT System,communication,low,0,0,1,1,2,2
+479,"relay, gsm sim800l",Relay GSM Broken 2,IoT System,communication,low,0,0,1,1,2,2
+480,"lcd, bluetooth hc05",LCD Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+481,"oled, bluetooth hc05",OLED Bluetooth Broken,IoT System,communication,low,0,0,1,1,2,2
+482,"led, bluetooth hc05",LED Bluetooth Broken 2,IoT System,communication,low,0,0,1,1,2,2
+483,"buzzer, bluetooth hc05",Buzzer Bluetooth Broken 2,IoT System,communication,low,0,0,1,1,2,2
+484,"relay, bluetooth hc05",Relay Bluetooth Broken 2,IoT System,communication,low,0,0,1,1,2,2
+485,"dht11, lcd",Temp LCD Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+486,"mq2, lcd",Gas LCD Broken,Monitoring System,safety,low,0,1,1,0,2,1
+487,"pir, lcd",Motion LCD Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+488,"ldr, lcd",Light LCD Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+489,"ultrasonic, lcd",Distance LCD Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+490,"soil moisture, lcd",Soil LCD Broken,Monitoring System,monitoring,low,0,1,1,0,2,1
+491,"flame sensor, lcd",Fire LCD Broken,Monitoring System,safety,low,0,1,1,0,2,1
+492,"dht11, buzzer",Temp Buzzer Broken,Alert System,alert,low,0,1,1,0,2,1
+493,"mq2, buzzer",Gas Buzzer Broken,Alert System,safety,low,0,1,1,0,2,1
+494,"pir, buzzer",Motion Buzzer Broken,Alert System,alert,low,0,1,1,0,2,1
+495,"ldr, buzzer",Light Buzzer Broken,Alert System,alert,low,0,1,1,0,2,1
+496,"ultrasonic, buzzer",Distance Buzzer Broken,Alert System,alert,low,0,1,1,0,2,1
+497,"soil moisture, buzzer",Soil Buzzer Broken,Alert System,alert,low,0,1,1,0,2,1
+498,"flame sensor, buzzer",Fire Buzzer Broken,Alert System,safety,low,0,1,1,0,2,1
+499,"dht11, relay",Temp Relay Broken,Control System,control,low,0,1,1,0,2,1
+500,"mq2, relay",Gas Relay Broken,Control System,control,low,0,1,1,0,2,1

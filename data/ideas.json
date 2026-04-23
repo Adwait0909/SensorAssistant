@@ -1,0 +1,647 @@
+[
+    {
+        "idea": "temperature monitoring system",
+        "aliases": [
+            "temp monitor"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Temperature Sensor (LM35 / DHT11)",
+            "LCD 16x2"
+        ],
+        "optional_components": [
+            "GSM SIM800L",
+            "WiFi Module"
+        ],
+        "difficulty": "low",
+        "category": "monitoring",
+        "common_issues": [
+            "incorrect sensor readings",
+            "library issues"
+        ],
+        "improvements": [
+            "add IoT dashboard",
+            "add alert system"
+        ]
+    },
+    {
+        "idea": "light detection system",
+        "aliases": [
+            "ldr system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Light Sensor (LDR)",
+            "LED"
+        ],
+        "optional_components": [
+            "Relay Module"
+        ],
+        "difficulty": "low",
+        "category": "monitoring",
+        "common_issues": [
+            "improper voltage divider",
+            "unstable readings"
+        ],
+        "improvements": [
+            "auto brightness control",
+            "data logging"
+        ]
+    },
+    {
+        "idea": "motion alarm system",
+        "aliases": [
+            "pir alarm"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Motion Sensor (PIR)",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "GSM SIM800L"
+        ],
+        "difficulty": "low",
+        "category": "alert",
+        "common_issues": [
+            "false triggering",
+            "sensor delay"
+        ],
+        "improvements": [
+            "add SMS alert",
+            "add camera module"
+        ]
+    },
+    {
+        "idea": "soil moisture indicator",
+        "aliases": [
+            "soil sensor system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Soil Moisture Sensor",
+            "LED"
+        ],
+        "optional_components": [
+            "LCD 16x2"
+        ],
+        "difficulty": "low",
+        "category": "monitoring",
+        "common_issues": [
+            "sensor corrosion",
+            "wrong calibration"
+        ],
+        "improvements": [
+            "automatic irrigation",
+            "mobile monitoring"
+        ]
+    },
+    {
+        "idea": "fire alarm system",
+        "aliases": [
+            "flame detection system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Flame Sensor",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "GSM SIM800L"
+        ],
+        "difficulty": "low",
+        "category": "safety",
+        "common_issues": [
+            "false detection from light",
+            "sensitivity issues"
+        ],
+        "improvements": [
+            "add sprinkler system",
+            "send alerts"
+        ]
+    },
+    {
+        "idea": "sound detection system",
+        "aliases": [
+            "clap sensor"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Sound Sensor",
+            "LED"
+        ],
+        "optional_components": [
+            "Relay Module"
+        ],
+        "difficulty": "low",
+        "category": "monitoring",
+        "common_issues": [
+            "noise interference",
+            "threshold tuning"
+        ],
+        "improvements": [
+            "clap-based control",
+            "noise level logging"
+        ]
+    },
+    {
+        "idea": "smart home light control",
+        "aliases": [
+            "home automation light"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Relay Module",
+            "Bluetooth Module (HC-05)"
+        ],
+        "optional_components": [
+            "WiFi Module"
+        ],
+        "difficulty": "medium",
+        "category": "control",
+        "common_issues": [
+            "relay wiring errors",
+            "bluetooth pairing issues"
+        ],
+        "improvements": [
+            "voice control",
+            "mobile app integration"
+        ]
+    },
+    {
+        "idea": "water level indicator",
+        "aliases": [
+            "tank level system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Water Level Sensor",
+            "LED"
+        ],
+        "optional_components": [
+            "Buzzer"
+        ],
+        "difficulty": "low",
+        "category": "monitoring",
+        "common_issues": [
+            "sensor corrosion",
+            "incorrect level detection"
+        ],
+        "improvements": [
+            "automatic motor control",
+            "LCD display"
+        ]
+    },
+    {
+        "idea": "gas leakage alert system",
+        "aliases": [
+            "gas detector"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Gas Sensor (MQ-2)",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "GSM SIM800L"
+        ],
+        "difficulty": "medium",
+        "category": "safety",
+        "common_issues": [
+            "sensor warm-up time",
+            "false alarms"
+        ],
+        "improvements": [
+            "SMS alerts",
+            "automatic shutdown system"
+        ]
+    },
+    {
+        "idea": "smart irrigation system",
+        "aliases": [
+            "auto irrigation"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Soil Moisture Sensor",
+            "Relay Module"
+        ],
+        "optional_components": [
+            "WiFi Module"
+        ],
+        "difficulty": "medium",
+        "category": "automation",
+        "common_issues": [
+            "sensor calibration",
+            "relay timing issues"
+        ],
+        "improvements": [
+            "weather-based control",
+            "mobile monitoring"
+        ]
+    },
+    {
+        "idea": "automatic street light",
+        "aliases": [
+            "auto light system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Light Sensor (LDR)",
+            "Relay Module"
+        ],
+        "optional_components": [
+            "LED"
+        ],
+        "difficulty": "low",
+        "category": "automation",
+        "common_issues": [
+            "incorrect threshold setting",
+            "relay noise"
+        ],
+        "improvements": [
+            "motion-based lighting",
+            "energy monitoring"
+        ]
+    },
+    {
+        "idea": "smart helmet",
+        "aliases": [
+            "helmet safety system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Alcohol Sensor (MQ-3)",
+            "GSM SIM800L",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "GPS Module"
+        ],
+        "difficulty": "medium",
+        "category": "safety",
+        "common_issues": [
+            "gsm power supply issues",
+            "sensor calibration required"
+        ],
+        "improvements": [
+            "add GPS tracking",
+            "add accident detection"
+        ]
+    },
+    {
+        "idea": "home security system",
+        "aliases": [
+            "security alarm"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Motion Sensor (PIR)",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "GSM SIM800L",
+            "Camera Module"
+        ],
+        "difficulty": "medium",
+        "category": "safety",
+        "common_issues": [
+            "false triggers",
+            "delay in alerts"
+        ],
+        "improvements": [
+            "mobile notification",
+            "face detection"
+        ]
+    },
+    {
+        "idea": "iot weather monitoring system",
+        "aliases": [
+            "weather station"
+        ],
+        "required_components": [
+            "ESP8266 (NodeMCU)",
+            "Temperature Sensor (LM35 / DHT11)",
+            "Humidity Sensor"
+        ],
+        "optional_components": [
+            "LCD 16x2",
+            "Cloud platform"
+        ],
+        "difficulty": "medium",
+        "category": "communication",
+        "common_issues": [
+            "wifi connectivity issues",
+            "sensor accuracy"
+        ],
+        "improvements": [
+            "cloud dashboard",
+            "data analytics"
+        ]
+    },
+    {
+        "idea": "remote appliance control",
+        "aliases": [
+            "remote switch system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Relay Module",
+            "WiFi Module"
+        ],
+        "optional_components": [
+            "Mobile App"
+        ],
+        "difficulty": "medium",
+        "category": "control",
+        "common_issues": [
+            "network delay",
+            "relay miswiring"
+        ],
+        "improvements": [
+            "voice assistant integration",
+            "timer scheduling"
+        ]
+    },
+    {
+        "idea": "hand gesture recognition system",
+        "aliases": [
+            "gesture control"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Accelerometer/Gyro (MPU6050)",
+            "I2C LCD Module"
+        ],
+        "optional_components": [
+            "Relay Module"
+        ],
+        "difficulty": "hard",
+        "category": "automation",
+        "common_issues": [
+            "calibration challenges",
+            "sensor noise"
+        ],
+        "improvements": [
+            "machine learning models",
+            "gesture library expansion"
+        ]
+    },
+    {
+        "idea": "rfid access control system",
+        "aliases": [
+            "card reader lock"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "NFC/RFID Module",
+            "Relay Module",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "I2C LCD Module",
+            "Real-Time Clock (DS1307)"
+        ],
+        "difficulty": "medium",
+        "category": "security",
+        "common_issues": [
+            "card read range",
+            "false denials"
+        ],
+        "improvements": [
+            "multi-card database",
+            "access logging"
+        ]
+    },
+    {
+        "idea": "plant health monitoring system",
+        "aliases": [
+            "smart plant monitor"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Soil Moisture Sensor",
+            "Light Sensor (LDR)",
+            "Temperature Sensor (LM35 / DHT11)",
+            "I2C LCD Module"
+        ],
+        "optional_components": [
+            "WiFi Module",
+            "Relay Module"
+        ],
+        "difficulty": "medium",
+        "category": "monitoring",
+        "common_issues": [
+            "sensor calibration",
+            "false watering triggers"
+        ],
+        "improvements": [
+            "push notifications",
+            "growth analytics"
+        ]
+    },
+    {
+        "idea": "precision lighting control",
+        "aliases": [
+            "smart dimmer"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Potentiometer",
+            "Light Sensor (LDR)",
+            "LED",
+            "Relay Module"
+        ],
+        "optional_components": [
+            "OLED Display (128x64)"
+        ],
+        "difficulty": "medium",
+        "category": "automation",
+        "common_issues": [
+            "pwm jitter",
+            "light flicker"
+        ],
+        "improvements": [
+            "circadian rhythm support",
+            "energy analytics"
+        ]
+    },
+    {
+        "idea": "temperature controlled fan",
+        "aliases": [
+            "smart cooling system"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Temperature Sensor (LM35 / DHT11)",
+            "DC Motor",
+            "Motor Driver (L298N)",
+            "Potentiometer"
+        ],
+        "optional_components": [
+            "OLED Display (128x64)"
+        ],
+        "difficulty": "medium",
+        "category": "automation",
+        "common_issues": [
+            "motor noise",
+            "temperature overshoot"
+        ],
+        "improvements": [
+            "speed ramping",
+            "predictive control"
+        ]
+    },
+    {
+        "idea": "rotary encoder volume control",
+        "aliases": [
+            "encoder knob"
+        ],
+        "required_components": [
+            "Arduino Nano",
+            "Potentiometer",
+            "OLED Display (128x64)"
+        ],
+        "optional_components": [
+            "Buzzer"
+        ],
+        "difficulty": "low",
+        "category": "control",
+        "common_issues": [
+            "encoder bouncing",
+            "wrong pin mapping"
+        ],
+        "improvements": [
+            "multi-menu navigation",
+            "acceleration curve"
+        ]
+    },
+    {
+        "idea": "vibration feedback alert system",
+        "aliases": [
+            "haptic notifier"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Vibration Motor",
+            "Push Button",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "I2C LCD Module"
+        ],
+        "difficulty": "low",
+        "category": "alert",
+        "common_issues": [
+            "power consumption",
+            "pattern recognition"
+        ],
+        "improvements": [
+            "morse code patterns",
+            "customizable sequences"
+        ]
+    },
+    {
+        "idea": "precision time-based automation",
+        "aliases": [
+            "scheduled automation"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Real-Time Clock (DS1307)",
+            "Relay Module",
+            "Buzzer"
+        ],
+        "optional_components": [
+            "I2C LCD Module",
+            "Push Button"
+        ],
+        "difficulty": "medium",
+        "category": "automation",
+        "common_issues": [
+            "time drift",
+            "battery backup failure"
+        ],
+        "improvements": [
+            "ntp synchronization",
+            "complex scheduling"
+        ]
+    },
+    {
+        "idea": "multi-channel analog data acquisition",
+        "aliases": [
+            "adc sensor hub"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "ADC Module (ADS1115)",
+            "I2C LCD Module"
+        ],
+        "optional_components": [
+            "WiFi Module",
+            "Capacitor"
+        ],
+        "difficulty": "medium",
+        "category": "monitoring",
+        "common_issues": [
+            "crosstalk between channels",
+            "noise filtering"
+        ],
+        "improvements": [
+            "data logging",
+            "cloud streaming"
+        ]
+    },
+    {
+        "idea": "pwm-controlled rgb led system",
+        "aliases": [
+            "led color mixer"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "LED",
+            "Potentiometer",
+            "Resistor",
+            "Capacitor"
+        ],
+        "optional_components": [
+            "Push Button",
+            "OLED Display (128x64)"
+        ],
+        "difficulty": "low",
+        "category": "display",
+        "common_issues": [
+            "color consistency",
+            "power draw"
+        ],
+        "improvements": [
+            "preset animations",
+            "music synchronization"
+        ]
+    },
+    {
+        "idea": "sequential output decoder",
+        "aliases": [
+            "output multiplexer"
+        ],
+        "required_components": [
+            "Arduino Uno",
+            "Shift Register (74HC595)",
+            "LED"
+        ],
+        "optional_components": [
+            "Relay Module",
+            "Buzzer"
+        ],
+        "difficulty": "medium",
+        "category": "control",
+        "common_issues": [
+            "timing synchronization",
+            "cascading errors"
+        ],
+        "improvements": [
+            "cascade multiple registers",
+            "real-time monitoring"
+        ]
+    }
+]

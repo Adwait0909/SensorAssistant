@@ -1,0 +1,247 @@
+[
+    {
+        "condition": {
+            "component": "LED",
+            "missing": "Resistor"
+        },
+        "warning": "LED without resistor may burn out"
+    },
+    {
+        "condition": {
+            "component": "GSM SIM800L",
+            "missing": "Power Supply (4V regulated)"
+        },
+        "warning": "SIM800L requires stable 4V supply with high current"
+    },
+    {
+        "condition": {
+            "component": "GSM SIM800L",
+            "with": "Arduino Uno (5V direct)"
+        },
+        "warning": "Do not connect SIM800L directly to 5V pin"
+    },
+    {
+        "condition": {
+            "component": "ESP8266 (NodeMCU)",
+            "with": "5V logic signal"
+        },
+        "warning": "ESP8266 GPIO pins are not 5V tolerant"
+    },
+    {
+        "condition": {
+            "component": "Bluetooth Module (HC-05)",
+            "missing": "Voltage Divider"
+        },
+        "warning": "HC-05 RX pin requires 3.3V level (use voltage divider)"
+    },
+    {
+        "condition": {
+            "component": "Ultrasonic Sensor (HC-SR04)",
+            "with": "ESP8266 (NodeMCU)"
+        },
+        "warning": "Echo pin outputs 5V; use level shifter for ESP8266"
+    },
+    {
+        "condition": {
+            "component": "Relay Module",
+            "missing": "External Power Source"
+        },
+        "warning": "Relay switching loads requires separate power supply"
+    },
+    {
+        "condition": {
+            "component": "DC Motor",
+            "missing": "Motor Driver"
+        },
+        "warning": "Do not connect DC motor directly to microcontroller"
+    },
+    {
+        "condition": {
+            "component": "Servo Motor",
+            "with": "Arduino 5V pin (direct power)"
+        },
+        "warning": "Servo may draw high current; use external power supply"
+    },
+    {
+        "condition": {
+            "component": "LDR",
+            "missing": "Resistor"
+        },
+        "warning": "LDR requires voltage divider for proper operation"
+    },
+    {
+        "condition": {
+            "component": "Soil Moisture Sensor",
+            "with": "continuous power"
+        },
+        "warning": "Continuous power may cause probe corrosion"
+    },
+    {
+        "condition": {
+            "component": "MQ-2",
+            "missing": "Warm-up time"
+        },
+        "warning": "Gas sensor requires preheating before accurate readings"
+    },
+    {
+        "condition": {
+            "component": "MQ-3",
+            "missing": "Calibration"
+        },
+        "warning": "Alcohol sensor requires calibration for accuracy"
+    },
+    {
+        "condition": {
+            "component": "I2C LCD Module",
+            "missing": "Correct I2C Address"
+        },
+        "warning": "Incorrect I2C address will prevent LCD communication"
+    },
+    {
+        "condition": {
+            "component": "7 Segment Display",
+            "missing": "Resistor"
+        },
+        "warning": "Each segment requires current limiting resistor"
+    },
+    {
+        "condition": {
+            "component": "Battery",
+            "missing": "Protection Circuit"
+        },
+        "warning": "Battery without protection may cause damage or safety risk"
+    },
+    {
+        "condition": {
+            "component": "Voltage Regulator (AMS1117)",
+            "with": "high load"
+        },
+        "warning": "AMS1117 may overheat under high current load"
+    },
+    {
+        "condition": {
+            "component": "Breadboard",
+            "with": "high current circuit"
+        },
+        "warning": "Breadboard is not suitable for high current applications"
+    },
+    {
+        "condition": {
+            "component": "Jumper Wires",
+            "with": "loose connection"
+        },
+        "warning": "Loose jumper wires can cause unstable behavior"
+    },
+    {
+        "condition": {
+            "component": "Flame Sensor",
+            "with": "sunlight exposure"
+        },
+        "warning": "Flame sensor may give false triggers in strong light"
+    },
+    {
+        "condition": {
+            "component": "IR Sensor (Obstacle Detection)",
+            "with": "bright sunlight"
+        },
+        "warning": "IR sensor performance degrades in ambient IR light"
+    },
+    {
+        "condition": {
+            "component": "OLED Display (128x64)",
+            "missing": "I2C address verification"
+        },
+        "warning": "Wrong I2C address will prevent display communication"
+    },
+    {
+        "condition": {
+            "component": "Motor Driver (L298N)",
+            "missing": "Common Ground"
+        },
+        "warning": "Logic signals must share ground with driver control pins"
+    },
+    {
+        "condition": {
+            "component": "Stepper Motor",
+            "with": "direct microcontroller connection"
+        },
+        "warning": "Stepper motor requires dedicated driver module"
+    },
+    {
+        "condition": {
+            "component": "IR Receiver Module",
+            "with": "LED lights"
+        },
+        "warning": "IR receiver affected by LED IR emissions"
+    },
+    {
+        "condition": {
+            "component": "Push Button",
+            "missing": "Debounce circuit"
+        },
+        "warning": "Switch bouncing causes multiple false triggers"
+    },
+    {
+        "condition": {
+            "component": "Potentiometer",
+            "with": "long wires"
+        },
+        "warning": "Long wires pick up noise affecting readings"
+    },
+    {
+        "condition": {
+            "component": "Real-Time Clock (DS1307)",
+            "missing": "Backup Battery"
+        },
+        "warning": "Time will be lost on power failure without battery"
+    },
+    {
+        "condition": {
+            "component": "ADC Module (ADS1115)",
+            "with": "high impedance source"
+        },
+        "warning": "High impedance inputs need capacitive filtering"
+    },
+    {
+        "condition": {
+            "component": "Shift Register (74HC595)",
+            "with": "no delay between operations"
+        },
+        "warning": "Timing between clock/latch signals must be maintained"
+    },
+    {
+        "condition": {
+            "component": "Accelerometer/Gyro (MPU6050)",
+            "missing": "Calibration"
+        },
+        "warning": "Uncalibrated sensor gives incorrect readings"
+    },
+    {
+        "condition": {
+            "component": "Vibration Motor",
+            "with": "direct GPIO connection"
+        },
+        "warning": "Vibration motor draws too much current from GPIO pin"
+    },
+    {
+        "condition": {
+            "component": "Capacitor",
+            "with": "reversed polarity"
+        },
+        "warning": "Electrolytic capacitors will fail or explode if polarized incorrectly"
+    },
+    {
+        "condition": {
+            "component": "NFC/RFID Module",
+            "with": "metallic objects nearby"
+        },
+        "warning": "Metal interferes with RFID signal propagation"
+    },
+    {
+        "condition": {
+            "component": "Transistor",
+            "missing": "Base Resistor"
+        },
+        "warning": "Transistor without base resistor may get damaged by over-current"
+    }
+]

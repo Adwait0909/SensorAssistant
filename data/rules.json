@@ -1,0 +1,170 @@
+[
+    {
+        "id": "rule_1",
+        "conditions": {
+            "roles_required": [
+                "input",
+                "controller",
+                "output"
+            ],
+            "min_inputs": 1
+        },
+        "project_type": "Monitoring System",
+        "description": "Reads sensor data and displays output",
+        "naming_pattern": "{sensor} Monitoring System",
+        "missing_suggestions": [
+            "output device",
+            "communication module"
+        ]
+    },
+    {
+        "id": "rule_2",
+        "conditions": {
+            "roles_required": [
+                "input",
+                "controller",
+                "output"
+            ],
+            "min_inputs": 1,
+            "requires_threshold": true
+        },
+        "project_type": "Alert System",
+        "description": "Triggers alert when sensor value crosses threshold",
+        "naming_pattern": "{sensor} Alert System",
+        "missing_suggestions": [
+            "buzzer",
+            "LED",
+            "notification module"
+        ]
+    },
+    {
+        "id": "rule_3",
+        "conditions": {
+            "roles_required": [
+                "input",
+                "controller",
+                "output"
+            ],
+            "min_inputs": 1,
+            "requires_logic": true
+        },
+        "project_type": "Automation System",
+        "description": "Automatically controls devices based on sensor input",
+        "naming_pattern": "Automatic {sensor} Control System",
+        "missing_suggestions": [
+            "relay module",
+            "motor driver"
+        ]
+    },
+    {
+        "id": "rule_4",
+        "conditions": {
+            "roles_required": [
+                "controller",
+                "output"
+            ],
+            "min_inputs": 0,
+            "manual_input": true
+        },
+        "project_type": "Control System",
+        "description": "User-controlled system without mandatory sensors",
+        "naming_pattern": "Smart {device} Control System",
+        "missing_suggestions": [
+            "input interface",
+            "communication module"
+        ]
+    },
+    {
+        "id": "rule_5",
+        "conditions": {
+            "roles_required": [
+                "input",
+                "controller",
+                "output"
+            ],
+            "min_inputs": 1,
+            "priority": "high_reliability"
+        },
+        "project_type": "Safety System",
+        "description": "Detects hazardous conditions and responds immediately",
+        "naming_pattern": "{sensor} Safety System",
+        "missing_suggestions": [
+            "alarm",
+            "backup power",
+            "communication module"
+        ]
+    },
+    {
+        "id": "rule_7",
+        "conditions": {
+            "roles_required": [
+                "controller",
+                "input",
+                "output"
+            ],
+            "min_inputs": 1,
+            "requires_display": true
+        },
+        "project_type": "Data Logging System",
+        "description": "Records sensor data over time with display",
+        "naming_pattern": "{sensor} Data Logger with {display}",
+        "missing_suggestions": [
+            "storage module",
+            "timestamp capability"
+        ]
+    },
+    {
+        "id": "rule_8",
+        "conditions": {
+            "roles_required": [
+                "controller",
+                "communication"
+            ],
+            "min_inputs": 1
+        },
+        "project_type": "IoT System",
+        "description": "Sends sensor data to cloud or mobile device",
+        "naming_pattern": "IoT {sensor} System with {communication}",
+        "missing_suggestions": [
+            "cloud platform setup",
+            "mobile app"
+        ]
+    },
+    {
+        "id": "rule_9",
+        "conditions": {
+            "roles_required": [
+                "input",
+                "controller",
+                "output"
+            ],
+            "min_inputs": 2,
+            "requires_logic": true
+        },
+        "project_type": "Multi-Sensor System",
+        "description": "Combines multiple sensors for complex decisions",
+        "naming_pattern": "Multi-Sensor {category} System",
+        "missing_suggestions": [
+            "sensor fusion logic",
+            "calibration framework"
+        ]
+    },
+    {
+        "id": "rule_10",
+        "conditions": {
+            "roles_required": [
+                "controller",
+                "input"
+            ],
+            "min_inputs": 1,
+            "requires_threshold": true
+        },
+        "project_type": "Environmental Monitor",
+        "description": "Monitors environmental conditions with preset thresholds",
+        "naming_pattern": "{sensor} Environmental Monitor",
+        "missing_suggestions": [
+            "historical tracking",
+            "trend analysis"
+        ]
+    }
+]

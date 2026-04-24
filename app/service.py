@@ -20,12 +20,13 @@ def process_input(user_input: str) -> dict:
     # 1. ML PREDICTION
     # =========================
     ml_score = predict_score(user_input)
+    components = normalize_input(user_input)
     ml_category = score_to_category(ml_score)
 
     # =========================
     # 2. PARSE INPUT
     # =========================
-    components = normalize_input(user_input)
+    
 
     known_components, unknown_components = classify_components(components)
 

@@ -335,7 +335,7 @@ def get_score_label(score):
         return "Good Option"
     return "Basic Idea"
 
-def generate_projects(user_components, roles, ml_category=""):
+def generate_projects(user_components, roles, ml_category=None):
     rules = load_rules()
     comp_map = _component_lookup()
     component_groups = _build_component_groups(user_components, comp_map)

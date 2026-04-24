@@ -7,9 +7,9 @@ from scipy.sparse import hstack
 # =========================
 # Load
 # =========================
-model = pickle.load(open("model.pkl", "rb"))
-vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-scaler = pickle.load(open("scaler.pkl", "rb"))
+model = pickle.load(open("ml/model.pkl", "rb"))
+vectorizer = pickle.load(open("ml/vectorizer.pkl", "rb"))
+scaler = pickle.load(open("ml/scaler.pkl", "rb"))
 
 # =========================
 # Input

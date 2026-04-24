@@ -1,6 +1,6 @@
 import json
 from io import StringIO
-
+from app.service import process_input
 import pandas as pd
 import streamlit as st
 

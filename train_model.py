@@ -73,8 +73,8 @@ print("MAE:", mae)
 # =========================
 # Save everything
 # =========================
-pickle.dump(model, open("model.pkl", "wb"))
-pickle.dump(vectorizer, open("vectorizer.pkl", "wb"))
-pickle.dump(scaler, open("scaler.pkl", "wb"))
+pickle.dump(model, open("ml/model.pkl", "wb"))
+pickle.dump(vectorizer, open("ml/vectorizer.pkl", "wb"))
+pickle.dump(scaler, open("ml/scaler.pkl", "wb"))
 
 print("Model, vectorizer, and scaler saved successfully.")

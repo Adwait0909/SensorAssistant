@@ -1,0 +1,82 @@
+[
+  {
+    "id": "sr-esp32-voltage",
+    "target": "ESP32",
+    "category": "excessive_voltage",
+    "risk_level": "High",
+    "title": "ESP32 3.3V Logic Level Constraint",
+    "rule": "ESP32 GPIO pins operate at 3.3V logic level (maximum absolute rating 3.6V). Exposing pins directly to 5V inputs from 5V sensors (like HC-SR04 Echo) will permanently damage GPIO gates. Use a bidirectional logic level converter or resistor voltage divider."
+  },
+  {
+    "id": "sr-motor-current",
+    "target": "DC Motor",
+    "category": "incorrect_motor_supply",
+    "risk_level": "High",
+    "title": "Direct GPIO Motor Drive Hazard",
+    "rule": "Never power or drive DC motors directly from microcontroller GPIO pins. DC motors can draw 300mA - 1000mA stall current, whereas GPIO pins can only deliver 20-40mA maximum. Peak inrush current and inductive kickback will instantly burn MCU output drivers. Use an L298N/L293D motor driver or transistor switch with flyback diode."
+  },
+  {
+    "id": "sr-servo-current",
+    "target": "Servo Motor",
+    "category": "unsupported_current_draw",
+    "risk_level": "Medium",
+    "title": "Servo Inrush & Brownout Risk",
+    "rule": "Servos draw peak currents up to 500mA - 1A when moving under load. Powering servos directly from the Arduino onboard 5V pin causes severe voltage dips, triggering microcontroller brownout resets. Power the servo from an external regulated 5V power supply with shared common ground."
+  },
+  {
+    "id": "sr-gsm-power",
+    "target": "GSM",
+    "category": "gsm_power",
+    "risk_level": "High",
+    "title": "GSM 2A Burst Current Requirement",
+    "rule": "GSM/GPRS modules (such as SIM800L) require 3.7V - 4.2V and draw up to 2.0A peak current bursts during RF transmission handover. Standard Arduino 5V/3.3V regulators cannot deliver 2A, which leads to repeated boot-looping and failed network registration. Use a high-current Li-Ion cell or LM2596 buck regulator."
+  },
+  {
+    "id": "sr-relay-mains",
+    "target": "Relay",
+    "category": "unsafe_relay_usage",
+    "risk_level": "Critical",
+    "title": "Mains High Voltage Shock Hazard",
+    "rule": "Relay contact terminals switching mains AC (110V - 240V AC) pose severe electric shock and fire hazards. Ensure proper creepage distance, optocoupler electrical isolation, insulated terminal blocks, and never touch connections while live power is connected."
+  },
+  {
+    "id": "sr-led-resistor",
+    "target": "LED",
+    "category": "missing_resistor",
+    "risk_level": "Medium",
+    "title": "LED Current-Limiting Resistor Omission",
+    "rule": "Connecting standard LEDs directly across 5V or 3.3V without a series current-limiting resistor (e.g. 220Ω - 330Ω) causes uncontrolled forward current draw beyond 50mA, resulting in immediate thermal breakdown of the LED diode and potential GPIO port burnout."
+  },
+  {
+    "id": "sr-regulator-limit",
+    "target": "Voltage Regulator",
+    "category": "regulator_limitations",
+    "risk_level": "Medium",
+    "title": "Linear Regulator Thermal Dissipation",
+    "rule": "Linear regulators like 7805 dissipate excess voltage as pure heat ((Vin - Vout) * I). Feeding 12V into a 7805 to provide 5V at 500mA generates 3.5W of heat. A heatsink is mandatory if input voltage exceeds 9V under moderate current draw."
+  },
+  {
+    "id": "sr-power-mismatch",
+    "target": "Raspberry Pi",
+    "category": "power_mismatch",
+    "risk_level": "High",
+    "title": "Raspberry Pi 3.3V Logic Tolerance",
+    "rule": "All 40 GPIO pins on Raspberry Pi are strictly 3.3V tolerant with no 5V tolerance. Connecting 5V signals directly to Pi GPIO will destroy the broadcom SoC. Always utilize logic level shifters."
+  },
+  {
+    "id": "sr-reverse-polarity",
+    "target": "Battery",
+    "category": "reverse_polarity",
+    "risk_level": "High",
+    "title": "Reverse Polarity Inversion Hazard",
+    "rule": "Connecting external DC batteries or power supplies with reversed polarity will instantly blow reverse-protection diodes and onboard linear regulators. Verify polarity with a multimeter before powering on."
+  },
+  {
+    "id": "sr-short-circuit",
+    "target": "Breadboard",
+    "category": "short_circuit",
+    "risk_level": "Medium",
+    "title": "Breadboard Bus Bridge Short-Circuit Risk",
+    "rule": "Carelessly plugging jumper leads across breadboard power rails can cause dead shorts across VCC and GND, damaging USB host ports or tripping laptop power protection."
+  }
+]

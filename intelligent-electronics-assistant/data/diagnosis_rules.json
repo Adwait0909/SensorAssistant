@@ -1,0 +1,114 @@
+[
+  {
+    "id": "dr-led-no-light",
+    "symptom": "LED is not turning ON",
+    "component": "LED",
+    "priority": "Medium",
+    "problem": "Light Emitting Diode fails to illuminate when triggered by GPIO pin.",
+    "causes": [
+      "Reversed polarity (anode connected to GND, cathode to positive)",
+      "Missing or wrong current-limiting resistor value",
+      "Wrong GPIO pin configured in sketch or pin declared as INPUT mode instead of OUTPUT",
+      "Blown LED diode junction caused by prior over-voltage"
+    ],
+    "tests_to_perform": [
+      "Diode mode multimeter check across LED leads (forward voltage ~1.8V - 2.2V)",
+      "Measure DC voltage on output pin during HIGH state (should be 5V or 3.3V)",
+      "Verify continuity of series current-limiting resistor"
+    ],
+    "steps": [
+      "Check LED orientation: the longer lead (anode) must connect towards the positive GPIO pin, and the flat edge side (cathode) towards ground.",
+      "Inspect code: verify pinMode(pin, OUTPUT) is declared in setup() and digitalWrite(pin, HIGH) is executed.",
+      "Check resistor value: ensure a 220Ω to 330Ω resistor is connected in series with the LED.",
+      "Swap LED: if wiring and code are correct, test with a fresh LED in case the junction was blown."
+    ]
+  },
+  {
+    "id": "dr-gsm-not-responding",
+    "symptom": "GSM module is not responding",
+    "component": "GSM",
+    "priority": "High",
+    "problem": "Cellular SIM800L / SIM900 module fails to register on network or AT commands timeout.",
+    "causes": [
+      "Insufficient current supply (GSM requires 2A burst current during network search)",
+      "Voltage level mismatch on RX/TX serial pins (5V logic connected directly to 3.3V RX)",
+      "TX and RX serial lines swapped with microcontroller pins",
+      "Invalid or unseated micro-SIM card (2G network required)"
+    ],
+    "tests_to_perform": [
+      "Measure VCC rail during power-up with multimeter to check for dips below 3.7V",
+      "Inspect Netlight LED blink pattern (fast blink = searching, 3s blink = registered)",
+      "Send basic 'AT' test command over Serial Monitor at 9600 baud"
+    ],
+    "steps": [
+      "Power Supply Check: do not power GSM from Arduino 5V pin. Provide external 3.7V - 4.2V 2A power source (e.g. LM2596 buck converter or Li-Ion battery).",
+      "Common Ground: connect the ground pin of the external GSM power supply to the microcontroller GND pin.",
+      "Serial Pin Verification: connect Arduino TX to GSM RX via voltage divider (1k/2k) and Arduino RX to GSM TX.",
+      "Baud Rate: ensure SoftwareSerial baud rate matches module default (typically 9600 baud)."
+    ]
+  },
+  {
+    "id": "dr-ultrasonic-zero",
+    "symptom": "HC-SR04 reads 0cm or out of range",
+    "component": "HC-SR04 Ultrasonic Sensor",
+    "priority": "Medium",
+    "problem": "Ultrasonic distance sensor returns constant 0cm, 400cm, or NaN distance values.",
+    "causes": [
+      "Trigger and Echo pins reversed in breadboard wiring or software pin mapping",
+      "Sensor acoustic transducer obscured or held at an oblique angle relative to target surface",
+      "Missing voltage divider on Echo pin when interfaced with 3.3V microcontrollers (ESP32 / Pi)"
+    ],
+    "tests_to_perform": [
+      "Measure 5V VCC supply voltage at sensor pins",
+      "Check oscilloscope or logic analyzer pulse on Trig pin (should be 10us HIGH pulse)"
+    ],
+    "steps": [
+      "Wiring Check: confirm Trig pin connects to Digital 9 and Echo pin connects to Digital 10.",
+      "Target Orientation: place a flat cardboard target 10cm to 30cm directly in front of the sensor face.",
+      "Check Power: ensure sensor receives full 5.0V VCC supply."
+    ]
+  },
+  {
+    "id": "dr-mcu-reboot",
+    "symptom": "Arduino or ESP32 resets repeatedly when motor starts",
+    "component": "DC Motor",
+    "priority": "High",
+    "problem": "Microcontroller undergoes brownout reset (BOR) whenever DC motor or servo actuates.",
+    "causes": [
+      "Motor stall inrush current pulls VCC line below 4.3V brownout threshold",
+      "Absence of flyback diode or inductive kickback noise on shared power rails",
+      "Missing decoupling electrolytic capacitors near motor driver"
+    ],
+    "tests_to_perform": [
+      "Measure logic 5V rail with multimeter / scope during motor startup",
+      "Verify presence of 1N4007 flyback diode across motor terminals"
+    ],
+    "steps": [
+      "Separate Power Rails: use dedicated battery pack or external power supply for motors.",
+      "Shared Ground: connect motor battery GND to microcontroller GND.",
+      "Decoupling Capacitors: place a 100uF - 470uF electrolytic capacitor across motor power supply rail.",
+      "Flyback Diode: install 1N4007 diode across motor terminals (cathode to positive)."
+    ]
+  },
+  {
+    "id": "dr-esp32-wifi-fail",
+    "symptom": "ESP32 Wi-Fi fails to connect to network",
+    "component": "ESP32",
+    "priority": "Medium",
+    "problem": "ESP32 SoC repeatedly fails WiFi.begin() or drops connection during RF transmission.",
+    "causes": [
+      "Weak USB power cable causing peak current voltage drop during Wi-Fi beacon bursts",
+      "2.4GHz Wi-Fi network credential mismatch or 5GHz SSID selection (ESP32 supports 2.4GHz only)",
+      "ADC2 pin conflict while Wi-Fi stack is actively transmitting"
+    ],
+    "tests_to_perform": [
+      "Check Serial Monitor log at 115200 baud for WiFi.status() error code",
+      "Verify Wi-Fi network operates on 2.4GHz ISM band"
+    ],
+    "steps": [
+      "Verify Network Band: ensure connecting to 2.4GHz Wi-Fi band (5GHz networks are unsupported).",
+      "Power Quality: power ESP32 via high-quality USB cable connected to 1A+ powered port.",
+      "Pin Selection: avoid using ADC2 pins (GPIO 0, 2, 4, 12, 13, 14, 15, 25, 26, 27) when Wi-Fi is active."
+    ]
+  }
+]

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - Electronics Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card login-container">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 6px;">Sign In</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">Intelligent Electronics Project Assistant</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding: 10px; margin-bottom: 16px; border-radius: 6px; font-size: 13px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Username</label>
+        <input type="text" name="username" class="input-field" value="demo" required>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Password</label>
+        <input type="password" name="password" class="input-field" value="demo123" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px;">
+        Sign In to Assistant
+      </button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center; font-size: 12px; color: var(--text-dim);">
+      Default demo credentials: <b>demo</b> / <b>demo123</b>
+    </div>
+  </div>
+</body>
+</html>

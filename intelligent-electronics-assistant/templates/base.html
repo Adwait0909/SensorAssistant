@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Intelligent Electronics Project Assistant{% endblock %}</title>
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="sidebar">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <!-- Circuit / IC Icon SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"/>
+            <rect x="9" y="9" width="6" height="6"/>
+            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+          </svg>
+        </div>
+        <span class="brand-title">Electronics AI</span>
+      </div>
+
+      <ul class="nav-links">
+        <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.dashboard') }}">
+            <svg viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'components' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.components_page') }}">
+            <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            My Components
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'projects' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.projects_page') }}">
+            <svg viewBox="0 0 24 24"><path d="m16 6 4 14M12 6v14M8 8v12M4 4v16"/></svg>
+            Recommendations
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'scanner' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.scanner_page') }}">
+            <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+            Component Scanner
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'wiring' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.wiring_page') }}">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Wiring Diagrams
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'diagnosis' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.diagnosis_page') }}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Failure Diagnosis
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'my_projects' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.my_projects_page') }}">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            My Projects
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'assistant' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.assistant_page') }}">
+            <svg viewBox="0 0 24 24"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+            AI Assistant
+          </a>
+        </li>
+        <li class="nav-item {% if active_page == 'profile' %}active{% endif %}">
+          <a href="{{ url_for('dashboard_views.profile_page') }}">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            Profile
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Database ● {{ system_status.database }}</span>
+          </div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>ML Model ● {{ system_status.ml_model }}</span>
+          </div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>RAG ● {{ system_status.rag }}</span>
+          </div>
+          <div class="status-badge">
+            <span class="status-dot {% if not system_status.scanner_ready %}warn{% endif %}"></span>
+            <span>Scanner ● {{ system_status.scanner }}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="top-nav">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="btn btn-secondary mobile-menu-btn" style="display:none; padding:6px 10px;" onclick="toggleSidebar()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="page-info">
+            <h1>{% block page_title %}Intelligent Electronics Project Assistant{% endblock %}</h1>
+            <p>{% block page_subtitle %}Turn your components into buildable projects.{% endblock %}</p>
+          </div>
+        </div>
+
+        <div class="user-profile-menu">
+          <div class="user-badge">
+            <div class="user-avatar">{{ session.get('username', 'D')[0]|upper }}</div>
+            <span>{{ session.get('username', 'Demo User') }}</span>
+          </div>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary" style="padding:6px 12px; font-size:12px;">Sign Out</a>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div style="margin-bottom: 20px;">
+              {% for category, message in messages %}
+                <div class="toast" style="position:static; margin-bottom:10px; background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4);">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('open');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>●</span> <span>${message}</span>`;
+      if (type === 'success') {
+        toast.style.borderColor = 'var(--accent-success)';
+      } else if (type === 'error') {
+        toast.style.borderColor = 'var(--accent-danger)';
+      }
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

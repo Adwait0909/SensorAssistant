@@ -1,0 +1,19 @@
+[
+  "Arduino Uno",
+  "ESP32",
+  "Raspberry Pi",
+  "LED",
+  "Resistor",
+  "Capacitor",
+  "Ultrasonic Sensor",
+  "PIR Sensor",
+  "LDR",
+  "Buzzer",
+  "Servo Motor",
+  "DC Motor",
+  "Relay",
+  "Breadboard",
+  "MQ-2 Gas Sensor",
+  "DHT11 Sensor",
+  "LCD 16x2"
+]

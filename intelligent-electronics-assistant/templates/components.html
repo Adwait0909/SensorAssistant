@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}My Components - Inventory{% endblock %}
+{% block page_title %}Component Inventory{% endblock %}
+{% block page_subtitle %}Manage your parts, stock levels, and electrical specifications.{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 20px;">
+  <!-- Filter & Action Bar -->
+  <div class="glass-card" style="padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; flex: 1;">
+      <!-- Search Input -->
+      <div style="position: relative; min-width: 220px;">
+        <input type="text" id="component-search" class="input-field" placeholder="Search by name or alias..." style="padding-left: 34px;">
+        <svg style="position: absolute; left: 10px; top: 12px; width: 16px; height: 16px; stroke: var(--text-muted); fill: none;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+
+      <!-- Category Filter -->
+      <select id="category-filter" class="select-field" style="width: auto;">
+        <option value="All">All Categories</option>
+        <option value="Controllers">Controllers</option>
+        <option value="Sensors">Sensors</option>
+        <option value="Outputs">Outputs</option>
+        <option value="Communication">Communication</option>
+        <option value="Supporting components">Supporting components</option>
+      </select>
+
+      <!-- Voltage Filter -->
+      <select id="voltage-filter" class="select-field" style="width: auto;">
+        <option value="All">All Voltages</option>
+        <option value="3.3V">3.3V</option>
+        <option value="5V">5V</option>
+        <option value="9V">9V</option>
+        <option value="12V">12V</option>
+      </select>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-primary" onclick="openAddComponentModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Component
+      </button>
+      <a href="{{ url_for('dashboard_views.scanner_page') }}" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+        Scan Component
+      </a>
+    </div>
+  </div>
+
+  <!-- Components Table Card -->
+  <div class="glass-card" style="padding: 20px;">
+    <div class="table-responsive">
+      <table class="data-table" id="components-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Voltage</th>
+            <th>Cost</th>
+            <th>Availability</th>
+            <th>Safety Notes</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="components-tbody">
+          <!-- Loaded via JavaScript -->
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 30px;">
+              Loading components...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add / Edit Component -->
+<div class="modal-overlay" id="component-modal">
+  <div class="modal-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 id="modal-title" style="font-size: 17px; font-weight: 600;">Add New Component</h3>
+      <button onclick="closeComponentModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;">&times;</button>
+    </div>
+
+    <form id="component-form" onsubmit="handleComponentSubmit(event)">
+      <input type="hidden" id="comp-id">
+      
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Component Name *</label>
+        <input type="text" id="comp-name" class="input-field" placeholder="e.g. Arduino Uno, ESP32, LDR" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div>
+          <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Category *</label>
+          <select id="comp-category" class="select-field" required>
+            <option value="Controllers">Controllers</option>
+            <option value="Sensors">Sensors</option>
+            <option value="Outputs">Outputs</option>
+            <option value="Communication">Communication</option>
+            <option value="Supporting components">Supporting components</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Sub-Category</label>
+          <input type="text" id="comp-subcategory" class="input-field" placeholder="e.g. Distance Sensor">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div>
+          <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Quantity</label>
+          <input type="number" id="comp-quantity" class="input-field" value="1" min="0">
+        </div>
+        <div>
+          <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Voltage</label>
+          <input type="text" id="comp-voltage" class="input-field" value="5V" placeholder="5V or 3.3V">
+        </div>
+        <div>
+          <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Cost (₹)</label>
+          <input type="number" step="0.5" id="comp-cost" class="input-field" value="0.0">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Description</label>
+        <textarea id="comp-desc" class="input-field" rows="2" placeholder="Brief technical summary..."></textarea>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Safety Notes</label>
+        <input type="text" id="comp-safety" class="input-field" placeholder="e.g. 3.3V logic level strictly, requires resistor">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-secondary" onclick="closeComponentModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="save-comp-btn">Save Component</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/components.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}My Projects - Workshop Hub{% endblock %}
+{% block page_title %}Personal Project Memory & Workspace{% endblock %}
+{% block page_subtitle %}Manage your saved projects, active builds, and completed engineering milestones.{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Active / In-Progress Builds -->
+  <div class="glass-card" style="padding: 24px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+      <span>Active Builds in Progress</span>
+      <span class="badge badge-info">{{ attempted_projects|length }} Active</span>
+    </h3>
+
+    {% if attempted_projects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+      {% for item in attempted_projects %}
+      <div class="glass-card" style="padding: 16px; background: rgba(10, 13, 20, 0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+          <h4 style="font-size: 14.5px; font-weight: 600; color: #fff;">{{ item.project.name }}</h4>
+          <span class="badge badge-info">{{ item.progress }}%</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">{{ item.project.description[:85] }}...</p>
+        <div style="display: flex; gap: 8px;">
+          <a href="{{ url_for('dashboard_views.project_build_page', project_id=item.project.id) }}" class="btn btn-primary" style="flex:1; justify-content:center; font-size:11.5px;">
+            Resume Build
+          </a>
+          <a href="{{ url_for('dashboard_views.wiring_page', project_id=item.project.id) }}" class="btn btn-secondary" style="font-size:11.5px;">
+            Wiring
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; color: var(--text-dim); padding: 20px; font-size: 13px;">
+      No builds currently in progress. Select a recommended project to start building!
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Saved Projects Queue -->
+  <div class="glass-card" style="padding: 24px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+      <span>Saved Projects Queue</span>
+      <span class="badge badge-warning">{{ saved_projects|length }} Saved</span>
+    </h3>
+
+    {% if saved_projects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+      {% for item in saved_projects %}
+      <div class="glass-card" style="padding: 16px; background: rgba(10, 13, 20, 0.4);">
+        <h4 style="font-size: 14.5px; font-weight: 600; color: #fff; margin-bottom: 4px;">{{ item.project.name }}</h4>
+        <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px;">{{ item.project.category }} • {{ item.project.difficulty }}</div>
+        <div style="display: flex; gap: 8px;">
+          <a href="{{ url_for('dashboard_views.project_detail_page', project_id=item.project.id) }}" class="btn btn-primary" style="flex:1; justify-content:center; font-size:11.5px;">
+            View Specs
+          </a>
+          <button class="btn btn-secondary" style="font-size:11.5px;" onclick="removeFromSaved('{{ item.project.id }}', this)">
+            Remove
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; color: var(--text-dim); padding: 20px; font-size: 13px;">
+      Your saved queue is empty. Browse Project Recommendations to star projects for later.
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Completed Projects -->
+  <div class="glass-card" style="padding: 24px;">
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+      <span>Completed Project Milestones</span>
+      <span class="badge badge-success">{{ completed_projects|length }} Completed</span>
+    </h3>
+
+    {% if completed_projects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+      {% for item in completed_projects %}
+      <div class="glass-card" style="padding: 16px; background: rgba(16, 185, 129, 0.04); border-color: rgba(16, 185, 129, 0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+          <h4 style="font-size: 14.5px; font-weight: 600; color: #fff;">{{ item.project.name }}</h4>
+          <span class="badge badge-success">✓ Complete</span>
+        </div>
+        <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">{{ item.history.notes or "Successfully built and verified." }}</p>
+        <div style="display: flex; gap: 8px;">
+          <a href="{{ url_for('dashboard_views.project_detail_page', project_id=item.project.id) }}" class="btn btn-secondary" style="flex:1; justify-content:center; font-size:11.5px;">
+            Review Details
+          </a>
+          <a href="{{ url_for('dashboard_views.project_build_page', project_id=item.project.id) }}" class="btn btn-secondary" style="font-size:11.5px;">
+            Re-run Steps
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; color: var(--text-dim); padding: 20px; font-size: 13px;">
+      No projects marked complete yet. Start and finish a step-by-step build to earn milestones!
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function removeFromSaved(projectId, btn) {
+  try {
+    const res = await fetch(`/api/history/unsave/${projectId}`, { method: 'POST' });
+    if (res.ok) {
+      showToast('Project removed from saved list', 'info');
+      btn.closest('.glass-card').remove();
+    }
+  } catch (e) {
+    showToast('Failed to unsave project', 'error');
+  }
+}
+</script>
+{% endblock %}

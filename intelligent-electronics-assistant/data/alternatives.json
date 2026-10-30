@@ -1,0 +1,120 @@
+{
+  "Arduino Uno": [
+    {
+      "name": "Arduino Nano",
+      "cost": 250.0,
+      "mode": "prototype",
+      "reason": "Compact pin-compatible ATmega328P board at ~45% lower cost."
+    },
+    {
+      "name": "ESP32",
+      "cost": 380.0,
+      "mode": "production",
+      "reason": "Higher clock speed (240MHz vs 16MHz), dual-core, and integrated Wi-Fi/BLE."
+    }
+  ],
+  "ESP32": [
+    {
+      "name": "ESP8266 (NodeMCU)",
+      "cost": 220.0,
+      "mode": "prototype",
+      "reason": "Cheaper Wi-Fi enabled SoC when dual-core and BLE are not required."
+    }
+  ],
+  "Raspberry Pi": [
+    {
+      "name": "Raspberry Pi Zero 2 W",
+      "cost": 1800.0,
+      "mode": "prototype",
+      "reason": "Compact quad-core SBC that consumes far less power and costs 60% less."
+    }
+  ],
+  "HC-SR04 Ultrasonic Sensor": [
+    {
+      "name": "RCWL-1601 Ultrasonic Sensor",
+      "cost": 75.0,
+      "mode": "prototype",
+      "reason": "Drop-in pin-compatible ultrasonic sensor supporting both 3.3V and 5V directly."
+    },
+    {
+      "name": "US-100 Ultrasonic Sensor",
+      "cost": 160.0,
+      "mode": "production",
+      "reason": "Includes built-in temperature compensation for millimeter-accurate distance measurement."
+    }
+  ],
+  "Temperature Sensor": [
+    {
+      "name": "LM35 Temperature Sensor",
+      "cost": 45.0,
+      "mode": "prototype",
+      "reason": "Low-cost analog temperature sensor with linear 10mV/°C scale."
+    },
+    {
+      "name": "DHT22 / AM2302",
+      "cost": 280.0,
+      "mode": "production",
+      "reason": "Higher accuracy (±0.5°C vs ±2°C) and wider humidity sensing range (0-100%)."
+    }
+  ],
+  "OLED": [
+    {
+      "name": "0.91 inch I2C OLED (128x32)",
+      "cost": 140.0,
+      "mode": "prototype",
+      "reason": "Smaller form factor and lower cost display for compact telemetry readouts."
+    },
+    {
+      "name": "LCD 1602 with I2C",
+      "cost": 180.0,
+      "mode": "production",
+      "reason": "High-contrast character display with long operational life and zero burn-in risk."
+    }
+  ],
+  "LCD": [
+    {
+      "name": "0.96 inch I2C OLED",
+      "cost": 220.0,
+      "mode": "production",
+      "reason": "Crisper graphical UI rendering with lower power consumption."
+    }
+  ],
+  "Bluetooth": [
+    {
+      "name": "ESP32 (Built-in BLE)",
+      "cost": 380.0,
+      "mode": "production",
+      "reason": "Consolidates controller and Bluetooth into a single module, eliminating external serial wiring."
+    }
+  ],
+  "DC Motor": [
+    {
+      "name": "Micro Coreless DC Motor",
+      "cost": 25.0,
+      "mode": "prototype",
+      "reason": "Extremely lightweight low-current motor for miniature mechanisms."
+    }
+  ],
+  "Servo Motor": [
+    {
+      "name": "MG90S Metal Gear Servo",
+      "cost": 190.0,
+      "mode": "production",
+      "reason": "Durable metal gearing prevents gear stripping under high mechanical torque."
+    }
+  ],
+  "Relay": [
+    {
+      "name": "TIP120 Darlington Transistor Switch",
+      "cost": 20.0,
+      "mode": "prototype",
+      "reason": "Solid-state DC switching without noisy mechanical click or contact arcing."
+    },
+    {
+      "name": "Solid State Relay (SSR)",
+      "cost": 240.0,
+      "mode": "production",
+      "reason": "Silent, spark-free AC switching with optical isolation and indefinite switching lifespan."
+    }
+  ]
+}

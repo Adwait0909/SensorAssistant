@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}Circuit Wiring Diagram Generator{% endblock %}
+{% block page_title %}Circuit Wiring Diagram Generator{% endblock %}
+{% block page_subtitle %}Real schematic & breadboard diagrams — powered by the Circuit Engine{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Layout ──────────────────────────────────────────────────── */
+.wiring-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+}
+@media (max-width: 1024px) {
+  .wiring-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Diagram canvas ──────────────────────────────────────────── */
+.diagram-stage {
+  width: 100%;
+  min-height: 540px;
+  background: #070c14;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  overflow: auto;
+  position: relative;
+}
+.diagram-stage svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.diagram-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  gap: 12px;
+  color: var(--text-muted);
+}
+.diagram-placeholder .spin {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── View toggle ─────────────────────────────────────────────── */
+.view-toggle-group {
+  display: inline-flex;
+  background: rgba(10,13,20,.6);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 3px;
+}
+.view-btn {
+  background: none; border: none;
+  color: var(--text-muted);
+  padding: 6px 16px; font-size: 12px; font-weight: 500;
+  border-radius: 16px; cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.view-btn.active {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #fff;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── Sidebar panels ──────────────────────────────────────────── */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.panel-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent-cyan);
+  margin-bottom: 10px;
+}
+
+/* Components list */
+.comp-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(34,211,238,.08);
+  border: 1px solid rgba(34,211,238,.2);
+  border-radius: 20px;
+  padding: 3px 10px; font-size: 11px; color: var(--text-secondary);
+  margin: 3px 2px;
+}
+.comp-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); }
+
+/* Validation panel */
+.val-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.val-badge.pass  { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.3); }
+.val-badge.fail  { background: rgba(248,113,113,.12); color: #f87171; border: 1px solid rgba(248,113,113,.3); }
+.val-badge.warn  { background: rgba(251,191,36,.12);  color: #fbbf24; border: 1px solid rgba(251,191,36,.3); }
+
+.check-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+  font-size: 11px;
+}
+.check-row:last-child { border-bottom: none; }
+.check-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.check-name { color: var(--text-secondary); font-weight: 600; min-width: 90px; }
+.check-msgs { color: var(--text-muted); line-height: 1.5; }
+.msg-error  { color: #f87171; }
+.msg-warning{ color: #fbbf24; }
+.msg-info   { color: #94a3b8; }
+
+/* ── Toolbar ─────────────────────────────────────────────────── */
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; flex-direction:column; gap:20px;">
+
+  <!-- ── Controls bar ── -->
+  <div class="glass-card" style="padding:14px 20px; display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;">
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+
+      <!-- Project Selector -->
+      <select id="project-selector" class="select-field" style="min-width:260px;" onchange="onProjectChange(this.value)">
+        <option value="">Select a project…</option>
+      </select>
+
+      <!-- View mode toggle -->
+      <div class="view-toggle-group">
+        <button id="btn-breadboard" class="view-btn active" onclick="switchView('breadboard')">Breadboard</button>
+        <button id="btn-schematic"  class="view-btn"        onclick="switchView('schematic')">Schematic</button>
+      </div>
+    </div>
+
+    <!-- Toolbar actions -->
+    <div class="toolbar">
+      <button class="btn btn-secondary" style="padding:6px 10px;" onclick="zoomIn()"    title="Zoom In">🔍 +</button>
+      <button class="btn btn-secondary" style="padding:6px 10px;" onclick="zoomOut()"   title="Zoom Out">🔍 −</button>
+      <button class="btn btn-secondary" style="padding:6px 10px;" onclick="resetZoom()" title="Reset">↺</button>
+      <button class="btn btn-secondary" style="padding:6px 12px;" onclick="downloadSVG()" title="Download SVG">💾 SVG</button>
+      <button class="btn btn-primary"   style="padding:6px 12px;" onclick="printDiagram()" title="Print">🖨 Print</button>
+    </div>
+  </div>
+
+  <!-- ── Main two-column layout ── -->
+  <div class="wiring-layout">
+
+    <!-- Left: diagram canvas -->
+    <div>
+      <div class="diagram-stage" id="diagram-stage">
+        <div class="diagram-placeholder" id="diagram-placeholder">
+          <div class="spin"></div>
+          <span>Loading diagram…</span>
+        </div>
+        <div id="svg-container" style="display:none; transform-origin:top left;"></div>
+      </div>
+    </div>
+
+    <!-- Right: sidebar -->
+    <div class="sidebar">
+
+      <!-- Components used -->
+      <div class="glass-card" style="padding:16px 18px;">
+        <div class="panel-title">Components in Circuit</div>
+        <div id="comp-list"><span style="color:var(--text-muted); font-size:12px;">—</span></div>
+      </div>
+
+      <!-- Validation report -->
+      <div class="glass-card" style="padding:16px 18px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <div class="panel-title" style="margin-bottom:0;">Circuit Validation</div>
+          <span id="val-overall"></span>
+        </div>
+        <div id="val-checks"><span style="color:var(--text-muted); font-size:12px;">—</span></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="glass-card" style="padding:14px 18px;">
+        <div class="panel-title">Wire Legend</div>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:11px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;background:#f87171;border-radius:2px;display:inline-block;"></span><span style="color:var(--text-muted);">Power (VCC / 5V)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;background:#94a3b8;border-radius:2px;display:inline-block;"></span><span style="color:var(--text-muted);">GND Ground</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;background:#22d3ee;border-radius:2px;display:inline-block;"></span><span style="color:var(--text-muted);">Signal (Digital / PWM)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;background:#60a5fa;border-radius:2px;display:inline-block;"></span><span style="color:var(--text-muted);">Analog / ADC</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><span style="width:22px;height:3px;background:#a78bfa;border-radius:2px;display:inline-block;"></span><span style="color:var(--text-muted);">I²C Bus (SDA / SCL)</span></div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+  </div><!-- /layout -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let currentProjectId = "{{ project_id or '' }}";
+let currentView      = "breadboard";
+let currentZoom      = 1.0;
+let cachedBoth       = null;   // { svg_schematic, svg_breadboard, checks, components_used, valid }
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+  await populateProjects();
+  if (currentProjectId) loadBothViews();
+});
+
+// ── Project dropdown ─────────────────────────────────────────────────────────
+async function populateProjects() {
+  try {
+    const r = await fetch("/api/projects");
+    const j = await r.json();
+    const sel = document.getElementById("project-selector");
+    sel.innerHTML = '<option value="">Select a project…</option>';
+    (j.data || []).forEach(p => {
+      const o = document.createElement("option");
+      o.value = p.id; o.textContent = p.name;
+      if (p.id === currentProjectId) o.selected = true;
+      sel.appendChild(o);
+    });
+    if (!currentProjectId && j.data && j.data.length) {
+      currentProjectId = j.data[0].id;
+      sel.value = currentProjectId;
+    }
+  } catch (e) { console.error("project list error", e); }
+}
+
+function onProjectChange(id) {
+  if (!id) return;
+  currentProjectId = id;
+  cachedBoth = null;
+  history.replaceState(null, "", `/wiring/${id}`);
+  loadBothViews();
+}
+
+// ── Load both SVGs in one request, then display the selected view ─────────────
+async function loadBothViews() {
+  if (!currentProjectId) return;
+  showPlaceholder("Generating circuit diagrams…");
+  cachedBoth = null;
+
+  try {
+    const r = await fetch("/api/wiring/both", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ project_id: currentProjectId })
+    });
+    const j = await r.json();
+    if (j.status !== "success") { showError(j.message); return; }
+    cachedBoth = j.data;
+    renderCurrentView();
+    renderSidebar();
+  } catch (e) {
+    showError("Network error — could not reach the server.");
+  }
+}
+
+// ── View toggle ───────────────────────────────────────────────────────────────
+function switchView(mode) {
+  currentView = mode;
+  document.getElementById("btn-breadboard").classList.toggle("active", mode === "breadboard");
+  document.getElementById("btn-schematic" ).classList.toggle("active", mode === "schematic");
+  if (cachedBoth) renderCurrentView();
+  else loadBothViews();
+}
+
+function renderCurrentView() {
+  const svg = currentView === "schematic" ? cachedBoth.svg_schematic : cachedBoth.svg_breadboard;
+  const container = document.getElementById("svg-container");
+  container.innerHTML = svg;
+  container.style.display = "block";
+  container.style.transform = `scale(${currentZoom})`;
+  document.getElementById("diagram-placeholder").style.display = "none";
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function renderSidebar() {
+  if (!cachedBoth) return;
+
+  // Components
+  const compEl = document.getElementById("comp-list");
+  const comps  = cachedBoth.components_used || [];
+  compEl.innerHTML = comps.length
+    ? comps.map(c => `<span class="comp-chip">${escHtml(c)}</span>`).join("")
+    : '<span style="color:var(--text-muted);font-size:12px;">None mapped</span>';
+
+  // Overall badge
+  const overall = document.getElementById("val-overall");
+  overall.innerHTML = cachedBoth.valid
+    ? '<span class="val-badge pass">✓ Valid</span>'
+    : '<span class="val-badge fail">✗ Issues</span>';
+
+  // Per-category checks
+  const checksEl = document.getElementById("val-checks");
+  const checks   = cachedBoth.checks || [];
+  if (!checks.length) { checksEl.innerHTML = '<span style="color:var(--text-muted);font-size:12px;">No data</span>'; return; }
+
+  checksEl.innerHTML = checks.map(ch => {
+    const hasErrors   = ch.messages.some(m => m.level === "error");
+    const hasWarnings = ch.messages.some(m => m.level === "warning");
+    const icon  = ch.passed ? "✅" : (hasErrors ? "❌" : "⚠️");
+    const msgs  = ch.messages.map(m =>
+      `<div class="msg-${m.level === "error" ? "error" : m.level === "warning" ? "warning" : "info"}">${escHtml(m.msg)}</div>`
+    ).join("");
+    return `
+      <div class="check-row">
+        <span class="check-icon">${icon}</span>
+        <div>
+          <div class="check-name">${escHtml(ch.name)}</div>
+          ${msgs ? `<div class="check-msgs">${msgs}</div>` : ""}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+// ── Zoom ──────────────────────────────────────────────────────────────────────
+function zoomIn()    { currentZoom = Math.min(currentZoom + 0.15, 3); applyZoom(); }
+function zoomOut()   { currentZoom = Math.max(currentZoom - 0.15, 0.3); applyZoom(); }
+function resetZoom() { currentZoom = 1; applyZoom(); }
+function applyZoom() {
+  const c = document.getElementById("svg-container");
+  c.style.transform = `scale(${currentZoom})`;
+  c.style.transformOrigin = "top left";
+}
+
+// ── Download / Print ──────────────────────────────────────────────────────────
+function downloadSVG() {
+  window.location.href = `/api/wiring/download/${currentProjectId}?view_mode=${currentView}`;
+}
+
+function printDiagram() {
+  const svg = document.getElementById("svg-container").innerHTML;
+  const w   = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html><head><title>Circuit — ${currentProjectId}</title></head>
+    <body style="margin:0;background:#070c14;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    ${svg}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 350);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function showPlaceholder(msg) {
+  document.getElementById("svg-container").style.display = "none";
+  const p = document.getElementById("diagram-placeholder");
+  p.style.display = "flex";
+  p.innerHTML = `<div class="spin"></div><span>${msg}</span>`;
+}
+
+function showError(msg) {
+  document.getElementById("svg-container").style.display = "none";
+  const p = document.getElementById("diagram-placeholder");
+  p.style.display = "flex";
+  p.innerHTML = `<span style="color:#f87171;">⚠ ${escHtml(msg)}</span>`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+</script>
+{% endblock %}

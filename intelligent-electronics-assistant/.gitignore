@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+database/app.db
+uploads/*
+!uploads/.gitkeep
+.env
+.DS_Store
+.pytest_cache/
+ml/model/*.h5
+ml/model/*.keras

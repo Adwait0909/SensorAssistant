@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CircuitForge · Circuit Diagram Generator</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<header><div class="logo">⚡ Circuit<span>Forge</span></div><div class="sub">Rule-based circuit diagram generator</div></header>
+<main>
+  <aside class="card">
+    <button id="btnRandom" class="btn primary">⚡ Generate Random Circuit</button>
+    <button id="btnBuild" class="btn">🛠 Build My Own Circuit</button>
+    <div id="builder" hidden>
+      <div id="picker"></div>
+      <button id="btnBuildGo" class="btn primary">Build Circuit</button>
+    </div>
+    <button id="btnValidate" class="btn">✔ Validate Circuit</button>
+    <div class="row"><button id="btnDownload" class="btn grow">⬇ Download Diagram</button><button id="btnPng" class="btn">PNG</button></div>
+    <h3>Example circuits</h3><div id="examples"></div>
+  </aside>
+  <section class="card diagram">
+    <div class="bar"><div id="title">No circuit yet</div>
+      <div class="tabs"><button data-v="schematic" class="on">Schematic</button><button data-v="breadboard">Breadboard</button></div></div>
+    <div id="canvas"><p class="hint">Click <b>Generate Random Circuit</b> or pick an example to begin.</p></div>
+  </section>
+  <section class="card"><h3>Validation <span id="badge"></span></h3><div id="checks"></div></section>
+  <section class="card table"><h3>Connection table</h3>
+    <div class="scroll"><table><thead><tr><th>Component</th><th>Pin</th><th>→ Component</th><th>Pin</th><th>Type</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>

@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}Step-by-Step Builder — {{ project.name }}{% endblock %}
+{% block page_title %}Step-by-Step Project Builder{% endblock %}
+{% block page_subtitle %}{{ project.name }} &nbsp;·&nbsp; {{ project.category }} &nbsp;·&nbsp; {{ project.difficulty }}{% endblock %}
+
+{% set wire_colors = {'Red': '#ef4444', 'Black': '#475569', 'Green': '#22c55e', 'Blue': '#3b82f6', 'Yellow': '#eab308', 'Orange': '#f97316', 'White': '#e2e8f0', 'Brown': '#92400e', 'Purple': '#a855f7', 'Gray': '#6b7280', 'Cyan': '#22d3ee', 'Pink': '#ec4899'} %}
+
+{% block extra_css %}
+<style>
+/* ── Layout ─────────────────────────────────────────────── */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1fr 310px;
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 1080px) { .builder-layout { grid-template-columns: 1fr; } }
+
+/* ── Step Card ───────────────────────────────────────────── */
+.step-card {
+  border-left: 4px solid var(--border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.step-card.completed  { border-left-color: var(--accent-success); background: rgba(16,185,129,.025); }
+.step-card.active     { border-left-color: var(--accent-cyan);    box-shadow: 0 0 18px rgba(34,211,238,.10); }
+.step-card.locked     { opacity: 0.55; pointer-events: none; }
+
+/* Step number bubble */
+.step-bubble {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+  background: rgba(255,255,255,.06);
+  border: 2px solid var(--border-color);
+  color: var(--text-muted);
+  transition: all .2s;
+}
+.step-card.completed .step-bubble { background: rgba(16,185,129,.2); border-color: var(--accent-success); color: #34d399; }
+.step-card.active    .step-bubble { background: rgba(34,211,238,.2); border-color: var(--accent-cyan);    color: #22d3ee; }
+
+/* Connection table */
+.conn-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 8px; }
+.conn-table th { color: var(--accent-cyan); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: .06em; padding: 5px 8px; border-bottom: 1px solid rgba(255,255,255,.06); text-align: left; }
+.conn-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,.04); color: var(--text-muted); vertical-align: top; }
+.conn-table tr:last-child td { border-bottom: none; }
+.conn-table td:first-child { font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+.wire-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; flex-shrink: 0; }
+
+/* How-to steps */
+.how-to-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.how-to-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; color: var(--text-muted); }
+.how-to-list li .num { min-width: 20px; height: 20px; border-radius: 50%; background: rgba(34,211,238,.12); border: 1px solid rgba(34,211,238,.3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--accent-cyan); flex-shrink: 0; }
+
+/* Warning block */
+.warn-block { display: flex; gap: 8px; align-items: flex-start; background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.3); border-radius: 6px; padding: 9px 12px; font-size: 12px; color: #fcd34d; }
+.warn-icon { font-size: 15px; flex-shrink: 0; }
+
+/* Expected output */
+.output-block { background: rgba(16,185,129,.05); border: 1px solid rgba(16,185,129,.2); border-radius: 6px; padding: 9px 13px; font-size: 12.5px; color: #34d399; display: flex; gap: 8px; align-items: flex-start; }
+
+/* Progress bar */
+.prog-track { width: 100%; height: 8px; background: rgba(255,255,255,.06); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.prog-fill  { height: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-success)); border-radius: 4px; transition: width .4s ease; }
+
+/* Sidebar panels */
+.sidebar-panel { padding: 16px 18px; }
+.panel-label { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-cyan); margin-bottom: 10px; }
+
+/* Checkbox */
+.check-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,.02); transition: border-color .15s; }
+.check-wrap:hover { border-color: var(--accent-cyan); }
+.check-wrap input[type=checkbox] { width: 18px; height: 18px; accent-color: #34d399; cursor: pointer; }
+
+/* Collapsible section trigger */
+.section-toggle { cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; }
+.section-toggle .arrow { font-size: 10px; transition: transform .2s; }
+.section-toggle.open .arrow { transform: rotate(90deg); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; flex-direction:column; gap:20px;">
+
+  <!-- ── Header bar ── -->
+  <div class="glass-card" style="padding:20px 24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:10px;">
+      <div>
+        <h2 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:4px;">{{ project.name }}</h2>
+        <span style="font-size:12px; color:var(--text-muted);">
+          Session <b style="color:#fff;">#{{ build_data.session_id }}</b>
+          &nbsp;·&nbsp; {{ project.difficulty }} &nbsp;·&nbsp; {{ project.category }}
+        </span>
+      </div>
+      <div style="text-align:right;">
+        <div id="progress-text" style="font-size:26px; font-weight:700; color:var(--accent-electric);">{{ build_data.progress_percent }}%</div>
+        <div style="font-size:11px; color:var(--text-dim);">
+          <b id="done-count" style="color:#fff;">{{ build_data.completed_steps }}</b> / {{ build_data.total_steps }} steps done
+        </div>
+      </div>
+    </div>
+    <div class="prog-track"><div id="prog-fill" class="prog-fill" style="width:{{ build_data.progress_percent }}%;"></div></div>
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+      <a href="{{ url_for('dashboard_views.wiring_page', project_id=project.id) }}" class="btn btn-secondary" style="font-size:11.5px; padding:5px 12px;">
+        ⚡ View Wiring Diagram
+      </a>
+      <a href="{{ url_for('dashboard_views.project_detail_page', project_id=project.id) }}" class="btn btn-secondary" style="font-size:11.5px; padding:5px 12px;">
+        📋 Project Specs
+      </a>
+      <a href="{{ url_for('dashboard_views.diagnosis_page') }}" class="btn btn-secondary" style="font-size:11.5px; padding:5px 12px;">
+        🔧 Failure Diagnosis
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Two-column builder layout ── -->
+  <div class="builder-layout">
+
+    <!-- LEFT: Step-by-step cards -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      {% for step in build_data.steps %}
+      {% set is_done = step.completed %}
+      {% set is_active = not is_done and loop.first %}
+      <div id="step-card-{{ step.step_number }}"
+           class="glass-card step-card {% if is_done %}completed{% elif loop.first or build_data.completed_steps == loop.index0 %}active{% endif %}"
+           style="padding:22px;">
+
+        <!-- ── Step header ── -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; gap:12px; flex:1;">
+            <div class="step-bubble" id="bubble-{{ step.step_number }}">
+              {% if is_done %}✓{% else %}{{ step.step_number }}{% endif %}
+            </div>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="badge badge-info" style="font-size:10px;">Step {{ step.step_number }}</span>
+                {% if is_done %}<span class="badge badge-success" style="font-size:10px;">✓ Done</span>{% endif %}
+              </div>
+              <h3 style="font-size:15.5px; font-weight:700; color:#fff; margin-top:4px;">{{ step.title }}</h3>
+            </div>
+          </div>
+
+          <!-- Mark done checkbox -->
+          <label class="check-wrap" style="flex-shrink:0;">
+            <input type="checkbox" id="chk-{{ step.step_number }}"
+                   {% if is_done %}checked{% endif %}
+                   onchange="toggleStep({{ build_data.session_id }}, {{ step.step_number }}, this.checked)">
+            <span style="font-size:12px; color:var(--text-secondary); white-space:nowrap;">Mark Done</span>
+          </label>
+        </div>
+
+        <!-- Description -->
+        <p style="font-size:13px; color:var(--text-muted); line-height:1.65; margin-bottom:16px;">{{ step.description }}</p>
+
+        <!-- Components in this step -->
+        {% if step.components_involved %}
+        <div style="margin-bottom:16px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-cyan); margin-bottom:7px;">
+            🔩 Components Needed
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            {% for c in step.components_involved %}
+            <span style="background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.2); border-radius:20px; padding:3px 11px; font-size:11.5px; color:var(--text-secondary);">{{ c }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Connection Table -->
+        {% if step.connections %}
+        <div style="margin-bottom:16px;">
+          <div class="section-toggle open" onclick="toggleSection(this, 'conn-{{ step.step_number }}')" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#60a5fa; margin-bottom:7px;">
+            <span class="arrow">▶</span> Wire Connections
+          </div>
+          <div id="conn-{{ step.step_number }}" style="overflow:auto; border:1px solid rgba(255,255,255,.06); border-radius:8px;">
+            <table class="conn-table">
+              <thead>
+                <tr>
+                  <th>FROM</th>
+                  <th>TO</th>
+                  <th>Wire</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for conn in step.connections %}
+                <tr>
+                  <td>{{ conn.from }}</td>
+                  <td>{{ conn.to }}</td>
+                  <td>
+                    <span class="wire-dot" style="background:{{ wire_colors[conn.wire_color] if conn.wire_color in wire_colors else '#94a3b8' }};"></span>
+                    {{ conn.wire_color }}
+                  </td>
+                  <td style="color:var(--text-dim); font-size:11px;">{{ conn.notes }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- How to Connect -->
+        {% if step.how_to_connect %}
+        <div style="margin-bottom:16px;">
+          <div class="section-toggle open" onclick="toggleSection(this, 'how-{{ step.step_number }}')" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#a78bfa; margin-bottom:8px;">
+            <span class="arrow">▶</span> How to Connect — Physical Steps
+          </div>
+          <div id="how-{{ step.step_number }}">
+            <ol class="how-to-list">
+              {% for line in step.how_to_connect.split('\n') %}
+              {% if line.strip() %}
+              <li>
+                <span class="num">{{ loop.index }}</span>
+                <span>{{ line.strip().lstrip('0123456789. )') }}</span>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Warnings -->
+        {% if step.warnings %}
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;">
+          {% for w in step.warnings %}
+          <div class="warn-block">
+            <span class="warn-icon">⚠️</span>
+            <span>{{ w }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Expected Output -->
+        <div class="output-block">
+          <span style="font-size:16px; flex-shrink:0;">✅</span>
+          <div>
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:2px; color:#6ee7b7;">Expected Result</div>
+            <div>{{ step.expected_output }}</div>
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+
+      <!-- ── Post-Build Testing Checklist ── -->
+      <div class="glass-card" style="padding:22px;">
+        <h3 style="font-size:15px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px;">🧪</span> Post-Assembly Testing Checklist
+        </h3>
+        <ol style="padding-left:18px; font-size:12.5px; color:var(--text-muted); display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          {% for t in project.testing_steps %}
+          <li>{{ t }}</li>
+          {% endfor %}
+        </ol>
+        <div style="border-top:1px solid rgba(255,255,255,.06); padding-top:14px;">
+          <div style="font-size:12.5px; color:var(--accent-success); margin-bottom:8px;"><b>Expected Final Output:</b> {{ project.expected_output }}</div>
+          {% if project.possible_failures %}
+          <div style="font-size:11.5px; color:var(--text-dim); margin-top:8px;"><b style="color:#fca5a5;">Common Pitfalls:</b></div>
+          <ul style="padding-left:16px; margin-top:4px; display:flex; flex-direction:column; gap:4px;">
+            {% for f in project.possible_failures %}
+            <li style="font-size:11.5px; color:var(--text-muted);">{{ f }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+
+    </div><!-- /left col -->
+
+    <!-- RIGHT: Sidebar -->
+    <div style="display:flex; flex-direction:column; gap:16px; position:sticky; top:20px;">
+
+      <!-- Progress summary -->
+      <div class="glass-card sidebar-panel">
+        <div class="panel-label">Build Progress</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          {% for step in build_data.steps %}
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px;" id="sidebar-step-{{ step.step_number }}">
+            <span style="width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700;
+              {% if step.completed %}background:rgba(16,185,129,.2); color:#34d399; border:1px solid #34d399;{% else %}background:rgba(255,255,255,.05); color:var(--text-dim); border:1px solid var(--border-color);{% endif %}">
+              {% if step.completed %}✓{% else %}{{ step.step_number }}{% endif %}
+            </span>
+            <span style="{% if step.completed %}color:var(--accent-success);{% else %}color:var(--text-muted);{% endif %} flex:1; line-height:1.3;">{{ step.title }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Safety warnings from project -->
+      {% if project.safety_rules %}
+      <div class="glass-card sidebar-panel" style="border-color:rgba(245,158,11,.25);">
+        <div class="panel-label" style="color:#fbbf24;">⚠ Safety Rules</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          {% for rule in project.safety_rules %}
+          <div style="font-size:12px; color:#fcd34d; line-height:1.5; padding:8px 10px; background:rgba(245,158,11,.06); border-radius:6px; border-left:3px solid rgba(245,158,11,.5);">
+            {{ rule }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Required components full list -->
+      <div class="glass-card sidebar-panel">
+        <div class="panel-label">Required Components</div>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+          {% for c in project.required_components %}
+          <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:7px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--accent-cyan); flex-shrink:0;"></span>
+            {{ c }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Wiring rules quick reference -->
+      <div class="glass-card sidebar-panel">
+        <div class="panel-label">Wiring Quick Reference</div>
+        <div style="display:flex; flex-direction:column; gap:5px;">
+          {% for rule in project.wiring_rules %}
+          <div style="font-size:11px; color:var(--text-dim); font-family:monospace; background:rgba(10,13,20,.5); padding:5px 8px; border-radius:4px; border:1px solid rgba(255,255,255,.04); line-height:1.5;">
+            {{ rule }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+  </div><!-- /builder-layout -->
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Utility: map wire color name to hex ────────────────────────────
+const WIRE_COLORS = {
+  'Red': '#ef4444', 'Black': '#475569', 'Green': '#22c55e',
+  'Blue': '#3b82f6', 'Yellow': '#eab308', 'Orange': '#f97316',
+  'White': '#e2e8f0', 'Brown': '#92400e', 'Purple': '#a855f7',
+  'Gray': '#6b7280', 'Cyan': '#22d3ee', 'Pink': '#ec4899'
+};
+
+// Jinja2 custom filter shim: wireColor is called inline in template.
+// We also need the color lookup in JS for dynamic updates.
+function getWireColor(name) {
+  return WIRE_COLORS[name] || '#94a3b8';
+}
+
+// ── Toggle collapsible section ─────────────────────────────────────
+function toggleSection(trigger, targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  const isOpen = trigger.classList.toggle('open');
+  target.style.display = isOpen ? '' : 'none';
+  trigger.querySelector('.arrow').style.transform = isOpen ? 'rotate(90deg)' : '';
+}
+
+// ── Mark step done / undone ────────────────────────────────────────
+async function toggleStep(sessionId, stepNumber, isChecked) {
+  try {
+    const res = await fetch('/api/build-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, step_number: stepNumber, completed: isChecked })
+    });
+    const result = await res.json();
+    if (result.status !== 'success') { showToast(result.message, 'error'); return; }
+
+    const pct  = result.data.progress_percent;
+    const card = document.getElementById('step-card-' + stepNumber);
+    const bubble = document.getElementById('bubble-' + stepNumber);
+    const sidebarRow = document.getElementById('sidebar-step-' + stepNumber);
+
+    // Update progress UI
+    document.getElementById('progress-text').innerText = pct + '%';
+    document.getElementById('prog-fill').style.width   = pct + '%';
+
+    // Update card style
+    if (isChecked) {
+      card.classList.add('completed');
+      card.classList.remove('active');
+      if (bubble) bubble.innerHTML = '✓';
+      if (sidebarRow) {
+        sidebarRow.querySelector('span:first-child').style.cssText =
+          'width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:rgba(16,185,129,.2);color:#34d399;border:1px solid #34d399;';
+        sidebarRow.querySelector('span:first-child').textContent = '✓';
+        sidebarRow.querySelector('span:last-child').style.color = 'var(--accent-success)';
+      }
+      showToast('Step ' + stepNumber + ' completed ✓', 'success');
+    } else {
+      card.classList.remove('completed');
+      if (bubble) bubble.innerHTML = stepNumber;
+      if (sidebarRow) {
+        sidebarRow.querySelector('span:first-child').style.cssText =
+          'width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:rgba(255,255,255,.05);color:var(--text-dim);border:1px solid var(--border-color);';
+        sidebarRow.querySelector('span:first-child').textContent = stepNumber;
+        sidebarRow.querySelector('span:last-child').style.color = 'var(--text-muted)';
+      }
+    }
+
+    // Update done count
+    const total = document.querySelectorAll('[id^="chk-"]').length;
+    const done  = document.querySelectorAll('[id^="chk-"]:checked').length;
+    document.getElementById('done-count').textContent = done;
+
+    if (pct === 100) {
+      setTimeout(() => showToast('🎉 All steps complete! Great build!', 'success'), 400);
+    }
+  } catch (err) {
+    showToast('Failed to save progress', 'error');
+  }
+}
+</script>
+{% endblock %}

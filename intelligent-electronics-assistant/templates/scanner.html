@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}AI Component Scanner - Electronics Assistant{% endblock %}
+{% block page_title %}AI Component Scanner{% endblock %}
+{% block page_subtitle %}Visual recognition powered by OpenCV & TensorFlow image classification.{% endblock %}
+
+{% block extra_css %}
+<style>
+.drop-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 36px 20px;
+  text-align: center;
+  background: rgba(10, 13, 20, 0.4);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--accent-electric);
+  background: rgba(56, 189, 248, 0.05);
+}
+.preview-img {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  margin-top: 12px;
+}
+.scan-animation {
+  position: relative;
+  overflow: hidden;
+}
+.scan-animation::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 15px var(--accent-cyan);
+  animation: scanLine 1.5s ease-in-out infinite alternate;
+}
+@keyframes scanLine {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Model Status Banner -->
+  <div class="glass-card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="status-dot {% if not system_status.scanner_ready %}warn{% endif %}"></span>
+      <span style="font-size: 13px; font-weight: 500;">
+        Scanner Status: <b>{{ system_status.scanner }}</b>
+      </span>
+    </div>
+    <span style="font-size: 12px; color: var(--text-dim);">
+      Supported Classes: Arduino, ESP32, Raspberry Pi, LED, Resistor, Capacitor, HC-SR04, PIR, LDR, Buzzer, Servo, DC Motor, Relay, Breadboard
+    </span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+    <!-- Upload & Camera Control Panel -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">1. Input Component Image</h3>
+
+      <!-- Drag & Drop Zone -->
+      <div id="drop-zone" class="drop-zone" onclick="document.getElementById('file-input').click()">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-electric)" stroke-width="2" style="margin-bottom: 10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;">Drag & Drop component image here</div>
+        <div style="font-size: 12px; color: var(--text-muted);">or click to browse from device (PNG, JPG, WEBP max 16MB)</div>
+        <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+      </div>
+
+      <!-- Camera Feed Toggle -->
+      <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <button id="camera-btn" class="btn btn-secondary" style="font-size: 12px;" onclick="toggleCamera()">
+          📷 Live Camera Input
+        </button>
+        <button id="scan-btn" class="btn btn-primary" style="font-size: 13px;" onclick="runScanner()" disabled>
+          Scan Component
+        </button>
+      </div>
+
+      <!-- Camera Preview Container -->
+      <div id="camera-container" style="display: none; margin-top: 16px;">
+        <video id="video-feed" autoplay playsinline style="width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"></video>
+        <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="captureCameraFrame()">
+          📸 Capture Photo
+        </button>
+      </div>
+
+      <!-- Selected Image Preview -->
+      <div id="preview-container" class="scan-animation" style="display: none; margin-top: 16px; text-align: center;">
+        <img id="image-preview" class="preview-img" src="" alt="Selected Preview">
+      </div>
+    </div>
+
+    <!-- Detection Results & Inventory Insertion Panel -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">2. AI Classification Result</h3>
+
+      <div id="result-placeholder" style="text-align: center; padding: 60px 20px; color: var(--text-dim);">
+        Upload or capture an image to scan for electronics components.
+      </div>
+
+      <!-- Detection Card -->
+      <div id="result-card" style="display: none;">
+        <div style="background: rgba(10, 13, 20, 0.6); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 20px;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <span id="result-category" class="badge badge-info" style="margin-bottom: 6px;">Category</span>
+              <h2 id="result-component" style="font-size: 20px; font-weight: 700; color: #fff;">Component Name</h2>
+              <div style="font-size: 12px; color: var(--text-muted);">Normalized: <b id="result-normalized" style="color: var(--accent-electric);">Standard Name</b></div>
+            </div>
+
+            <div style="text-align: right;">
+              <span style="font-size: 11px; color: var(--text-dim);">Confidence</span>
+              <div id="result-confidence" style="font-size: 22px; font-weight: 700; color: var(--accent-success);">98.5%</div>
+            </div>
+          </div>
+
+          <div id="result-message" style="font-size: 12.5px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+          </div>
+        </div>
+
+        <!-- Add to Inventory Form -->
+        <div class="glass-card" style="padding: 16px; background: rgba(6, 182, 212, 0.04);">
+          <h4 style="font-size: 13.5px; font-weight: 600; color: #fff; margin-bottom: 12px;">Add Scanned Item to Workshop Inventory</h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">Quantity to Add</label>
+              <input type="number" id="add-qty" class="input-field" value="1" min="1">
+            </div>
+            <div>
+              <label style="font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 4px;">Voltage Spec</label>
+              <input type="text" id="add-voltage" class="input-field" value="5V">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button id="add-inv-btn" class="btn btn-secondary" style="flex: 1; justify-content: center; font-size: 12px;" onclick="addScannedToInventory()">
+              + Add to Inventory
+            </button>
+            <button id="find-proj-btn" class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 12px;" onclick="findProjectsForScanned()">
+              ⚡ Find Projects
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fallback / Model Not Trained Warning Box -->
+      <div id="not-trained-box" style="display: none; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-sm); padding: 18px; color: #fbbf24; font-size: 13px; line-height: 1.5; margin-top: 20px;">
+        <b>Scanner Model Notice:</b><br>
+        <span id="not-trained-msg">Model not trained. Upload a trained model or run the training script.</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedFile = null;
+let currentPrediction = null;
+let cameraStream = null;
+
+// Drag & drop handlers
+const dropZone = document.getElementById('drop-zone');
+
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    selectedFile = e.dataTransfer.files[0];
+    showPreview(selectedFile);
+  }
+});
+
+function handleFileSelect(e) {
+  if (e.target.files && e.target.files.length > 0) {
+    selectedFile = e.target.files[0];
+    showPreview(selectedFile);
+  }
+}
+
+function showPreview(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('image-preview').src = e.target.result;
+    document.getElementById('preview-container').style.display = 'block';
+    document.getElementById('scan-btn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Camera feed controls
+async function toggleCamera() {
+  const container = document.getElementById('camera-container');
+  const video = document.getElementById('video-feed');
+  
+  if (container.style.display === 'none') {
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      video.srcObject = cameraStream;
+      container.style.display = 'block';
+    } catch (err) {
+      showToast('Camera access not supported or denied by browser', 'error');
+    }
+  } else {
+    stopCamera();
+    container.style.display = 'none';
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+  }
+}
+
+function captureCameraFrame() {
+  const video = document.getElementById('video-feed');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  
+  canvas.toBlob((blob) => {
+    selectedFile = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+    showPreview(selectedFile);
+    stopCamera();
+    document.getElementById('camera-container').style.display = 'none';
+  }, 'image/jpeg');
+}
+
+async function runScanner() {
+  if (!selectedFile) return;
+
+  const btn = document.getElementById('scan-btn');
+  btn.disabled = true;
+  btn.innerText = 'Scanning...';
+
+  const formData = new FormData();
+  formData.append('image', selectedFile);
+
+  try {
+    const res = await fetch('/api/scanner/predict', {
+      method: 'POST',
+      body: formData
+    });
+    const result = await res.json();
+
+    document.getElementById('result-placeholder').style.display = 'none';
+
+    if (result.status === 'success' && result.data.model_available) {
+      currentPrediction = result.data;
+      document.getElementById('result-component').innerText = result.data.component;
+      document.getElementById('result-normalized').innerText = result.data.normalized_name;
+      document.getElementById('result-category').innerText = result.data.category;
+      document.getElementById('result-confidence').innerText = result.data.confidence + '%';
+      document.getElementById('result-message').innerText = result.data.message;
+
+      document.getElementById('result-card').style.display = 'block';
+      document.getElementById('not-trained-box').style.display = 'none';
+    } else {
+      document.getElementById('result-card').style.display = 'none';
+      document.getElementById('not-trained-box').style.display = 'block';
+      document.getElementById('not-trained-msg').innerText = result.data ? result.data.message : "Model not trained. Upload a trained model or run the training script.";
+    }
+  } catch (err) {
+    showToast('Failed to process image scan', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Scan Component';
+  }
+}
+
+async function addScannedToInventory() {
+  if (!currentPrediction || !currentPrediction.normalized_name) return;
+
+  const qty = parseInt(document.getElementById('add-qty').value) || 1;
+  const voltage = document.getElementById('add-voltage').value || '5V';
+
+  try {
+    const res = await fetch('/api/components', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: currentPrediction.normalized_name,
+        category: currentPrediction.category,
+        quantity: qty,
+        voltage: voltage,
+        cost: 50.0,
+        description: `Added via AI Component Scanner (${currentPrediction.confidence}% confidence)`
+      })
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      showToast(`Added ${qty}x ${currentPrediction.normalized_name} to inventory!`, 'success');
+    } else {
+      showToast(result.message, 'error');
+    }
+  } catch (err) {
+    showToast('Failed to add scanned item to inventory', 'error');
+  }
+}
+
+function findProjectsForScanned() {
+  if (!currentPrediction || !currentPrediction.normalized_name) return;
+  // Automatically add to inventory then redirect to recommendations
+  addScannedToInventory().then(() => {
+    window.location.href = '/projects';
+  });
+}
+</script>
+{% endblock %}

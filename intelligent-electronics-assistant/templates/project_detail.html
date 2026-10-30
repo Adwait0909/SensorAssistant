@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name }} - Project Details{% endblock %}
+{% block page_title %}{{ project.name }}{% endblock %}
+{% block page_subtitle %}{{ project.category }} • {{ project.difficulty }} Level{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Top Hero Card with Feasibility & Actions -->
+  <div class="glass-card" style="padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+      <div style="max-width: 65%;">
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <span class="badge badge-info">{{ project.category }}</span>
+          <span class="badge badge-secondary">{{ project.difficulty }}</span>
+          <span class="badge {% if safety.highest_severity == 'Low' %}badge-success{% elif safety.highest_severity == 'Medium' %}badge-warning{% else %}badge-danger{% endif %}">
+            {{ safety.status }}
+          </span>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+          {{ project.description }}
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button id="save-btn" class="btn btn-secondary" onclick="toggleSaveDetail('{{ project.id }}')">
+          {% if is_saved %}★ Saved in Workshop{% else %}☆ Save Project{% endif %}
+        </button>
+        <a href="{{ url_for('dashboard_views.project_build_page', project_id=project.id) }}" class="btn btn-primary" style="padding: 10px 20px; font-weight: 600;">
+          Start Step-by-Step Build
+        </a>
+      </div>
+    </div>
+
+    <!-- Metrics Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; background: rgba(10, 13, 20, 0.4); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-dim);">Feasibility Match:</span>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent-electric);">{{ deps.feasibility_percent }}%</div>
+        <span style="font-size: 11px; color: var(--text-muted);">{{ deps.summary }}</span>
+      </div>
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-dim);">Inventory Owned Cost:</span>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent-success);">₹{{ cost.current_component_cost }}</div>
+        <span style="font-size: 11px; color: var(--accent-success);">✓ Value reused</span>
+      </div>
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-dim);">Additional Cost to Build:</span>
+        <div style="font-size: 20px; font-weight: 700; color: {% if cost.additional_required_cost == 0 %}var(--accent-success){% else %}var(--text-main){% endif %};">
+          ₹{{ cost.additional_required_cost }}
+        </div>
+        <span style="font-size: 11px; color: var(--text-muted);">Mode: {{ mode|capitalize }}</span>
+      </div>
+      <div>
+        <span style="font-size: 11.5px; color: var(--text-dim);">Build Progress:</span>
+        <div style="font-size: 20px; font-weight: 700; color: #fff;">{{ build_session.progress_percent }}%</div>
+        <span style="font-size: 11px; color: var(--text-dim);">{{ build_session.completed_steps }}/{{ build_session.total_steps }} steps done</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Column Layout: Dependencies & Safety Analysis -->
+  <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+
+    <!-- Left Column: Component Dependency Breakdown -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      <!-- Components Analysis -->
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+          <span>Dependency & Component Analysis</span>
+          <span style="font-size: 12px; color: var(--text-dim);">Real-time workshop check</span>
+        </h3>
+
+        <!-- Available Components -->
+        <div style="margin-bottom: 20px;">
+          <h4 style="font-size: 13px; font-weight: 600; color: var(--accent-success); margin-bottom: 8px;">
+            ✓ Available in Inventory ({{ deps.available_components|length }})
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            {% for c in deps.available_components %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; font-size: 12.5px;">
+              <span style="font-weight: 500;">{{ c.name }}</span>
+              <span style="color: var(--text-dim); font-size: 11.5px;">Stock: <b>{{ c.stock }}</b> | {{ c.voltage }}</span>
+            </div>
+            {% endfor %}
+            {% if deps.available_components|length == 0 %}
+            <div style="font-size: 12px; color: var(--text-dim); padding: 8px;">No matching components found in your inventory.</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Missing Components & Low-Cost Alternatives -->
+        <div style="margin-bottom: 20px;">
+          <h4 style="font-size: 13px; font-weight: 600; color: #fca5a5; margin-bottom: 8px;">
+            ⚠ Missing Components ({{ deps.missing_components|length }})
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            {% for m in deps.missing_components %}
+            <div style="padding: 10px 14px; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 6px; font-size: 12.5px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-weight: 600; color: #fca5a5;">{{ m.name }}</span>
+                <span class="badge badge-warning">Missing</span>
+              </div>
+              <!-- Compatible Alternatives -->
+              {% if m.alternatives %}
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px;">
+                <b style="color: var(--accent-cyan);">Compatible Alternative:</b>
+                {% for alt in m.alternatives %}
+                  <div>• <b>{{ alt.name }}</b> (~₹{{ alt.cost }}) - <i>{{ alt.reason }}</i></div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            {% if deps.missing_components|length == 0 %}
+            <div style="font-size: 12.5px; color: var(--accent-success); padding: 8px;">
+              ✓ All required components are in stock! You can assemble this immediately.
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Optional Components -->
+        {% if deps.optional_components %}
+        <div>
+          <h4 style="font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 8px;">
+            ○ Optional Enhancements
+          </h4>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            {% for opt in deps.optional_components %}
+            <span class="badge badge-secondary" style="font-size: 11.5px; padding: 5px 10px;">
+              {{ opt.name }} {% if opt.status == 'available' %}(In Stock){% endif %}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Supporting Electrical Dependencies -->
+      {% if deps.supporting_dependencies %}
+      <div class="glass-card" style="padding: 20px;">
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Supporting Circuit Dependencies</h3>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          {% for dep in deps.supporting_dependencies %}
+          <div style="font-size: 12px; color: var(--text-muted); background: rgba(10, 13, 20, 0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <b style="color: var(--accent-electric);">{{ dep.key|replace('_', ' ')|capitalize }}:</b> {{ dep.description }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Safety Engine & Build Preview -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+
+      <!-- Safety Engine Alert Box -->
+      <div class="glass-card" style="padding: 24px; border-color: {% if safety.highest_severity == 'Critical' %}rgba(239, 68, 68, 0.4){% elif safety.highest_severity == 'High' %}rgba(245, 158, 11, 0.4){% else %}var(--border-color){% endif %};">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3 style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--accent-warning);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Safety Rule Engine
+          </h3>
+          <span class="badge {% if safety.highest_severity == 'Low' %}badge-success{% else %}badge-warning{% endif %}">
+            {{ safety.status }}
+          </span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+          {% for w in safety.warnings %}
+          <div style="background: rgba(10, 13, 20, 0.6); border-left: 3px solid {% if w.risk_level == 'Critical' or w.risk_level == 'High' %}var(--accent-danger){% elif w.risk_level == 'Medium' %}var(--accent-warning){% else %}var(--accent-success){% endif %}; padding: 10px 14px; border-radius: 4px; font-size: 12px;">
+            <div style="font-weight: 600; color: #fff; margin-bottom: 2px;">{{ w.title }}</div>
+            <div style="color: var(--text-muted); line-height: 1.4;">{{ w.explanation }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div style="font-size: 11px; color: var(--text-dim); line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+          <i>{{ safety.disclaimer }}</i>
+        </div>
+      </div>
+
+      <!-- Expected Output & Testing Preview -->
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Verification & Expected Behavior</h3>
+        <p style="font-size: 12.5px; color: var(--accent-success); margin-bottom: 14px;">
+          <b>Expected Output:</b> {{ project.expected_output or "Circuit functions according to firmware logic." }}
+        </p>
+
+        {% if project.possible_failures %}
+        <h4 style="font-size: 12.5px; font-weight: 600; color: #fca5a5; margin-bottom: 6px;">Common Failure Pitfalls:</h4>
+        <ul style="padding-left: 18px; font-size: 11.5px; color: var(--text-muted); display:flex; flex-direction:column; gap:4px;">
+          {% for f in project.possible_failures %}
+          <li>{{ f }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function toggleSaveDetail(projectId) {
+  const btn = document.getElementById('save-btn');
+  const isSaved = btn.innerText.includes('Saved');
+  
+  try {
+    if (!isSaved) {
+      const res = await fetch('/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_id: projectId, action: 'saved', notes: 'Saved from project details page' })
+      });
+      if (res.ok) {
+        btn.innerText = '★ Saved in Workshop';
+        btn.style.color = 'var(--accent-warning)';
+        showToast('Project saved to your workshop', 'success');
+      }
+    } else {
+      const res = await fetch(`/api/history/unsave/${projectId}`, { method: 'POST' });
+      if (res.ok) {
+        btn.innerText = '☆ Save Project';
+        btn.style.color = '';
+        showToast('Removed from saved list', 'info');
+      }
+    }
+  } catch (e) {
+    showToast('Failed to update status', 'error');
+  }
+}
+</script>
+{% endblock %}

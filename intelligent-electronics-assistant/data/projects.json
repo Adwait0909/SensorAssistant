@@ -1,0 +1,2728 @@
+[
+  {
+    "id": "proj-automatic-street-light",
+    "name": "Automatic Street Light",
+    "description": "An energy-saving automated lighting system that senses ambient ambient lux with an LDR and turns on high-efficiency LEDs when darkness is detected.",
+    "category": "Home Automation",
+    "difficulty": "Beginner",
+    "estimated_cost": 550.0,
+    "required_components": [
+      "Arduino Uno",
+      "LDR",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "Battery"
+    ],
+    "dependencies": {
+      "resistor_for_led": "220Ω current limiting resistor for LED to prevent burn out",
+      "resistor_for_ldr": "10kΩ pull-down resistor to create voltage divider for analog reading"
+    },
+    "wiring_rules": [
+      "LDR leg 1 connects to Arduino 5V",
+      "LDR leg 2 connects to Arduino Analog Pin A0 and through a 10k resistor to GND",
+      "LED Anode (long leg) connects to Digital Pin 13 through a 220 ohm resistor",
+      "LED Cathode connects to Arduino GND"
+    ],
+    "safety_rules": [
+      "Do not connect LED directly to 5V or Digital Pins without 220 ohm series resistor.",
+      "Ensure LDR voltage divider does not short 5V to GND."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino Uno 5V and GND to the breadboard power rails so every component has a clean shared supply and ground.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V pin",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5 V DC supply rail"
+          },
+          {
+            "from": "Arduino Uno — GND pin",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground reference"
+          }
+        ],
+        "how_to_connect": "1. Place the Arduino Uno on the desk with the USB port facing you.\n2. Take a red jumper wire and plug one end into the Arduino 5V pin (right header row, labelled 5V).\n3. Plug the other end into any hole on the red (+) power rail of the breadboard.\n4. Take a black jumper wire and plug one end into any Arduino GND pin.\n5. Plug the other end into any hole on the blue (−) power rail.\n6. Verify both rails are connected before proceeding.",
+        "warnings": [
+          "Double-check that the red wire goes to 5V — NOT VIN — to avoid supplying raw battery voltage to components."
+        ],
+        "expected_output": "When Arduino is powered via USB, a multimeter placed between the red and blue rails reads approximately 4.95–5.05 V."
+      },
+      {
+        "step_number": 2,
+        "title": "Build LDR Voltage Divider",
+        "description": "Insert the LDR and a 10 kΩ pull-down resistor to form a voltage divider that converts light intensity into a varying analog voltage on pin A0.",
+        "components_involved": [
+          "LDR (Photoresistor)",
+          "10kΩ Resistor",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Breadboard Red Rail (+)",
+            "to": "LDR Leg 1 (either leg)",
+            "wire_color": "Red",
+            "notes": "Powers one side of the LDR"
+          },
+          {
+            "from": "LDR Leg 2",
+            "to": "Arduino Uno — A0",
+            "wire_color": "Yellow",
+            "notes": "Analog voltage reading node"
+          },
+          {
+            "from": "LDR Leg 2 (same row)",
+            "to": "10kΩ Resistor Leg 1",
+            "wire_color": "Yellow",
+            "notes": "Divider mid-point"
+          },
+          {
+            "from": "10kΩ Resistor Leg 2",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Pull-down to GND"
+          }
+        ],
+        "how_to_connect": "1. Insert the LDR across the centre gap of the breadboard (one leg each side of the gap).\n2. Using a red wire, connect the left leg of the LDR to the breadboard red (+) rail.\n3. Using a yellow wire, connect the right leg of the LDR to Arduino analog pin A0.\n4. In the SAME row as the right LDR leg, insert one leg of the 10 kΩ resistor.\n5. Connect the other leg of the 10 kΩ resistor to the breadboard blue (−) rail with a black wire.\n6. The mid-point between the LDR and resistor is your voltage divider output — it should also connect to A0.",
+        "warnings": [
+          "LDR has no polarity — either leg can face 5V.",
+          "Do NOT short the 5V rail directly to GND through the resistor — always keep the resistor between the LDR mid-point and GND."
+        ],
+        "expected_output": "Open Arduino Serial Monitor at 9600 baud and run analogRead(A0). Value should be ~900–1023 in bright light and drop to ~50–300 when you cover the LDR with your hand."
+      },
+      {
+        "step_number": 3,
+        "title": "Connect Indicator LED",
+        "description": "Wire the LED with a 220 Ω current-limiting resistor to digital pin D13 so the Arduino can switch it on and off safely.",
+        "components_involved": [
+          "LED",
+          "220Ω Resistor",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D13",
+            "to": "220Ω Resistor Leg 1",
+            "wire_color": "Green",
+            "notes": "Current-limiting resistor on the high side"
+          },
+          {
+            "from": "220Ω Resistor Leg 2",
+            "to": "LED Anode (long leg +)",
+            "wire_color": "Green",
+            "notes": "Resistor feeds into LED positive leg"
+          },
+          {
+            "from": "LED Cathode (short leg −)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Returns to ground"
+          }
+        ],
+        "how_to_connect": "1. Insert the 220 Ω resistor into the breadboard (any empty row).\n2. Connect one end of the resistor to Arduino digital pin D13 with a green jumper wire.\n3. Identify the LED legs: the LONGER leg is the Anode (+), the SHORTER leg (or flat side) is the Cathode (−).\n4. Insert the LED so its anode (+) leg is in the SAME breadboard row as the second leg of the resistor.\n5. Connect the LED cathode (−) leg to the breadboard blue GND rail with a black wire.\n6. Visually confirm: D13 → Resistor → LED Anode → LED Cathode → GND.",
+        "warnings": [
+          "NEVER connect an LED directly to 5V or a digital pin without a series resistor — it will burn out immediately.",
+          "Check LED polarity carefully: flat side or short leg = cathode (negative)."
+        ],
+        "expected_output": "Run digitalWrite(13, HIGH) in a test sketch — LED lights up. Run digitalWrite(13, LOW) — LED turns off. No smoke or excessive heat."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Firmware & Calibrate Threshold",
+        "description": "Upload the LDR threshold sketch to Arduino and calibrate the light trigger value using Serial Monitor readings.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Connect Arduino to your PC via USB cable.\n2. Open Arduino IDE and paste the street-light sketch (analogRead A0, if value < threshold then digitalWrite D13 HIGH).\n3. Set threshold initially to 400 (mid-range ADC value).\n4. Click Upload and wait for 'Done uploading'.\n5. Open Serial Monitor (Ctrl+Shift+M), set baud rate to 9600.\n6. Note the ADC readings in normal room light vs. covering the LDR — adjust threshold in code to the midpoint.",
+        "warnings": [
+          "Disconnect the breadboard jumpers from RX (D0) and TX (D1) pins while uploading if you have anything connected there — serial conflict will block upload."
+        ],
+        "expected_output": "Serial Monitor prints live ADC values (0–1023). LED turns ON when you cover the LDR and turns OFF when uncovered. Threshold can be tuned by editing the comparison value."
+      }
+    ],
+    "testing_steps": [
+      "Power the Arduino using USB cable.",
+      "Cover the LDR with your finger or a dark sheet.",
+      "Observe that the LED turns ON when light level drops below threshold.",
+      "Uncover LDR; verify that LED turns OFF smoothly."
+    ],
+    "expected_output": "LED illuminates automatically when light falls below ~400 raw ADC value.",
+    "possible_failures": [
+      "LED never turns on: check LED polarity (flat side/short leg is cathode).",
+      "LDR reading does not change: 10k resistor disconnected or shorted to 5V.",
+      "Arduino disconnects: power rail short circuit on breadboard."
+    ]
+  },
+  {
+    "id": "proj-smart-dustbin",
+    "name": "Smart Dustbin",
+    "description": "A contactless waste bin lid opener using an ultrasonic distance sensor and a servo motor for hygienic, touchless disposal.",
+    "category": "Robotics & Automation",
+    "difficulty": "Beginner",
+    "estimated_cost": 720.0,
+    "required_components": [
+      "Arduino Uno",
+      "HC-SR04 Ultrasonic Sensor",
+      "Servo Motor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "LED",
+      "Buzzer",
+      "Battery"
+    ],
+    "dependencies": {
+      "servo_power": "External 5V supply recommended if servo draws over 400mA on load"
+    },
+    "wiring_rules": [
+      "HC-SR04 VCC -> 5V, GND -> GND",
+      "HC-SR04 Trig -> Pin 9, Echo -> Pin 10",
+      "Servo Red -> 5V, Brown/Black -> GND, Orange/Yellow -> Pin 6"
+    ],
+    "safety_rules": [
+      "Do not stall the servo motor mechanically as stall current causes Arduino brownout reset."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Establish 5V and GND rails on the breadboard from the Arduino.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Main power rail"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Place Arduino and breadboard side by side.\n2. Red wire: Arduino 5V → breadboard red (+) rail.\n3. Black wire: Arduino GND → breadboard blue (−) rail.\n4. Verify with a multimeter: 5V between rails.",
+        "warnings": [],
+        "expected_output": "Multimeter reads ~5V between red and blue breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire HC-SR04 Ultrasonic Sensor",
+        "description": "Connect the HC-SR04 sensor to power, ground, and trigger/echo digital pins so Arduino can measure hand distance.",
+        "components_involved": [
+          "HC-SR04 Ultrasonic Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "HC-SR04 — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V power for sensor"
+          },
+          {
+            "from": "HC-SR04 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Sensor ground"
+          },
+          {
+            "from": "HC-SR04 — TRIG",
+            "to": "Arduino Uno — D9",
+            "wire_color": "Yellow",
+            "notes": "Trigger pulse output from Arduino"
+          },
+          {
+            "from": "HC-SR04 — ECHO",
+            "to": "Arduino Uno — D10",
+            "wire_color": "Green",
+            "notes": "Echo pulse return to Arduino"
+          }
+        ],
+        "how_to_connect": "1. Insert the HC-SR04 into the breadboard, pins spanning two rows.\n2. Connect VCC pin row to the red (+) rail with a red wire.\n3. Connect GND pin row to the blue (−) rail with a black wire.\n4. Connect TRIG pin to Arduino D9 with a yellow wire.\n5. Connect ECHO pin to Arduino D10 with a green wire.\n6. Confirm all 4 wires are secure.",
+        "warnings": [
+          "HC-SR04 operates at 5V — do not use 3.3V or the echo pulse will be weak.",
+          "Keep sensor facing open space (not a wall) during testing."
+        ],
+        "expected_output": "A Serial Monitor test sketch prints distance values in centimetres. Wave hand in front of sensor — values change between 5–200 cm."
+      },
+      {
+        "step_number": 3,
+        "title": "Connect Servo Motor",
+        "description": "Wire the servo motor's three-wire cable to 5V, GND, and PWM pin D6 so Arduino can rotate the dustbin lid.",
+        "components_involved": [
+          "Servo Motor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Servo — Red wire (VCC)",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V servo power"
+          },
+          {
+            "from": "Servo — Brown/Black wire (GND)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Servo ground"
+          },
+          {
+            "from": "Servo — Orange/Yellow (Signal)",
+            "to": "Arduino Uno — D6",
+            "wire_color": "Orange",
+            "notes": "PWM signal for angle control"
+          }
+        ],
+        "how_to_connect": "1. Identify the three servo wires: Red (power), Brown or Black (ground), Orange or Yellow (signal).\n2. Plug the red wire into the breadboard red (+) rail.\n3. Plug the brown/black wire into the breadboard blue (−) rail.\n4. Plug the orange/yellow signal wire into Arduino digital pin D6.\n5. Arrange the wires neatly so they don't strain the servo connector.",
+        "warnings": [
+          "Servo motors draw peak current (up to 700 mA) when stalled or moving under load. If the Arduino resets when the servo moves, use an external 5V supply for the servo.",
+          "Never mechanically block the servo horn — stall current will brown out the Arduino."
+        ],
+        "expected_output": "On power-up with the Servo library, servo moves to 0° (closed position) and holds. Running servo.write(90) in a test sketch opens the lid 90°."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Firmware & Test Proximity",
+        "description": "Upload the dustbin sketch that measures distance and commands the servo to open when a hand is detected within 20 cm.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Connect Arduino to PC via USB.\n2. Include the Servo.h library in Arduino IDE.\n3. Set TRIG=9, ECHO=10, SERVO_PIN=6, THRESHOLD=20 (cm).\n4. Upload the sketch.\n5. Open Serial Monitor to watch distance readings.\n6. Slowly bring hand toward the sensor from 50 cm — lid should open at 20 cm and close 3 seconds after removing hand.",
+        "warnings": [
+          "Disconnect servo signal wire from D6 before uploading if using D0/D1 for serial debug."
+        ],
+        "expected_output": "Lid opens (servo → 90°) when hand enters 20 cm zone. Lid closes (servo → 0°) automatically after 3 seconds. Serial Monitor prints real-time distance."
+      }
+    ],
+    "testing_steps": [
+      "Bring hand within 15 cm of the ultrasonic sensor.",
+      "Verify the servo turns 90 degrees and holds for 3 seconds.",
+      "Remove hand and verify lid closes smoothly."
+    ],
+    "expected_output": "Lid opens when hand enters 20cm threshold and closes after delay.",
+    "possible_failures": [
+      "Lid twitches or resets controller: Servo draws too much peak current from USB.",
+      "Echo reading 0cm: sensor wiring loose or Echo pin misassigned."
+    ]
+  },
+  {
+    "id": "proj-obstacle-avoidance-robot",
+    "name": "Obstacle Avoidance Robot",
+    "description": "An autonomous mobile rover that continuously scans for forward obstacles using an ultrasonic sensor and turns autonomously to avoid collisions.",
+    "category": "Robotics",
+    "difficulty": "Intermediate",
+    "estimated_cost": 1250.0,
+    "required_components": [
+      "Arduino Uno",
+      "HC-SR04 Ultrasonic Sensor",
+      "DC Motor",
+      "Battery",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Servo Motor",
+      "Buzzer",
+      "LED"
+    ],
+    "dependencies": {
+      "motor_driver": "Requires an H-Bridge driver module or driver transistors for high motor current",
+      "battery_supply": "Separate battery power recommended for motors"
+    },
+    "wiring_rules": [
+      "DC Motors driven through motor driver or transistor switches",
+      "Ultrasonic sensor mounted on front chassis",
+      "Common ground established between Arduino and motor battery"
+    ],
+    "safety_rules": [
+      "Never power DC motors directly from Arduino GPIO pins.",
+      "Ensure motor voltage does not feed back into Arduino 5V logic line."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Chassis & Motor Assembly",
+        "description": "Mount the DC motors onto the robot chassis and solder protection diodes across motor terminals to prevent voltage spikes.",
+        "components_involved": [
+          "DC Motor",
+          "9V Battery",
+          "Chassis"
+        ],
+        "connections": [
+          {
+            "from": "1N4007 Diode Cathode (stripe)",
+            "to": "DC Motor (+) terminal",
+            "wire_color": "Red",
+            "notes": "Reverse-biased flyback protection"
+          },
+          {
+            "from": "1N4007 Diode Anode",
+            "to": "DC Motor (−) terminal",
+            "wire_color": "Black",
+            "notes": "Clamps inductive spike to ground"
+          }
+        ],
+        "how_to_connect": "1. Screw both DC motors into the chassis motor mounts using M3 screws.\n2. Solder a 1N4007 diode across EACH motor: stripe (cathode) to the (+) terminal, plain end (anode) to the (−) terminal.\n3. Attach wheels to motor shafts and secure with the small set screw.\n4. Place the 9V battery holder on the chassis rear and route wires to the front.\n5. Confirm motors spin freely by hand before wiring.",
+        "warnings": [
+          "Always solder flyback diodes — without them, motor switching spikes WILL destroy your L298N and Arduino.",
+          "Ensure no solder bridges between motor terminals."
+        ],
+        "expected_output": "Motors spin freely by hand. When 9V is briefly applied directly to a motor, it spins smoothly in one direction."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire L298N Motor Driver",
+        "description": "Connect the L298N H-bridge module to the Arduino control pins and the battery supply, providing isolated high-current motor driving.",
+        "components_involved": [
+          "Arduino Uno",
+          "DC Motor",
+          "9V Battery",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "9V Battery (+)",
+            "to": "L298N — 12V input",
+            "wire_color": "Red",
+            "notes": "Motor power supply"
+          },
+          {
+            "from": "9V Battery (−)",
+            "to": "L298N — GND",
+            "wire_color": "Black",
+            "notes": "Power ground — also connect to Arduino GND"
+          },
+          {
+            "from": "L298N — 5V out",
+            "to": "Arduino Uno — VIN",
+            "wire_color": "Red",
+            "notes": "L298N's onboard 5V reg powers Arduino"
+          },
+          {
+            "from": "L298N — IN1",
+            "to": "Arduino Uno — D4",
+            "wire_color": "Yellow",
+            "notes": "Left motor forward"
+          },
+          {
+            "from": "L298N — IN2",
+            "to": "Arduino Uno — D5",
+            "wire_color": "Yellow",
+            "notes": "Left motor reverse"
+          },
+          {
+            "from": "L298N — IN3",
+            "to": "Arduino Uno — D6",
+            "wire_color": "Green",
+            "notes": "Right motor forward"
+          },
+          {
+            "from": "L298N — IN4",
+            "to": "Arduino Uno — D7",
+            "wire_color": "Green",
+            "notes": "Right motor reverse"
+          },
+          {
+            "from": "L298N — ENA (jumper removed)",
+            "to": "Arduino Uno — D3 (PWM)",
+            "wire_color": "Orange",
+            "notes": "Left motor speed control"
+          },
+          {
+            "from": "L298N — ENB (jumper removed)",
+            "to": "Arduino Uno — D2",
+            "wire_color": "Orange",
+            "notes": "Right motor speed control"
+          },
+          {
+            "from": "Left Motor (+)",
+            "to": "L298N — OUT1",
+            "wire_color": "Red",
+            "notes": "Left motor A"
+          },
+          {
+            "from": "Left Motor (−)",
+            "to": "L298N — OUT2",
+            "wire_color": "Black",
+            "notes": "Left motor B"
+          },
+          {
+            "from": "Right Motor (+)",
+            "to": "L298N — OUT3",
+            "wire_color": "Red",
+            "notes": "Right motor A"
+          },
+          {
+            "from": "Right Motor (−)",
+            "to": "L298N — OUT4",
+            "wire_color": "Black",
+            "notes": "Right motor B"
+          }
+        ],
+        "how_to_connect": "1. Remove the ENA and ENB yellow jumpers from the L298N module.\n2. Connect 9V battery (+) to L298N 12V input terminal and (−) to L298N GND.\n3. ALSO connect L298N GND to Arduino GND (shared ground — critical).\n4. Connect L298N 5V output to Arduino VIN to power it from the battery.\n5. Wire IN1-IN4 to Arduino D4, D5, D6, D7 respectively.\n6. Wire ENA to D3 and ENB to D2 for PWM speed control.\n7. Screw left motor wires into OUT1/OUT2 and right motor into OUT3/OUT4.",
+        "warnings": [
+          "NEVER connect motor power directly to Arduino 5V or 3.3V pins — the current will destroy the regulator.",
+          "Always establish SHARED GROUND between the battery, L298N, and Arduino."
+        ],
+        "expected_output": "With a test sketch: setting IN1=HIGH, IN2=LOW, ENA=HIGH spins left motor forward. Both motors spin in correct directions for forward, reverse, left, and right turn commands."
+      },
+      {
+        "step_number": 3,
+        "title": "Mount & Wire HC-SR04 Sensor",
+        "description": "Mount the ultrasonic sensor on the robot's front chassis and connect to Arduino for forward obstacle detection.",
+        "components_involved": [
+          "HC-SR04 Ultrasonic Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "HC-SR04 — VCC",
+            "to": "Arduino Uno — 5V",
+            "wire_color": "Red",
+            "notes": "Sensor power"
+          },
+          {
+            "from": "HC-SR04 — GND",
+            "to": "Arduino Uno — GND",
+            "wire_color": "Black",
+            "notes": "Sensor ground"
+          },
+          {
+            "from": "HC-SR04 — TRIG",
+            "to": "Arduino Uno — D9",
+            "wire_color": "Yellow",
+            "notes": "Trigger pulse"
+          },
+          {
+            "from": "HC-SR04 — ECHO",
+            "to": "Arduino Uno — D10",
+            "wire_color": "Green",
+            "notes": "Echo return"
+          }
+        ],
+        "how_to_connect": "1. Mount HC-SR04 on the front of the chassis facing forward using double-sided tape or a bracket.\n2. Route four wires (VCC, GND, TRIG, ECHO) back along the chassis to the Arduino.\n3. Connect VCC→Arduino 5V, GND→Arduino GND, TRIG→D9, ECHO→D10.\n4. Secure wires with cable ties so they don't snag in wheels.",
+        "warnings": [
+          "Ensure sensor faces straight ahead — any tilt will cause inaccurate distance readings."
+        ],
+        "expected_output": "Serial Monitor prints forward distance in cm. Place your hand 10 cm in front — reading shows ~10. Move to 50 cm — reads ~50."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Navigation Firmware",
+        "description": "Upload the obstacle avoidance sketch that drives the robot forward and turns when an obstacle is detected within 25 cm.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Connect Arduino to PC via USB (keep battery disconnected during upload).\n2. In the sketch set: TRIG=9, ECHO=10, IN1=4, IN2=5, IN3=6, IN4=7, ENA=3, ENB=2, THRESHOLD=25.\n3. Logic: if distance>25 go forward; else stop, turn right 500ms, resume.\n4. Upload sketch, disconnect USB.\n5. Place robot on floor and switch on battery.\n6. Observe autonomous navigation.",
+        "warnings": [
+          "Upload with battery DISCONNECTED to avoid serial conflicts.",
+          "Start robot on smooth floor — carpet increases motor current demand and may cause brownout."
+        ],
+        "expected_output": "Robot drives forward, detects obstacles within 25 cm, stops, turns right, and resumes forward motion. No collisions occur during a 2-minute run."
+      }
+    ],
+    "testing_steps": [
+      "Place robot on smooth floor with obstacles.",
+      "Turn on battery switch.",
+      "Confirm robot navigates forward and pivots when an obstacle appears within 25cm."
+    ],
+    "expected_output": "Rover steers around obstacles without physical collisions.",
+    "possible_failures": [
+      "Motors do not spin: inadequate battery current or shared ground missing.",
+      "Erratic sensor values: acoustic reflection angles or motor electrical noise."
+    ]
+  },
+  {
+    "id": "proj-temperature-monitoring-system",
+    "name": "Temperature Monitoring System",
+    "description": "A precision temperature and humidity logging unit that measures environmental conditions and displays real-time metrics on an OLED screen.",
+    "category": "IoT & Monitoring",
+    "difficulty": "Beginner",
+    "estimated_cost": 680.0,
+    "required_components": [
+      "Arduino Uno",
+      "Temperature Sensor",
+      "OLED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Buzzer",
+      "LED"
+    ],
+    "dependencies": {
+      "i2c_bus": "OLED display connects via I2C (SDA=A4, SCL=A5 on Uno)"
+    },
+    "wiring_rules": [
+      "DHT11 VCC to 5V, GND to GND, Data to Pin 2",
+      "OLED VCC to 5V, GND to GND, SDA to A4, SCL to A5",
+      "4.7k or 10k resistor between DHT11 Data and VCC"
+    ],
+    "safety_rules": [
+      "Double-check OLED polarity (VCC vs GND pins are inverted on some clone modules)."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino 5V and GND to the breadboard supply rails.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V supply"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire from Arduino 5V to breadboard red (+) rail.\n2. Black wire from Arduino GND to breadboard blue (−) rail.\n3. Confirm with multimeter: ~5V between rails.",
+        "warnings": [],
+        "expected_output": "Multimeter reads ~5V across the breadboard power rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire OLED Display (I2C)",
+        "description": "Connect the 0.96-inch I2C OLED display to the Arduino using the I2C bus pins A4 (SDA) and A5 (SCL).",
+        "components_involved": [
+          "OLED 0.96\" I2C Display",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "OLED — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "3.3V–5V power (module has onboard regulator)"
+          },
+          {
+            "from": "OLED — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Display ground"
+          },
+          {
+            "from": "OLED — SDA",
+            "to": "Arduino Uno — A4",
+            "wire_color": "Blue",
+            "notes": "I2C data line"
+          },
+          {
+            "from": "OLED — SCL",
+            "to": "Arduino Uno — A5",
+            "wire_color": "Yellow",
+            "notes": "I2C clock line"
+          }
+        ],
+        "how_to_connect": "1. Look at the OLED module — pins are usually labelled VCC, GND, SCL, SDA (sometimes in different order — CHECK your specific module).\n2. Connect VCC to the red breadboard rail with a red wire.\n3. Connect GND to the blue breadboard rail with a black wire.\n4. Connect SDA to Arduino analog pin A4 with a blue wire.\n5. Connect SCL to Arduino analog pin A5 with a yellow wire.\n6. The OLED should faintly illuminate on some modules when powered.",
+        "warnings": [
+          "WARNING: Some clone OLED modules have VCC and GND REVERSED compared to the label. Always verify with a multimeter before plugging in.",
+          "Do not confuse A4/A5 with D4/D5 — they look similar on the board."
+        ],
+        "expected_output": "Run an I2C scanner sketch — Serial Monitor prints 'Device found at address 0x3C' (or 0x3D). OLED shows startup pattern or white pixels."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire DHT11 Temperature Sensor",
+        "description": "Connect the DHT11 sensor with a 10 kΩ pull-up resistor on the data line for reliable one-wire digital communication.",
+        "components_involved": [
+          "DHT11 Temperature Sensor",
+          "10kΩ Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "DHT11 — Pin 1 (VCC)",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "3.3–5.5V power"
+          },
+          {
+            "from": "DHT11 — Pin 4 (GND)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Sensor ground"
+          },
+          {
+            "from": "DHT11 — Pin 2 (DATA)",
+            "to": "Arduino Uno — D2",
+            "wire_color": "Green",
+            "notes": "1-Wire data signal"
+          },
+          {
+            "from": "10kΩ Resistor Leg 1",
+            "to": "DHT11 Pin 2 (DATA, same row)",
+            "wire_color": "Green",
+            "notes": "Pull-up resistor mid-point"
+          },
+          {
+            "from": "10kΩ Resistor Leg 2",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Pull-up to 5V"
+          }
+        ],
+        "how_to_connect": "1. DHT11 has 4 pins when viewed from the front grill: Pin1=VCC, Pin2=DATA, Pin3=NC, Pin4=GND.\n2. Insert DHT11 into breadboard across several rows.\n3. Connect Pin1 (VCC) to red rail; Pin4 (GND) to blue rail.\n4. Connect Pin2 (DATA) to Arduino D2 with a green wire.\n5. In THE SAME breadboard row as Pin2, insert one leg of the 10kΩ resistor.\n6. Connect the other resistor leg to the red (+) rail to create a pull-up to 5V.",
+        "warnings": [
+          "The 10kΩ pull-up resistor is MANDATORY — without it, DHT11 data line floats and returns NaN readings.",
+          "Never connect DHT11 Pin3 (NC) — it is not connected internally."
+        ],
+        "expected_output": "Using the DHT library, Serial Monitor prints temperature (~25°C) and humidity (~50%) within 2 seconds of powering on. Values refresh every 2 seconds."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Display Firmware",
+        "description": "Upload the sketch that reads DHT11 data and renders temperature and humidity in real time on the OLED screen.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Install libraries: DHT sensor library (Adafruit) and Adafruit SSD1306 + GFX Library via Arduino IDE Library Manager.\n2. In the sketch set: DHTPIN=2, DHTTYPE=DHT11, OLED address=0x3C.\n3. Code displays 'Temp: XX.X C' and 'Humidity: XX%' on OLED.\n4. Upload to Arduino.\n5. OLED should display readings within 3 seconds of boot.",
+        "warnings": [
+          "If OLED stays blank, try changing address from 0x3C to 0x3D in the sketch.",
+          "If temperature reads -999 or NaN, check the pull-up resistor connection on DHT11 data pin."
+        ],
+        "expected_output": "OLED shows live temperature and humidity. Gently breathing on the DHT11 causes humidity to rise by 5–10% and temperature to increase slightly within 3 seconds."
+      }
+    ],
+    "testing_steps": [
+      "Upload DHT & Adafruit SSD1306 code.",
+      "Check that OLED displays ambient temperature (~25°C) and humidity.",
+      "Gently breathe on sensor to verify temperature and humidity rise."
+    ],
+    "expected_output": "Real-time readable dashboard of ambient climate.",
+    "possible_failures": [
+      "OLED display remains black: wrong I2C address (0x3C vs 0x3D) or loose wiring.",
+      "Nan reading on temperature: pull-up resistor missing on DHT11 data line."
+    ]
+  },
+  {
+    "id": "proj-smart-plant-monitor",
+    "name": "Smart Plant Monitor",
+    "description": "An automated soil moisture sensing node that alerts plant owners when soil hydration drops below acceptable thresholds via visual and acoustic signals.",
+    "category": "AgriTech & Automation",
+    "difficulty": "Beginner",
+    "estimated_cost": 590.0,
+    "required_components": [
+      "Arduino Uno",
+      "Soil Moisture Sensor",
+      "Buzzer",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "OLED",
+      "Battery"
+    ],
+    "dependencies": {
+      "led_resistor": "220Ω resistor for alert LED"
+    },
+    "wiring_rules": [
+      "Soil moisture sensor analog output -> Arduino Pin A1",
+      "Buzzer (+) -> Arduino Pin 8, (-) -> GND",
+      "Alert LED (+) -> Pin 7 with 220Ω resistor, (-) -> GND"
+    ],
+    "safety_rules": [
+      "Do not submerge the sensor's electronic circuit board in water—only insert probe tines into soil."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Establish 5V and GND supply rails on the breadboard.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V rail"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "GND rail"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard (+) rail.\n2. Black wire: Arduino GND → breadboard (−) rail.\n3. Test with multimeter.",
+        "warnings": [],
+        "expected_output": "~5V between breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire Soil Moisture Sensor",
+        "description": "Connect the soil moisture sensor module's analog output to Arduino A1 to read soil wetness as a 0–1023 ADC value.",
+        "components_involved": [
+          "Soil Moisture Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Sensor Module — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Power the sensor module"
+          },
+          {
+            "from": "Sensor Module — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Sensor ground"
+          },
+          {
+            "from": "Sensor Module — AOUT",
+            "to": "Arduino Uno — A1",
+            "wire_color": "Yellow",
+            "notes": "Analog moisture reading"
+          }
+        ],
+        "how_to_connect": "1. Insert the sensor MODULE BOARD (not the probe) into the breadboard.\n2. Connect VCC to red rail and GND to blue rail.\n3. Connect AOUT to Arduino A1 with a yellow wire.\n4. Plug the probe connector from the module board into the metal probe tines.\n5. Do NOT submerge the module board — only the metal probe tines go into soil.",
+        "warnings": [
+          "NEVER submerge the PCB board in water or soil — only the metal probe prongs.",
+          "The sensor corrodes over long-term use in soil. Gold-plated probes last longer."
+        ],
+        "expected_output": "Serial Monitor shows ~1023 when probe is in dry air and drops to ~300–500 when probe is inserted in damp soil."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire Alert Buzzer & LED",
+        "description": "Connect the active buzzer and warning LED to digital pins D8 and D7 so the Arduino can trigger audio-visual alerts when soil is dry.",
+        "components_involved": [
+          "Active Buzzer",
+          "LED",
+          "220Ω Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D8",
+            "to": "Buzzer (+) pin",
+            "wire_color": "Green",
+            "notes": "Digital high drives buzzer"
+          },
+          {
+            "from": "Buzzer (−) pin",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Buzzer ground return"
+          },
+          {
+            "from": "Arduino Uno — D7",
+            "to": "220Ω Resistor Leg 1",
+            "wire_color": "Orange",
+            "notes": "Current-limited LED drive"
+          },
+          {
+            "from": "220Ω Resistor Leg 2",
+            "to": "LED Anode (long leg +)",
+            "wire_color": "Orange",
+            "notes": "Into LED positive"
+          },
+          {
+            "from": "LED Cathode (short leg −)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "LED ground"
+          }
+        ],
+        "how_to_connect": "1. Insert the active buzzer into the breadboard — the (+) pin is usually marked with a '+' label or a longer pin.\n2. Connect D8 to buzzer (+) and buzzer (−) to the blue GND rail.\n3. Insert the 220Ω resistor next to the LED rows.\n4. Connect D7 to one end of the resistor; the other resistor end to the LED anode (long leg).\n5. Connect LED cathode (short leg) to the blue GND rail.",
+        "warnings": [
+          "Active buzzers have polarity — if it doesn't beep, swap (+) and (−) wires.",
+          "Use a 220Ω resistor for the LED — directly wiring to a digital pin without it will burn the LED."
+        ],
+        "expected_output": "Running digitalWrite(8, HIGH) makes the buzzer beep continuously. Running digitalWrite(7, HIGH) lights the LED."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Plant Monitor Firmware",
+        "description": "Upload the threshold detection sketch that monitors A1, sounds buzzer, and lights LED when soil moisture drops below the dry threshold.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Connect Arduino to PC via USB.\n2. In sketch: MOISTURE_PIN=A1, BUZZER=8, LED=7, DRY_THRESHOLD=600.\n3. Logic: if analogRead(A1) > 600, soil is dry → buzzer ON, LED ON; else both OFF.\n4. Upload sketch and open Serial Monitor.\n5. Insert probe into dry soil → LED and buzzer activate.\n6. Water the soil → LED and buzzer deactivate within 2–3 seconds.",
+        "warnings": [],
+        "expected_output": "LED and buzzer activate when probe is in dry soil (ADC > 600) and deactivate when soil is sufficiently moist (ADC < 600). Serial Monitor shows live moisture values."
+      }
+    ],
+    "testing_steps": [
+      "Insert probe into dry soil: verify red LED turns ON and buzzer beeps.",
+      "Water the soil: verify LED turns OFF and buzzer stops."
+    ],
+    "expected_output": "Warning trigger activates when soil moisture is under 25%.",
+    "possible_failures": [
+      "Moisture reads constant: probe corroded or poor contact in loose soil."
+    ]
+  },
+  {
+    "id": "proj-motion-detection-alarm",
+    "name": "Motion Detection Alarm",
+    "description": "A perimeter security alert device utilizing a PIR motion sensor to detect infrared heat emitted by moving intruders, triggering a buzzer and flashing LEDs.",
+    "category": "Security",
+    "difficulty": "Beginner",
+    "estimated_cost": 490.0,
+    "required_components": [
+      "Arduino Uno",
+      "PIR Sensor",
+      "Buzzer",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Battery"
+    ],
+    "dependencies": {},
+    "wiring_rules": [
+      "PIR VCC -> 5V, GND -> GND, OUT -> Pin 2",
+      "Buzzer (+) -> Pin 11, (-) -> GND",
+      "LED (+) -> Pin 12 via 220 ohm, (-) -> GND"
+    ],
+    "safety_rules": [
+      "PIR sensor requires up to 60 seconds warm-up period after power-on before output stabilizes."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino 5V and GND to breadboard rails.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V supply"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard red (+) rail.\n2. Black wire: Arduino GND → breadboard blue (−) rail.",
+        "warnings": [],
+        "expected_output": "~5V between breadboard rails confirmed with multimeter."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire PIR Motion Sensor",
+        "description": "Connect the HC-SR501 PIR sensor to power and Arduino digital interrupt pin D2. Adjust sensitivity and delay potentiometers to mid-position.",
+        "components_involved": [
+          "PIR Sensor (HC-SR501)",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "PIR Sensor — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5–12V input (5V from rail)"
+          },
+          {
+            "from": "PIR Sensor — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "PIR Sensor — OUT",
+            "to": "Arduino Uno — D2",
+            "wire_color": "Green",
+            "notes": "Motion detected = digital HIGH"
+          }
+        ],
+        "how_to_connect": "1. Look at the back of the PIR module — there are two small potentiometers. Turn both to the midpoint (12 o'clock position).\n2. Identify the three pins (from left to right when facing the lens): GND, OUT, VCC — or check label on your specific module.\n3. Connect VCC to the breadboard red (+) rail.\n4. Connect GND to the breadboard blue (−) rail.\n5. Connect OUT to Arduino D2 with a green wire.\n6. The small jumper on the module should be set to single-trigger mode (H).",
+        "warnings": [
+          "PIR sensor requires 30–60 seconds warm-up time after power-on before output stabilises — do not test immediately.",
+          "Keep the PIR sensor away from direct sunlight, air-conditioning vents, and heat sources — all cause false triggers."
+        ],
+        "expected_output": "After 60-second warm-up, Serial Monitor prints 'Motion Detected!' when you wave your hand in front of the sensor at up to 5 metres distance."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire Buzzer & Alert LED",
+        "description": "Connect the active buzzer to D11 and the LED through a 220Ω resistor to D12 for the alarm output.",
+        "components_involved": [
+          "Active Buzzer",
+          "LED",
+          "220Ω Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D11",
+            "to": "Buzzer (+) pin",
+            "wire_color": "Orange",
+            "notes": "PWM-capable pin for tone control"
+          },
+          {
+            "from": "Buzzer (−) pin",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Buzzer ground"
+          },
+          {
+            "from": "Arduino Uno — D12",
+            "to": "220Ω Resistor Leg 1",
+            "wire_color": "Yellow",
+            "notes": "LED current-limiting"
+          },
+          {
+            "from": "220Ω Resistor Leg 2",
+            "to": "LED Anode (long leg +)",
+            "wire_color": "Yellow",
+            "notes": "Into LED anode"
+          },
+          {
+            "from": "LED Cathode (short leg −)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "LED ground"
+          }
+        ],
+        "how_to_connect": "1. Insert active buzzer into breadboard with (+) pin connected via green wire to D11.\n2. Connect buzzer (−) to the blue GND rail.\n3. Insert 220Ω resistor; one end to D12, other end to LED anode (long leg).\n4. LED cathode (short, flat side) to the blue GND rail.",
+        "warnings": [
+          "Do not exceed 40 mA total per digital pin — the 220Ω resistor limits LED current to a safe ~14 mA at 5V."
+        ],
+        "expected_output": "pinMode(11, OUTPUT); digitalWrite(11, HIGH) beeps the buzzer. digitalWrite(12, HIGH) lights the LED."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Alarm Firmware",
+        "description": "Upload the motion alarm sketch, wait for PIR warm-up, then verify the alarm triggers on movement.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Upload sketch: PIR_PIN=2, BUZZER=11, LED=12.\n2. Logic: if digitalRead(2)==HIGH → buzzer and LED ON for 3 seconds.\n3. After uploading, remain still for 60 seconds while PIR warms up.\n4. Wave your hand across the sensor — buzzer sounds and LED flashes.\n5. Stop moving — alarm silences after configured hold time.",
+        "warnings": [
+          "Wait the full 60-second warm-up after power-on or you will see constant false triggers."
+        ],
+        "expected_output": "Waving hand in front of sensor triggers buzzer and LED for 3 seconds. No false alarms in a stable, non-drafty room after warm-up period."
+      }
+    ],
+    "testing_steps": [
+      "Power device and remain stationary for 45 seconds.",
+      "Wave hand across sensor field: buzzer sounds and LED illuminates.",
+      "Stop moving: alarm silences after configured time window."
+    ],
+    "expected_output": "Instant audio-visual intrusion alert upon human motion.",
+    "possible_failures": [
+      "False triggers during warm up: wait 60s for thermal equilibrium."
+    ]
+  },
+  {
+    "id": "proj-gas-leakage-alert",
+    "name": "Gas Leakage Alert",
+    "description": "An essential kitchen safety monitor that senses elevated concentrations of flammable LPG/methane smoke using an MQ-2 sensor and sounds an alarm.",
+    "category": "Safety & Industrial",
+    "difficulty": "Beginner",
+    "estimated_cost": 610.0,
+    "required_components": [
+      "Arduino Uno",
+      "Gas Sensor",
+      "Buzzer",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "LCD"
+    ],
+    "dependencies": {
+      "heater_power": "MQ-2 draws ~150mA for its internal heater"
+    },
+    "wiring_rules": [
+      "MQ-2 VCC -> 5V, GND -> GND, AOUT -> Pin A0",
+      "Buzzer (+) -> Pin 8, (-) -> GND",
+      "Status LED (+) -> Pin 9 via 220Ω, (-) -> GND"
+    ],
+    "safety_rules": [
+      "Never test gas sensors with direct unmetered flammable gas streams indoors. Use a small butane lighter with extreme caution."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Establish 5V and GND rails on the breadboard. MQ-2 sensor requires 5V for its heater coil.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Powers MQ-2 heater (~150mA)"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard red (+) rail.\n2. Black wire: Arduino GND → breadboard blue (−) rail.\n3. The MQ-2 draws ~150mA — USB-powered Arduino can supply this (USB max ~500mA).",
+        "warnings": [
+          "Ensure USB port or power adapter can supply at least 500mA total. Weak power banks may cause resets."
+        ],
+        "expected_output": "Multimeter reads ~5V across rails. Arduino does not reset when MQ-2 is connected."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire MQ-2 Gas Sensor",
+        "description": "Connect the MQ-2 sensor module. Allow a 15–20 minute burn-in period for the heater coil to reach operating temperature and baseline readings to stabilise.",
+        "components_involved": [
+          "MQ-2 Gas Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "MQ-2 Module — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V for heater element"
+          },
+          {
+            "from": "MQ-2 Module — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Sensor ground"
+          },
+          {
+            "from": "MQ-2 Module — AOUT",
+            "to": "Arduino Uno — A0",
+            "wire_color": "Yellow",
+            "notes": "Analog gas concentration output"
+          }
+        ],
+        "how_to_connect": "1. Insert MQ-2 module into breadboard.\n2. Connect VCC to red (+) rail.\n3. Connect GND to blue (−) rail.\n4. Connect AOUT (analog output) to Arduino A0 with yellow wire.\n5. Power on Arduino and wait 15–20 minutes for heater stabilisation before taking any readings.\n6. The sensor will feel warm to the touch — this is normal.",
+        "warnings": [
+          "CRITICAL SAFETY: Never test with open flammable gas indoors. Use only a brief, controlled exposure (e.g., lighter flint spark without flame).",
+          "The sensor will be warm during operation — do not touch the mesh cap.",
+          "Sensor readings are not calibrated in ppm without factory calibration curves — use only as a threshold alarm."
+        ],
+        "expected_output": "After 20-minute burn-in, Serial Monitor shows stable ADC readings in clean air (typically 100–300). Values jump to 400–800+ when exposed to lighter gas or smoke."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire Buzzer & Status LED",
+        "description": "Connect the alarm buzzer to D8 and a status LED through a 220Ω resistor to D9.",
+        "components_involved": [
+          "Active Buzzer",
+          "LED",
+          "220Ω Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D8",
+            "to": "Buzzer (+) pin",
+            "wire_color": "Orange",
+            "notes": "Gas alarm output"
+          },
+          {
+            "from": "Buzzer (−)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Buzzer ground"
+          },
+          {
+            "from": "Arduino Uno — D9",
+            "to": "220Ω Resistor Leg 1",
+            "wire_color": "Green",
+            "notes": "LED current limit"
+          },
+          {
+            "from": "220Ω Resistor Leg 2",
+            "to": "LED Anode (+)",
+            "wire_color": "Green",
+            "notes": "Into LED"
+          },
+          {
+            "from": "LED Cathode (−)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "LED ground"
+          }
+        ],
+        "how_to_connect": "1. Insert active buzzer — (+) to D8, (−) to GND rail.\n2. Insert 220Ω resistor; one end to D9, other to LED anode.\n3. LED cathode to GND rail.",
+        "warnings": [],
+        "expected_output": "Test sketch: D8 HIGH sounds buzzer; D9 HIGH lights LED."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Gas Alarm Firmware",
+        "description": "Upload the gas detection sketch with a calibrated threshold above the clean-air baseline to trigger the alarm on gas detection.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Note your clean-air baseline ADC reading from Serial Monitor (e.g. 200).\n2. Set GAS_THRESHOLD = baseline + 200 (e.g. 400) in the sketch.\n3. GAS_PIN=A0, BUZZER=8, LED=9.\n4. Upload sketch.\n5. In a well-ventilated area, briefly wave a lighter (no flame, just gas) near the sensor.\n6. Verify buzzer and LED activate immediately.",
+        "warnings": [
+          "Always test in a well-ventilated area.",
+          "Clear the gas immediately after testing — the alarm should stop within 30 seconds of gas clearing."
+        ],
+        "expected_output": "Alarm (buzzer + LED) triggers within 1 second of gas exposure. Alarm clears within 30 seconds after gas dissipates. Serial Monitor shows rising ADC values during exposure."
+      }
+    ],
+    "testing_steps": [
+      "Expose sensor gently to brief vapor or smoke.",
+      "Verify buzzer emits continuous alert beep.",
+      "Ventilate area: confirm alarm clears once gas disperses."
+    ],
+    "expected_output": "Rapid gas detection alert with sub-second response.",
+    "possible_failures": [
+      "Readings drift wildly: insufficient pre-heat time or fluctuating 5V supply."
+    ]
+  },
+  {
+    "id": "proj-smart-parking-indicator",
+    "name": "Smart Parking Indicator",
+    "description": "An ultrasonic parking distance guide that signals proximity to garage walls using a color-changing RGB LED (Green: safe, Yellow: close, Red: stop).",
+    "category": "Automotive & Prototyping",
+    "difficulty": "Beginner",
+    "estimated_cost": 630.0,
+    "required_components": [
+      "Arduino Uno",
+      "HC-SR04 Ultrasonic Sensor",
+      "RGB LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Buzzer",
+      "LCD"
+    ],
+    "dependencies": {
+      "resistors_for_rgb": "Three 220Ω or 330Ω resistors for each RGB color pin"
+    },
+    "wiring_rules": [
+      "HC-SR04 Trig -> Pin 9, Echo -> Pin 10",
+      "RGB Red -> Pin 3 (PWM) via 220Ω, Green -> Pin 5 (PWM) via 220Ω, Blue -> Pin 6 (PWM) via 220Ω",
+      "RGB Common Cathode -> GND"
+    ],
+    "safety_rules": [
+      "Common cathode must connect to GND; common anode models require VCC. Confirm LED pinout."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino 5V and GND to breadboard supply rails.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V supply"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard (+) rail.\n2. Black wire: Arduino GND → breadboard (−) rail.",
+        "warnings": [],
+        "expected_output": "~5V between breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire HC-SR04 Ultrasonic Sensor",
+        "description": "Mount HC-SR04 facing the parking direction and connect TRIG/ECHO to D9/D10.",
+        "components_involved": [
+          "HC-SR04 Ultrasonic Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "HC-SR04 — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V power"
+          },
+          {
+            "from": "HC-SR04 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "HC-SR04 — TRIG",
+            "to": "Arduino Uno — D9",
+            "wire_color": "Yellow",
+            "notes": "10µs trigger pulse output"
+          },
+          {
+            "from": "HC-SR04 — ECHO",
+            "to": "Arduino Uno — D10",
+            "wire_color": "Green",
+            "notes": "Echo return input"
+          }
+        ],
+        "how_to_connect": "1. Insert HC-SR04 into breadboard or mount on a small bracket.\n2. Connect VCC to red rail, GND to blue rail.\n3. Yellow wire: TRIG → D9.\n4. Green wire: ECHO → D10.\n5. Confirm all 4 connections are solid.",
+        "warnings": [],
+        "expected_output": "Test sketch prints distance in cm. Distance values change as you move hand in front of sensor."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire RGB LED with Resistors",
+        "description": "Connect the Common-Cathode RGB LED — each colour channel through a 220Ω resistor to a PWM pin for smooth colour mixing.",
+        "components_involved": [
+          "RGB LED (Common Cathode)",
+          "3× 220Ω Resistors",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D3 (PWM)",
+            "to": "220Ω Resistor → RGB Red pin (R)",
+            "wire_color": "Red",
+            "notes": "Red channel — 220Ω in series"
+          },
+          {
+            "from": "Arduino Uno — D5 (PWM)",
+            "to": "220Ω Resistor → RGB Green pin (G)",
+            "wire_color": "Green",
+            "notes": "Green channel — 220Ω in series"
+          },
+          {
+            "from": "Arduino Uno — D6 (PWM)",
+            "to": "220Ω Resistor → RGB Blue pin (B)",
+            "wire_color": "Blue",
+            "notes": "Blue channel — 220Ω in series"
+          },
+          {
+            "from": "RGB LED — Common Cathode (longest pin)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Shared ground for all channels"
+          }
+        ],
+        "how_to_connect": "1. Identify the 4 RGB LED pins: longest pin = Common Cathode (GND); others = R, G, B.\n2. Insert the LED into breadboard with cathode in a separate row.\n3. Insert three 220Ω resistors — one per colour channel.\n4. Wire D3 → 220Ω → R pin; D5 → 220Ω → G pin; D6 → 220Ω → B pin.\n5. Wire common cathode to the blue GND rail.\n6. For Common ANODE modules: connect longest pin to 5V rail and use inverted logic in code.",
+        "warnings": [
+          "Always verify Common Cathode vs Common Anode — they require opposite wiring and inverted code logic.",
+          "Each colour pin MUST have its own 220Ω resistor — never share resistors between channels."
+        ],
+        "expected_output": "analogWrite(3, 255) makes red channel full brightness. analogWrite(5, 255) makes green. Mixed values produce colour blends."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Parking Distance Firmware",
+        "description": "Upload the three-zone parking sketch: Green (>50 cm), Yellow (10–50 cm), Red (<10 cm stop).",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Upload sketch: TRIG=9, ECHO=10, R_PIN=3, G_PIN=5, B_PIN=6.\n2. Logic: >50cm → Green ON; 10–50cm → Yellow (R+G mix) ON; <10cm → Red ON + optional buzzer.\n3. Test by slowly moving an object toward the sensor from 100 cm.\n4. Observe colour change at each zone boundary.",
+        "warnings": [],
+        "expected_output": "LED glows green when object is far, transitions to yellow at medium distance, turns solid red when object is within 10 cm. Colour transitions are smooth with PWM mixing."
+      }
+    ],
+    "testing_steps": [
+      "Place object > 50cm away: LED shines Green.",
+      "Move object to 20cm: LED switches to Yellow.",
+      "Move object < 10cm: LED shines solid Red."
+    ],
+    "expected_output": "Three-stage visual distance indication for safe docking.",
+    "possible_failures": [
+      "Incorrect colors displayed: Red and Green pins swapped."
+    ]
+  },
+  {
+    "id": "proj-bluetooth-controlled-car",
+    "name": "Bluetooth Controlled Car",
+    "description": "A remote-controlled 2WD/4WD vehicle controlled from an Android smartphone via HC-05 Bluetooth serial commands.",
+    "category": "Robotics & Wireless",
+    "difficulty": "Intermediate",
+    "estimated_cost": 1450.0,
+    "required_components": [
+      "Arduino Uno",
+      "Bluetooth",
+      "DC Motor",
+      "Battery",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "LED",
+      "Buzzer"
+    ],
+    "dependencies": {
+      "voltage_divider_for_bt": "Resistor divider (1kΩ/2kΩ) on HC-05 RX pin to protect 3.3V logic"
+    },
+    "wiring_rules": [
+      "HC-05 VCC -> 5V, GND -> GND, TXD -> Arduino RX (Pin 0 or SoftwareSerial Pin 2)",
+      "Arduino TX -> Voltage divider -> HC-05 RXD (3.3V logic level)",
+      "Motor driver input pins connected to Arduino digital outputs"
+    ],
+    "safety_rules": [
+      "DISCONNECT HC-05 TX/RX lines while uploading sketches to Arduino over USB to avoid serial port conflict."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail & Shared Ground Setup",
+        "description": "Connect the 9V battery to the L298N motor driver. The L298N's onboard 5V regulator powers the Arduino via VIN. Establish a SHARED ground between battery, L298N, and Arduino.",
+        "components_involved": [
+          "Arduino Uno",
+          "L298N Motor Driver",
+          "9V Battery",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "9V Battery (+)",
+            "to": "L298N — 12V input terminal",
+            "wire_color": "Red",
+            "notes": "Motor power supply"
+          },
+          {
+            "from": "9V Battery (−)",
+            "to": "L298N — GND terminal",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          },
+          {
+            "from": "L298N — GND",
+            "to": "Arduino Uno — GND",
+            "wire_color": "Black",
+            "notes": "CRITICAL shared ground"
+          },
+          {
+            "from": "L298N — 5V out",
+            "to": "Arduino Uno — VIN",
+            "wire_color": "Red",
+            "notes": "Arduino powered from L298N regulator"
+          }
+        ],
+        "how_to_connect": "1. Connect 9V battery (+) to L298N 12V screw terminal.\n2. Connect 9V battery (−) to L298N GND screw terminal.\n3. Jumper a black wire from L298N GND to Arduino GND — this shared ground is critical.\n4. Connect L298N 5V output pin to Arduino VIN pin to power the Arduino from the battery.\n5. Leave Arduino USB disconnected when running on battery.",
+        "warnings": [
+          "NEVER power Arduino via both USB and VIN simultaneously — this can damage the voltage regulator.",
+          "ALWAYS establish shared ground between L298N and Arduino or motors will behave erratically."
+        ],
+        "expected_output": "Arduino powers on from the 9V battery through L298N. Power LED on Arduino illuminates."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire HC-05 Bluetooth Module",
+        "description": "Connect HC-05 using SoftwareSerial pins. Add a voltage divider on the HC-05 RX line since HC-05 uses 3.3V logic for RX but Arduino outputs 5V.",
+        "components_involved": [
+          "HC-05 Bluetooth Module",
+          "Arduino Uno",
+          "1kΩ Resistor",
+          "2kΩ Resistor",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "HC-05 — VCC",
+            "to": "Arduino Uno — 5V",
+            "wire_color": "Red",
+            "notes": "HC-05 power (has internal 3.3V reg)"
+          },
+          {
+            "from": "HC-05 — GND",
+            "to": "Arduino Uno — GND",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "HC-05 — TXD",
+            "to": "Arduino Uno — D2 (SoftRX)",
+            "wire_color": "Green",
+            "notes": "BT transmit → Arduino receive"
+          },
+          {
+            "from": "Arduino Uno — D3 (SoftTX)",
+            "to": "1kΩ Resistor Leg 1",
+            "wire_color": "Yellow",
+            "notes": "Start of voltage divider"
+          },
+          {
+            "from": "1kΩ Resistor Leg 2",
+            "to": "HC-05 — RXD",
+            "wire_color": "Yellow",
+            "notes": "Mid-point: ~3.3V to HC-05 RX"
+          },
+          {
+            "from": "1kΩ Resistor Leg 2 (same)",
+            "to": "2kΩ Resistor Leg 1",
+            "wire_color": "Yellow",
+            "notes": "Divider to ground"
+          },
+          {
+            "from": "2kΩ Resistor Leg 2",
+            "to": "Arduino Uno — GND",
+            "wire_color": "Black",
+            "notes": "Divider ground leg"
+          }
+        ],
+        "how_to_connect": "1. Connect HC-05 VCC to Arduino 5V and GND to Arduino GND.\n2. Connect HC-05 TXD directly to Arduino D2 (SoftwareSerial RX).\n3. For the voltage divider on HC-05 RX: connect Arduino D3 → 1kΩ resistor → HC-05 RXD.\n4. From the junction between the 1kΩ resistor and HC-05 RXD, also connect a 2kΩ resistor to GND.\n5. This creates ~3.3V at HC-05 RX from Arduino's 5V output.",
+        "warnings": [
+          "ALWAYS disconnect HC-05 TX/RX wires from Arduino pins D0/D1 or D2/D3 BEFORE uploading firmware — the serial connection blocks upload.",
+          "Applying 5V directly to HC-05 RX without the voltage divider will destroy the module over time."
+        ],
+        "expected_output": "HC-05 LED blinks rapidly (every 0.5s) when not paired. After pairing with phone, LED blinks slowly (every 2s)."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire DC Motors to L298N",
+        "description": "Connect two DC motors to L298N output channels and wire the control pins to Arduino digital outputs.",
+        "components_involved": [
+          "DC Motor",
+          "L298N Motor Driver",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Left Motor (+)",
+            "to": "L298N — OUT1",
+            "wire_color": "Red",
+            "notes": "Left motor terminal A"
+          },
+          {
+            "from": "Left Motor (−)",
+            "to": "L298N — OUT2",
+            "wire_color": "Black",
+            "notes": "Left motor terminal B"
+          },
+          {
+            "from": "Right Motor (+)",
+            "to": "L298N — OUT3",
+            "wire_color": "Red",
+            "notes": "Right motor terminal A"
+          },
+          {
+            "from": "Right Motor (−)",
+            "to": "L298N — OUT4",
+            "wire_color": "Black",
+            "notes": "Right motor terminal B"
+          },
+          {
+            "from": "L298N — IN1",
+            "to": "Arduino Uno — D4",
+            "wire_color": "Yellow",
+            "notes": "Left motor direction A"
+          },
+          {
+            "from": "L298N — IN2",
+            "to": "Arduino Uno — D5",
+            "wire_color": "Yellow",
+            "notes": "Left motor direction B"
+          },
+          {
+            "from": "L298N — IN3",
+            "to": "Arduino Uno — D6",
+            "wire_color": "Green",
+            "notes": "Right motor direction A"
+          },
+          {
+            "from": "L298N — IN4",
+            "to": "Arduino Uno — D7",
+            "wire_color": "Green",
+            "notes": "Right motor direction B"
+          }
+        ],
+        "how_to_connect": "1. Screw left motor wires into L298N OUT1 (red) and OUT2 (black) screw terminals.\n2. Screw right motor wires into L298N OUT3 (red) and OUT4 (black) terminals.\n3. Wire L298N IN1→D4, IN2→D5, IN3→D6, IN4→D7 with jumper wires.\n4. Leave ENA and ENB jumpers in place for full speed (or remove and wire to PWM pins for speed control).",
+        "warnings": [],
+        "expected_output": "Test sketch: IN1=HIGH, IN2=LOW makes left motor spin forward; IN3=HIGH, IN4=LOW makes right motor spin forward."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Firmware & Test Bluetooth Control",
+        "description": "Upload the Bluetooth car firmware and pair with a smartphone app to test all movement directions.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. DISCONNECT HC-05 wires from D2/D3 before uploading.\n2. Upload sketch: SoftwareSerial btSerial(2, 3); commands F/B/L/R/S for Forward/Back/Left/Right/Stop.\n3. After upload, reconnect HC-05 wires.\n4. Install 'Bluetooth RC Controller' app on Android.\n5. Pair phone with HC-05 (PIN: 1234).\n6. Connect in app and press Forward — both motors spin forward.",
+        "warnings": [
+          "Remove HC-05 RX/TX wires before every firmware upload."
+        ],
+        "expected_output": "Phone app controls car in all 4 directions with responsive steering. Range is approximately 10 metres in open area."
+      }
+    ],
+    "testing_steps": [
+      "Launch Bluetooth RC Controller app on smartphone.",
+      "Connect to HC-05 device.",
+      "Press Forward, Reverse, Left, Right buttons and confirm vehicle locomotion."
+    ],
+    "expected_output": "Responsive wireless vehicle control up to 10 meters.",
+    "possible_failures": [
+      "Arduino upload fails: Disconnect Bluetooth module from TX/RX pins before flashing."
+    ]
+  },
+  {
+    "id": "proj-home-security-alarm",
+    "name": "Home Security Alarm",
+    "description": "A comprehensive home defense hub with PIR intrusion detection, magnetic door switch monitoring, high-decibel alarm, and status LCD.",
+    "category": "Security & IoT",
+    "difficulty": "Intermediate",
+    "estimated_cost": 890.0,
+    "required_components": [
+      "Arduino Uno",
+      "PIR Sensor",
+      "Buzzer",
+      "LCD",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "Battery"
+    ],
+    "dependencies": {
+      "i2c_lcd": "I2C backpack on LCD reduces required pins to SDA and SCL"
+    },
+    "wiring_rules": [
+      "LCD SDA -> A4, SCL -> A5",
+      "PIR Sensor OUT -> Pin 2 (Interrupt capable)",
+      "Buzzer -> Pin 9 via transistor or direct, LED -> Pin 8"
+    ],
+    "safety_rules": [
+      "Do not draw over 200mA total from all Arduino digital pins combined."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail & LCD I2C Wiring",
+        "description": "Set up power rails and connect the 16×2 I2C LCD display to SDA/SCL pins for status readout.",
+        "components_involved": [
+          "Arduino Uno",
+          "LCD 16x2 I2C",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V supply"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "LCD I2C — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "LCD power"
+          },
+          {
+            "from": "LCD I2C — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "LCD ground"
+          },
+          {
+            "from": "LCD I2C — SDA",
+            "to": "Arduino Uno — A4",
+            "wire_color": "Blue",
+            "notes": "I2C data"
+          },
+          {
+            "from": "LCD I2C — SCL",
+            "to": "Arduino Uno — A5",
+            "wire_color": "Yellow",
+            "notes": "I2C clock"
+          }
+        ],
+        "how_to_connect": "1. Set up power rails: Arduino 5V → red rail, GND → blue rail.\n2. Connect LCD I2C backpack: VCC → red rail, GND → blue rail.\n3. Connect SDA → A4, SCL → A5.\n4. The small blue potentiometer on the I2C backpack adjusts LCD contrast — turn it if display is blank after programming.\n5. Run I2C scanner to confirm LCD address (typically 0x27 or 0x3F).",
+        "warnings": [
+          "If the LCD shows only black boxes, adjust the contrast potentiometer on the I2C backpack with a screwdriver."
+        ],
+        "expected_output": "LCD displays 'System Booting...' on line 1. I2C scanner confirms device at 0x27 or 0x3F."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire PIR Sensor",
+        "description": "Connect the PIR motion sensor to Arduino interrupt-capable pin D2 for instant motion detection response.",
+        "components_involved": [
+          "PIR Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "PIR Sensor — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V sensor power"
+          },
+          {
+            "from": "PIR Sensor — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "PIR Sensor — OUT",
+            "to": "Arduino Uno — D2",
+            "wire_color": "Green",
+            "notes": "Interrupt pin — instant response"
+          }
+        ],
+        "how_to_connect": "1. Connect PIR VCC → red rail, GND → blue rail, OUT → D2.\n2. Set PIR sensitivity potentiometer (Sx) to mid-position for 5-metre range.\n3. Set PIR time-delay potentiometer (Tx) to minimum for 3-second output hold.\n4. Allow 60-second warm-up before testing.",
+        "warnings": [
+          "PIR requires 60-second warm-up period. During warm-up, OUT pin may pulse randomly — this is normal."
+        ],
+        "expected_output": "After warm-up, D2 reads LOW in empty room. Waving hand causes D2 to go HIGH for 3–5 seconds."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire Buzzer & Status LED",
+        "description": "Connect the alarm buzzer to D9 and a warning LED through 220Ω to D8.",
+        "components_involved": [
+          "Active Buzzer",
+          "LED",
+          "220Ω Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D9",
+            "to": "Buzzer (+)",
+            "wire_color": "Orange",
+            "notes": "Alarm output"
+          },
+          {
+            "from": "Buzzer (−)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "Arduino Uno — D8",
+            "to": "220Ω Resistor",
+            "wire_color": "Yellow",
+            "notes": "LED current limit"
+          },
+          {
+            "from": "220Ω Resistor",
+            "to": "LED Anode (+)",
+            "wire_color": "Yellow",
+            "notes": "LED positive"
+          },
+          {
+            "from": "LED Cathode (−)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "LED ground"
+          }
+        ],
+        "how_to_connect": "1. Buzzer (+) → D9, Buzzer (−) → GND rail.\n2. D8 → 220Ω → LED anode; LED cathode → GND rail.",
+        "warnings": [],
+        "expected_output": "D9 HIGH sounds buzzer; D8 HIGH lights LED."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Security System Firmware",
+        "description": "Upload the alarm sketch with 30-second arming delay, LCD status messages, and intrusion alert.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Install LiquidCrystal_I2C library in Arduino IDE.\n2. Set LCD_ADDR=0x27, PIR_PIN=2, BUZZER=9, LED=8.\n3. Logic: boot → LCD 'System Armed', 30s countdown; motion detected → LCD 'INTRUSION!', buzzer + LED ON.\n4. Upload and test the 30s exit window, then trigger motion.",
+        "warnings": [],
+        "expected_output": "LCD shows 'System Armed' during countdown. 'INTRUSION DETECTED!' appears on LCD when motion is sensed. Buzzer sounds continuously until manual reset button press."
+      }
+    ],
+    "testing_steps": [
+      "Power on device and wait for 30s countdown.",
+      "Simulate intrusion: verify LCD switches to 'INTRUSION DETECTED!' and buzzer sounds.",
+      "Reset via reset pushbutton."
+    ],
+    "expected_output": "Reliable intrusion detection with status readout.",
+    "possible_failures": [
+      "LCD displays blank boxes: adjust contrast potentiometer on I2C backpack."
+    ]
+  },
+  {
+    "id": "proj-automatic-fan-controller",
+    "name": "Automatic Fan Controller",
+    "description": "A smart temperature-governed ventilation controller that regulates DC cooling fan speed smoothly using PWM based on ambient heat.",
+    "category": "Climate Control",
+    "difficulty": "Intermediate",
+    "estimated_cost": 650.0,
+    "required_components": [
+      "Arduino Uno",
+      "Temperature Sensor",
+      "DC Motor",
+      "Transistor",
+      "Diode",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "LCD",
+      "Battery"
+    ],
+    "dependencies": {
+      "transistor_switch": "BC547 / 2N2222 transistor required to switch motor current",
+      "flyback_diode": "1N4007 flyback diode across motor terminals to protect against inductive voltage spikes"
+    },
+    "wiring_rules": [
+      "DHT11 Data -> Pin 2",
+      "Arduino PWM Pin 9 -> 1kΩ resistor -> Transistor Base",
+      "Transistor Collector -> Motor negative terminal",
+      "Transistor Emitter -> GND",
+      "Motor positive terminal -> 5V rail",
+      "1N4007 Diode cathode -> 5V rail, anode -> Motor negative terminal"
+    ],
+    "safety_rules": [
+      "CRITICAL: Always install flyback diode across motor terminals to prevent reverse voltage spikes from burning the transistor and microcontroller."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino 5V and GND to breadboard rails. The motor will also draw from this 5V rail.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V rail for motor and sensor"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard (+) rail.\n2. Black wire: Arduino GND → breadboard (−) rail.",
+        "warnings": [
+          "If using a small DC fan motor, ensure total current does not exceed 500mA from USB. For larger motors, use an external 5V supply."
+        ],
+        "expected_output": "~5V between breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire DHT11 Temperature Sensor",
+        "description": "Connect DHT11 with 10kΩ pull-up resistor to D2 for temperature readings that control the fan speed.",
+        "components_involved": [
+          "DHT11 Temperature Sensor",
+          "10kΩ Resistor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "DHT11 — VCC (Pin 1)",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Sensor power"
+          },
+          {
+            "from": "DHT11 — GND (Pin 4)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "DHT11 — DATA (Pin 2)",
+            "to": "Arduino Uno — D2",
+            "wire_color": "Green",
+            "notes": "1-Wire data"
+          },
+          {
+            "from": "10kΩ Resistor",
+            "to": "Between DHT11 DATA and 5V",
+            "wire_color": "Red",
+            "notes": "Pull-up resistor — mandatory"
+          }
+        ],
+        "how_to_connect": "1. Insert DHT11, connecting Pin 1 (VCC) to red rail, Pin 4 (GND) to blue rail.\n2. Connect Pin 2 (DATA) to D2.\n3. In the same row as Pin 2, add 10kΩ resistor going to the red (+) rail.",
+        "warnings": [
+          "Pull-up resistor is mandatory — without it, DHT11 returns NaN."
+        ],
+        "expected_output": "Serial Monitor shows temperature ~25°C and humidity readings updating every 2 seconds."
+      },
+      {
+        "step_number": 3,
+        "title": "Build BC547 Transistor Switch with Flyback Diode",
+        "description": "Wire the BC547 NPN transistor as a motor switch controlled by Arduino PWM pin D9. Add 1N4007 flyback diode across motor terminals to absorb inductive voltage spikes.",
+        "components_involved": [
+          "BC547 Transistor",
+          "1N4007 Diode",
+          "1kΩ Resistor",
+          "DC Motor/Fan",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D9 (PWM)",
+            "to": "1kΩ Resistor Leg 1",
+            "wire_color": "Orange",
+            "notes": "PWM signal, current-limited to base"
+          },
+          {
+            "from": "1kΩ Resistor Leg 2",
+            "to": "BC547 — Base (middle pin)",
+            "wire_color": "Orange",
+            "notes": "Base drive current"
+          },
+          {
+            "from": "BC547 — Emitter",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Emitter to GND"
+          },
+          {
+            "from": "BC547 — Collector",
+            "to": "DC Motor (−) terminal",
+            "wire_color": "Blue",
+            "notes": "Motor switched by transistor"
+          },
+          {
+            "from": "DC Motor (+) terminal",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "Motor positive to 5V"
+          },
+          {
+            "from": "1N4007 Diode — Anode",
+            "to": "DC Motor (−) terminal",
+            "wire_color": "Blue",
+            "notes": "Flyback diode — anode to motor (−)"
+          },
+          {
+            "from": "1N4007 Diode — Cathode (stripe)",
+            "to": "DC Motor (+) / 5V Rail",
+            "wire_color": "Red",
+            "notes": "Flyback diode — cathode to motor (+)"
+          }
+        ],
+        "how_to_connect": "1. Insert BC547 into breadboard: flat face toward you. Left pin=Collector, Middle=Base, Right=Emitter.\n2. Connect Emitter to the blue GND rail.\n3. Connect 1kΩ resistor between D9 and Base.\n4. Connect Collector to Motor (−) terminal.\n5. Connect Motor (+) to red 5V rail.\n6. Insert 1N4007 diode ACROSS the motor: Cathode (stripe band) to Motor (+), Anode to Motor (−). This is REVERSE-BIASED — correct orientation for flyback protection.",
+        "warnings": [
+          "CRITICAL: Install the flyback diode BEFORE powering the motor. Without it, the transistor will be destroyed by inductive spikes within minutes.",
+          "BC547 pinout (flat face forward): Collector (left), Base (middle), Emitter (right). Do not swap — the transistor will not work or may burn out."
+        ],
+        "expected_output": "analogWrite(9, 128) runs motor at half speed. analogWrite(9, 255) runs at full speed. analogWrite(9, 0) stops motor. No voltage spikes above 6V when motor is stopped."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Temperature-Controlled PWM Firmware",
+        "description": "Upload the sketch that maps DHT11 temperature readings to PWM fan speed — fan off below 25°C, proportional speed 25–40°C, full speed above 40°C.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Install DHT library (Adafruit) in Arduino IDE.\n2. DHTPIN=2, MOTOR_PWM=9.\n3. Map: temp<25 → PWM=0; 25-40°C → map(temp, 25, 40, 80, 255); >40 → PWM=255.\n4. Upload sketch.\n5. Open Serial Monitor — observe temperature and PWM values.\n6. Warm the DHT11 with your hand or a hair dryer to 30°C — fan should spin up.",
+        "warnings": [],
+        "expected_output": "Fan remains off at room temperature (~25°C). Fan spins up proportionally as temperature rises. Fan reaches full speed above 40°C. Cooling brings fan back to off."
+      }
+    ],
+    "testing_steps": [
+      "Heat sensor with warm air: verify fan turns on when temp exceeds 30°C.",
+      "Observe fan speed increase proportionally with rising temperature.",
+      "Cool sensor down: verify fan stops gracefully."
+    ],
+    "expected_output": "Proportional PWM fan speed control according to temperature.",
+    "possible_failures": [
+      "Transistor burns out: flyback diode missing or omitted base resistor."
+    ]
+  },
+  {
+    "id": "proj-rfid-attendance-system",
+    "name": "RFID Attendance System",
+    "description": "An automated contactless identification and attendance logger with card verification, buzzer confirmation, and OLED user greetings.",
+    "category": "Identity & Security",
+    "difficulty": "Intermediate",
+    "estimated_cost": 820.0,
+    "required_components": [
+      "Arduino Uno",
+      "OLED",
+      "Buzzer",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "Wi-Fi"
+    ],
+    "dependencies": {
+      "spi_interface": "RFID module connects via SPI bus (SCK 13, MISO 12, MOSI 11, SS 10)"
+    },
+    "wiring_rules": [
+      "OLED on I2C (A4/A5)",
+      "Buzzer on Pin 8",
+      "Green/Red dual status LEDs on Pins 6 & 7 with 220Ω resistors"
+    ],
+    "safety_rules": [
+      "RFID RC522 modules strictly operate at 3.3V VCC. Supplying 5V destroys the module."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Establish power rails. Note: RC522 RFID module runs at 3.3V — use Arduino's 3.3V pin, NOT 5V.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V for OLED and buzzer"
+          },
+          {
+            "from": "Arduino Uno — 3.3V",
+            "to": "Breadboard Yellow Rail",
+            "wire_color": "Yellow",
+            "notes": "3.3V dedicated rail for RC522"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → breadboard red (+) rail.\n2. Yellow wire: Arduino 3.3V → a separate row of breadboard (label it 3.3V rail).\n3. Black wire: Arduino GND → breadboard blue (−) rail.",
+        "warnings": [
+          "RC522 RFID module operates at 3.3V. Connecting VCC to 5V WILL PERMANENTLY DESTROY the module."
+        ],
+        "expected_output": "Multimeter reads 5V on red rail and 3.3V on yellow rail."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire RC522 RFID Module via SPI",
+        "description": "Connect the RC522 to the Arduino SPI bus. All signal lines share the same SPI bus; only SS (Slave Select) and RST differ per device.",
+        "components_involved": [
+          "RC522 RFID Module",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "RC522 — 3.3V",
+            "to": "Breadboard 3.3V Rail",
+            "wire_color": "Yellow",
+            "notes": "3.3V power — NOT 5V"
+          },
+          {
+            "from": "RC522 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "RC522 — SCK",
+            "to": "Arduino Uno — D13",
+            "wire_color": "Gray",
+            "notes": "SPI clock"
+          },
+          {
+            "from": "RC522 — MISO",
+            "to": "Arduino Uno — D12",
+            "wire_color": "Blue",
+            "notes": "SPI Master-In Slave-Out"
+          },
+          {
+            "from": "RC522 — MOSI",
+            "to": "Arduino Uno — D11",
+            "wire_color": "Green",
+            "notes": "SPI Master-Out Slave-In"
+          },
+          {
+            "from": "RC522 — SS/SDA",
+            "to": "Arduino Uno — D10",
+            "wire_color": "Purple",
+            "notes": "SPI Slave Select"
+          },
+          {
+            "from": "RC522 — RST",
+            "to": "Arduino Uno — D9",
+            "wire_color": "Orange",
+            "notes": "Reset line"
+          }
+        ],
+        "how_to_connect": "1. Use the yellow 3.3V rail for RC522 VCC — NEVER the 5V rail.\n2. Connect GND to blue rail.\n3. Connect SCK→D13, MISO→D12, MOSI→D11 (these are the hardware SPI pins on Uno).\n4. Connect SS→D10 and RST→D9.\n5. Use short wires for SPI to reduce noise.",
+        "warnings": [
+          "3.3V ONLY for RC522 — this cannot be overstated.",
+          "Keep SPI wires short (<15cm) to avoid signal integrity issues at higher clock speeds."
+        ],
+        "expected_output": "Loading the MFRC522 library example 'DumpInfo' and tapping an RFID card prints the card UID in Serial Monitor."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire OLED Display & Status LEDs",
+        "description": "Connect OLED for user greeting messages and green/red LEDs for access granted/denied visual feedback.",
+        "components_involved": [
+          "OLED I2C Display",
+          "LED (Green)",
+          "LED (Red)",
+          "2× 220Ω Resistors",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "OLED — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V OLED power"
+          },
+          {
+            "from": "OLED — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "OLED ground"
+          },
+          {
+            "from": "OLED — SDA",
+            "to": "Arduino Uno — A4",
+            "wire_color": "Blue",
+            "notes": "I2C data"
+          },
+          {
+            "from": "OLED — SCL",
+            "to": "Arduino Uno — A5",
+            "wire_color": "Yellow",
+            "notes": "I2C clock"
+          },
+          {
+            "from": "Arduino Uno — D6",
+            "to": "220Ω → Green LED Anode",
+            "wire_color": "Green",
+            "notes": "Access granted indicator"
+          },
+          {
+            "from": "Arduino Uno — D7",
+            "to": "220Ω → Red LED Anode",
+            "wire_color": "Red",
+            "notes": "Access denied indicator"
+          },
+          {
+            "from": "Both LED Cathodes",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Both LED grounds"
+          }
+        ],
+        "how_to_connect": "1. OLED: VCC→red rail, GND→blue rail, SDA→A4, SCL→A5.\n2. Green LED: D6 → 220Ω → green LED anode; green LED cathode → GND rail.\n3. Red LED: D7 → 220Ω → red LED anode; red LED cathode → GND rail.\n4. Wire buzzer: D8 → buzzer (+), buzzer (−) → GND rail.",
+        "warnings": [],
+        "expected_output": "OLED displays 'Please Tap Card'. Green LED on when D6 HIGH. Red LED on when D7 HIGH."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload RFID Firmware & Register Cards",
+        "description": "Upload the attendance sketch, scan your authorised card to register its UID, then test access grant and denial.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Install MFRC522 and Adafruit SSD1306 libraries.\n2. Upload the UID reader sketch first — tap your authorised card and note the UID from Serial Monitor.\n3. Add that UID to the authorised UIDs array in the main sketch.\n4. Upload the main attendance sketch.\n5. Tap authorised card → OLED: 'Welcome!' + green LED + single beep.\n6. Tap unknown card → OLED: 'Access Denied' + red LED + double beep.",
+        "warnings": [
+          "SS pin (D10) is shared with SPI. Ensure no other SPI devices are on the bus unless their SS pins are separately managed."
+        ],
+        "expected_output": "Authorised card: OLED shows welcome message, green LED blinks, single beep. Unknown card: OLED shows denied, red LED blinks, double beep. Response time < 0.5 seconds."
+      }
+    ],
+    "testing_steps": [
+      "Tap authorized card: OLED displays 'Welcome Aniket!', green LED blinks, single beep sounds.",
+      "Tap unknown card: OLED displays 'Access Denied', red LED blinks, double beep sounds."
+    ],
+    "expected_output": "Instant authorization status with distinct auditory cues.",
+    "possible_failures": [
+      "RFID module not recognized: 3.3V supply drops below 3.0V or SPI lines swapped."
+    ]
+  },
+  {
+    "id": "proj-water-level-indicator",
+    "name": "Water Level Indicator",
+    "description": "An automated overhead water tank overflow and refill monitor using multi-point or ultrasonic depth measurement and buzzer alert.",
+    "category": "Home Automation",
+    "difficulty": "Beginner",
+    "estimated_cost": 580.0,
+    "required_components": [
+      "Arduino Uno",
+      "HC-SR04 Ultrasonic Sensor",
+      "Buzzer",
+      "LED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "LCD"
+    ],
+    "dependencies": {},
+    "wiring_rules": [
+      "Ultrasonic Sensor placed at the top of the tank pointing downwards",
+      "LEDs for 25%, 50%, 75%, 100% full indications",
+      "Buzzer activates when level reaches 95% full"
+    ],
+    "safety_rules": [
+      "Ensure non-contact sensor setup to avoid moisture short-circuits in water tanks."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "Power Rail Setup",
+        "description": "Connect Arduino 5V and GND to breadboard power rails.",
+        "components_involved": [
+          "Arduino Uno",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — 5V",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V supply"
+          },
+          {
+            "from": "Arduino Uno — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          }
+        ],
+        "how_to_connect": "1. Red wire: Arduino 5V → red (+) rail.\n2. Black wire: Arduino GND → blue (−) rail.",
+        "warnings": [
+          "Ensure all connections are moisture-proof for tank installation — use waterproof connectors or seal with silicone."
+        ],
+        "expected_output": "~5V between breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Mount & Wire HC-SR04 (Top of Tank)",
+        "description": "Mount the HC-SR04 sensor at the top of the tank facing downward to measure water depth by echo time.",
+        "components_involved": [
+          "HC-SR04 Ultrasonic Sensor",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "HC-SR04 — VCC",
+            "to": "Breadboard Red Rail (+)",
+            "wire_color": "Red",
+            "notes": "5V sensor power"
+          },
+          {
+            "from": "HC-SR04 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "HC-SR04 — TRIG",
+            "to": "Arduino Uno — D9",
+            "wire_color": "Yellow",
+            "notes": "Trigger pulse"
+          },
+          {
+            "from": "HC-SR04 — ECHO",
+            "to": "Arduino Uno — D10",
+            "wire_color": "Green",
+            "notes": "Echo return"
+          }
+        ],
+        "how_to_connect": "1. Mount HC-SR04 at the top inside the tank lid, facing straight DOWN toward the water surface.\n2. Ensure sensor face is parallel to water surface for accurate readings.\n3. Connect wires: VCC→red rail, GND→blue rail, TRIG→D9, ECHO→D10.\n4. Use long enough wire to reach from tank top to Arduino outside the tank.\n5. Measure the EMPTY tank depth from sensor to the bottom — record this as MAX_DEPTH.",
+        "warnings": [
+          "Keep the sensor face DRY — water droplets on the transducer face significantly degrade readings.",
+          "Do not submerge the sensor — it is not waterproof."
+        ],
+        "expected_output": "Serial Monitor shows stable distance readings. Distance = MAX_DEPTH when tank is empty. Distance decreases as water level rises."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire Level Indicator LEDs & Buzzer",
+        "description": "Wire 3 LEDs to show Low/Medium/High water level and a buzzer to alert when tank is nearly full (overflow prevention).",
+        "components_involved": [
+          "3× LED",
+          "3× 220Ω Resistors",
+          "Active Buzzer",
+          "Arduino Uno",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Arduino Uno — D4",
+            "to": "220Ω → Low-Level LED Anode",
+            "wire_color": "Red",
+            "notes": "25% full indicator"
+          },
+          {
+            "from": "Arduino Uno — D5",
+            "to": "220Ω → Medium-Level LED Anode",
+            "wire_color": "Yellow",
+            "notes": "50% full indicator"
+          },
+          {
+            "from": "Arduino Uno — D6",
+            "to": "220Ω → High-Level LED Anode",
+            "wire_color": "Green",
+            "notes": "75% full indicator"
+          },
+          {
+            "from": "All 3 LED Cathodes",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Shared ground"
+          },
+          {
+            "from": "Arduino Uno — D7",
+            "to": "Buzzer (+)",
+            "wire_color": "Orange",
+            "notes": "Overflow alarm at 95% full"
+          },
+          {
+            "from": "Buzzer (−)",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Buzzer ground"
+          }
+        ],
+        "how_to_connect": "1. Insert three LEDs (colours: red for low, yellow for medium, green for high).\n2. Each LED: digital pin → 220Ω → LED anode; LED cathode → GND rail.\n3. Connect D4→Low LED, D5→Medium LED, D6→High LED.\n4. Connect Buzzer (+) to D7 and Buzzer (−) to GND rail.",
+        "warnings": [],
+        "expected_output": "D4 HIGH lights low-level LED. D5 HIGH lights medium LED. D6 HIGH lights high LED. D7 HIGH sounds overflow buzzer."
+      },
+      {
+        "step_number": 4,
+        "title": "Upload Water Level Firmware",
+        "description": "Upload the calibrated level detection sketch that maps sensor distance to percentage full and lights the appropriate LED.",
+        "components_involved": [
+          "Arduino Uno"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Measure your tank: EMPTY_DIST = distance from sensor to empty bottom (e.g. 30cm); FULL_DIST = distance to full waterline (e.g. 5cm).\n2. levelPercent = map(distance, EMPTY_DIST, FULL_DIST, 0, 100).\n3. <25% → D4 ON; 25–75% → D5 ON; >75% → D6 ON; >95% → D7 Buzzer ON.\n4. Upload and test with a container of water — slowly fill and verify LEDs step through.",
+        "warnings": [
+          "Calibrate the EMPTY_DIST and FULL_DIST values to YOUR specific tank dimensions before deployment."
+        ],
+        "expected_output": "LEDs illuminate progressively as water level rises. Buzzer sounds when tank reaches 95% capacity. No false alarms from water surface ripples (add averaging filter in code)."
+      }
+    ],
+    "testing_steps": [
+      "Simulate water level with a flat board moving toward the sensor.",
+      "Verify LEDs illuminate progressively as distance decreases.",
+      "Confirm buzzer sounds when tank is 95% full to prevent overflow."
+    ],
+    "expected_output": "Prevents tank overflow and alerts when refill is required.",
+    "possible_failures": [
+      "Water vapor condensation on ultrasonic transducer faces impairs readings."
+    ]
+  },
+  {
+    "id": "proj-smart-energy-monitor",
+    "name": "Smart Energy Monitor",
+    "description": "A cloud-connected power consumption and device health monitoring unit using ESP32 Wi-Fi and real-time OLED statistics.",
+    "category": "IoT & Smart Grid",
+    "difficulty": "Intermediate",
+    "estimated_cost": 920.0,
+    "required_components": [
+      "ESP32",
+      "OLED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Relay",
+      "LED"
+    ],
+    "dependencies": {
+      "logic_voltage": "ESP32 uses 3.3V logic level"
+    },
+    "wiring_rules": [
+      "OLED SDA -> ESP32 GPIO 21, SCL -> ESP32 GPIO 22",
+      "OLED VCC -> 3.3V, GND -> GND"
+    ],
+    "safety_rules": [
+      "If interfacing with AC current transformers (CT sensors), ensure burden resistor is never disconnected while clamped to live wire!"
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "ESP32 Power Setup",
+        "description": "Power the ESP32 DevKit via USB. The ESP32 generates its own 3.3V rail from the onboard regulator.",
+        "components_involved": [
+          "ESP32 DevKit",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "ESP32 — 3.3V pin",
+            "to": "Breadboard Red Rail",
+            "wire_color": "Red",
+            "notes": "3.3V logic rail for peripherals"
+          },
+          {
+            "from": "ESP32 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Place the ESP32 DevKit straddling the centre of the breadboard (one row of pins each side).\n2. Connect the 3.3V pin to the breadboard red (+) rail.\n3. Connect GND to the blue (−) rail.\n4. Power the ESP32 via Micro-USB cable to PC.",
+        "warnings": [
+          "ESP32 uses 3.3V logic — do NOT connect 5V peripherals directly to GPIO pins.",
+          "ESP32 can draw up to 500mA during Wi-Fi transmission — use a quality USB cable and port."
+        ],
+        "expected_output": "ESP32 power LED illuminates. Multimeter reads 3.3V between breadboard rails."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire OLED Display (I2C on ESP32)",
+        "description": "Connect the 0.96-inch I2C OLED to ESP32's I2C pins: GPIO21 (SDA) and GPIO22 (SCL).",
+        "components_involved": [
+          "OLED 0.96\" I2C",
+          "ESP32",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "OLED — VCC",
+            "to": "Breadboard Red Rail (3.3V)",
+            "wire_color": "Red",
+            "notes": "3.3V (OLED module has regulator)"
+          },
+          {
+            "from": "OLED — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "OLED — SDA",
+            "to": "ESP32 — GPIO21",
+            "wire_color": "Blue",
+            "notes": "I2C data — ESP32 default SDA"
+          },
+          {
+            "from": "OLED — SCL",
+            "to": "ESP32 — GPIO22",
+            "wire_color": "Yellow",
+            "notes": "I2C clock — ESP32 default SCL"
+          }
+        ],
+        "how_to_connect": "1. OLED VCC → 3.3V red rail; OLED GND → blue rail.\n2. OLED SDA → ESP32 GPIO21; OLED SCL → ESP32 GPIO22.\n3. These are the ESP32's hardware I2C pins — they have built-in pull-ups.",
+        "warnings": [
+          "Check OLED module pinout carefully — some have VCC/GND reversed compared to the silk-screen label."
+        ],
+        "expected_output": "I2C scanner sketch confirms device at 0x3C. OLED displays test pattern on boot."
+      },
+      {
+        "step_number": 3,
+        "title": "Configure Wi-Fi & Upload Energy Monitor Firmware",
+        "description": "Upload the energy monitor sketch that connects to Wi-Fi and displays power metrics on the OLED.",
+        "components_involved": [
+          "ESP32"
+        ],
+        "connections": [],
+        "how_to_connect": "1. Install ESP32 board package in Arduino IDE (via Board Manager).\n2. Install Adafruit SSD1306 and GFX libraries.\n3. Enter your Wi-Fi SSID and password in the sketch.\n4. Set I2C address to 0x3C.\n5. Select board: 'ESP32 Dev Module', port: your COM port.\n6. Upload sketch — ESP32 connects to Wi-Fi and displays IP address and simulated energy metrics on OLED.",
+        "warnings": [
+          "ESP32 Wi-Fi peak current can cause brownout if USB power is weak — if ESP32 keeps rebooting, add a 100µF capacitor between 3.3V and GND.",
+          "Do not use ADC2 pins (GPIO 0,2,4,12-15,25-27) for analog readings while Wi-Fi is active."
+        ],
+        "expected_output": "OLED shows: IP address, uptime, simulated voltage (220V), power (0W idle). Wi-Fi connected LED blinks. Serial Monitor shows MQTT/HTTP data packets transmitted."
+      }
+    ],
+    "testing_steps": [
+      "Power ESP32 via micro-USB.",
+      "Confirm connection to local Wi-Fi access point.",
+      "Observe wattage, voltage, and kilowatt-hour metrics on OLED display."
+    ],
+    "expected_output": "Accurate real-time power analytics streamed over Wi-Fi.",
+    "possible_failures": [
+      "ESP32 reboot loops: Wi-Fi peak current brownout on weak USB ports."
+    ]
+  },
+  {
+    "id": "proj-mini-weather-station",
+    "name": "Mini Weather Station",
+    "description": "A standalone micro-meteorological station with temperature, humidity, and barometric/light measurements visualized on a crystal-clear display.",
+    "category": "IoT & Environmental",
+    "difficulty": "Intermediate",
+    "estimated_cost": 850.0,
+    "required_components": [
+      "ESP32",
+      "Temperature Sensor",
+      "LDR",
+      "OLED",
+      "Resistor",
+      "Breadboard",
+      "Jumper Wires"
+    ],
+    "optional_components": [
+      "Battery",
+      "LED"
+    ],
+    "dependencies": {
+      "ldr_divider": "10k resistor with LDR to ESP32 ADC1 pin (e.g. GPIO 34)"
+    },
+    "wiring_rules": [
+      "DHT11 VCC -> 3.3V, GND -> GND, Data -> GPIO 4 with pull-up resistor",
+      "LDR divider to GPIO 34 (ADC1 channel)",
+      "OLED SDA -> GPIO 21, SCL -> GPIO 22"
+    ],
+    "safety_rules": [
+      "Do not use ADC2 pins on ESP32 if Wi-Fi is actively enabled simultaneously (ADC2 conflicts with Wi-Fi)."
+    ],
+    "steps": [
+      {
+        "step_number": 1,
+        "title": "ESP32 Power & 3.3V Rail Setup",
+        "description": "Power the ESP32 and establish a 3.3V rail for all sensors.",
+        "components_involved": [
+          "ESP32 DevKit",
+          "Breadboard",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "ESP32 — 3.3V",
+            "to": "Breadboard Red Rail",
+            "wire_color": "Red",
+            "notes": "3.3V for all sensors"
+          },
+          {
+            "from": "ESP32 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Common ground"
+          }
+        ],
+        "how_to_connect": "1. Place ESP32 on breadboard.\n2. 3.3V → red rail, GND → blue rail.\n3. Power via USB to PC.",
+        "warnings": [
+          "All sensors in this project use 3.3V — do not use the 5V pin."
+        ],
+        "expected_output": "3.3V on breadboard rail confirmed with multimeter."
+      },
+      {
+        "step_number": 2,
+        "title": "Wire DHT11 Temperature & Humidity Sensor",
+        "description": "Connect DHT11 to ESP32 GPIO4 with a 10kΩ pull-up to 3.3V for temperature and humidity readings.",
+        "components_involved": [
+          "DHT11 Sensor",
+          "10kΩ Resistor",
+          "ESP32",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "DHT11 — VCC",
+            "to": "Breadboard Red Rail (3.3V)",
+            "wire_color": "Red",
+            "notes": "3.3V power"
+          },
+          {
+            "from": "DHT11 — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "DHT11 — DATA",
+            "to": "ESP32 — GPIO4",
+            "wire_color": "Green",
+            "notes": "1-Wire data to ESP32"
+          },
+          {
+            "from": "10kΩ Resistor",
+            "to": "Between DHT11 DATA and 3.3V",
+            "wire_color": "Red",
+            "notes": "Pull-up to 3.3V"
+          }
+        ],
+        "how_to_connect": "1. Connect DHT11 VCC→3.3V rail, GND→blue rail.\n2. Connect DATA→GPIO4 with green wire.\n3. Add 10kΩ pull-up between DATA and 3.3V rail.",
+        "warnings": [
+          "10kΩ pull-up to 3.3V (not 5V) for ESP32 compatibility."
+        ],
+        "expected_output": "Serial Monitor shows temperature ~25°C and humidity updating every 2 seconds."
+      },
+      {
+        "step_number": 3,
+        "title": "Wire LDR Light Sensor Voltage Divider",
+        "description": "Build an LDR + 10kΩ voltage divider connected to ESP32 ADC1 pin GPIO34 for ambient light measurement.",
+        "components_involved": [
+          "LDR (Photoresistor)",
+          "10kΩ Resistor",
+          "ESP32",
+          "Jumper Wires"
+        ],
+        "connections": [
+          {
+            "from": "Breadboard Red Rail (3.3V)",
+            "to": "LDR Leg 1",
+            "wire_color": "Red",
+            "notes": "Supply side of LDR"
+          },
+          {
+            "from": "LDR Leg 2",
+            "to": "ESP32 — GPIO34",
+            "wire_color": "Yellow",
+            "notes": "ADC1 input — use ADC1 pins only with Wi-Fi"
+          },
+          {
+            "from": "LDR Leg 2 (same row)",
+            "to": "10kΩ Resistor Leg 1",
+            "wire_color": "Yellow",
+            "notes": "Divider mid-point"
+          },
+          {
+            "from": "10kΩ Resistor Leg 2",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Pull-down to GND"
+          }
+        ],
+        "how_to_connect": "1. LDR leg 1 → 3.3V red rail.\n2. LDR leg 2 → GPIO34 AND to 10kΩ resistor → GND rail.\n3. GPIO34 is input-only on ESP32 — perfect for ADC.",
+        "warnings": [
+          "Use GPIO34–GPIO39 for ADC when Wi-Fi is active — these are ADC1 channels and do not conflict with Wi-Fi.",
+          "Do NOT use GPIO25, GPIO26, GPIO27 for ADC when Wi-Fi is on — these are ADC2 and will give wrong readings."
+        ],
+        "expected_output": "analogRead(34) returns ~3800–4095 in bright light and ~200–800 in dim light (12-bit ADC on ESP32)."
+      },
+      {
+        "step_number": 4,
+        "title": "Wire OLED & Upload Weather Station Firmware",
+        "description": "Connect OLED display and upload the multi-sensor weather station sketch that shows temperature, humidity, and light level.",
+        "components_involved": [
+          "OLED I2C Display",
+          "ESP32"
+        ],
+        "connections": [
+          {
+            "from": "OLED — VCC",
+            "to": "Breadboard Red Rail (3.3V)",
+            "wire_color": "Red",
+            "notes": "3.3V power"
+          },
+          {
+            "from": "OLED — GND",
+            "to": "Breadboard Blue Rail (−)",
+            "wire_color": "Black",
+            "notes": "Ground"
+          },
+          {
+            "from": "OLED — SDA",
+            "to": "ESP32 — GPIO21",
+            "wire_color": "Blue",
+            "notes": "I2C SDA"
+          },
+          {
+            "from": "OLED — SCL",
+            "to": "ESP32 — GPIO22",
+            "wire_color": "Yellow",
+            "notes": "I2C SCL"
+          }
+        ],
+        "how_to_connect": "1. OLED: VCC→3.3V, GND→blue rail, SDA→GPIO21, SCL→GPIO22.\n2. Install DHT library and Adafruit SSD1306 in Arduino IDE.\n3. Upload weather station sketch: reads DHT11 every 2s, reads LDR every 500ms, displays all values on OLED with icons.\n4. Test: cover LDR — light icon changes; breathe on DHT11 — humidity rises.",
+        "warnings": [],
+        "expected_output": "OLED displays: Temperature (°C), Humidity (%), Light level (Lux or raw). Values update smoothly every 2 seconds. Exposing to lamp increases light reading; breathing on sensor increases humidity."
+      }
+    ],
+    "testing_steps": [
+      "Boot weather station and verify sensors calibrate.",
+      "Expose to lamp: verify Lux/sun icon updates.",
+      "Observe temperature and relative humidity metrics refresh smoothly."
+    ],
+    "expected_output": "High-accuracy compact ambient weather display.",
+    "possible_failures": [
+      "WiFi and ADC conflict: using ADC2 pins (GPIO 0, 2, 4, 12-15, 25-27) fails when Wi-Fi is transmitting."
+    ]
+  }
+]

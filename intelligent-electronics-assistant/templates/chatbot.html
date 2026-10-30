@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}AI Electronics Assistant - Local RAG{% endblock %}
+{% block page_title %}Local RAG AI Assistant{% endblock %}
+{% block page_subtitle %}Instant answers based on your component specifications, safety rules, and project knowledge base.{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; min-height: 650px;">
+
+  <!-- Header Banner -->
+  <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent-electric); display: flex; align-items: center; justify-content: center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-electric)" stroke-width="2"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+      </div>
+      <div>
+        <h2 style="font-size: 16px; font-weight: 700;">Electronics Workshop Knowledge Copilot</h2>
+        <p style="font-size: 12px; color: var(--text-muted);">Retrieves ground-truth component specs & wiring standards with zero hallucinations.</p>
+      </div>
+    </div>
+    <div>
+      <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success); border: 1px solid rgba(16, 185, 129, 0.3);">
+        ● Local RAG Engine Active
+      </span>
+    </div>
+  </div>
+
+  <!-- Quick Prompts -->
+  <div style="margin-bottom: 16px;">
+    <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 8px;">Suggested Questions:</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <button class="btn btn-secondary" style="font-size: 11.5px; padding: 4px 10px;" onclick="sendQuickPrompt('What voltage does ESP32 need and what pins are used for I2C?')">⚡ ESP32 Specs & Voltage</button>
+      <button class="btn btn-secondary" style="font-size: 11.5px; padding: 4px 10px;" onclick="sendQuickPrompt('How do I wire an LDR sensor with Arduino Uno?')">💡 LDR Wiring Guide</button>
+      <button class="btn btn-secondary" style="font-size: 11.5px; padding: 4px 10px;" onclick="sendQuickPrompt('What safety precautions are required when working with 220V relay modules?')">⚠️ Relay Safety Rules</button>
+      <button class="btn btn-secondary" style="font-size: 11.5px; padding: 4px 10px;" onclick="sendQuickPrompt('Explain Automatic Street Light project requirements and expected output')">🚦 Automatic Street Light</button>
+    </div>
+  </div>
+
+  <!-- Chat Log Box -->
+  <div id="chat-box" style="flex: 1; overflow-y: auto; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; max-height: 440px;">
+    <div class="chat-message assistant-message" style="display: flex; gap: 12px;">
+      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-electric); color: #000; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">AI</div>
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; font-size: 13.5px; line-height: 1.6; color: var(--text-primary); max-width: 85%;">
+        Hello! I am your Intelligent Electronics Assistant. Ask me anything about components in your workshop, pinouts, wiring rules, or safety guidelines.
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Input Form -->
+  <form id="chat-form" onsubmit="handleSend(event)" style="display: flex; gap: 10px;">
+    <input type="text" id="chat-input" class="form-control" placeholder="Ask a question about components, pinouts, or projects..." required style="flex: 1;">
+    <button type="submit" class="btn btn-primary" id="btn-send" style="padding: 0 20px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Send
+    </button>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', loadChatHistory);
+
+async function loadChatHistory() {
+  try {
+    const res = await fetch('/api/chat/history');
+    const data = await res.json();
+    if (data.status === 'success' && data.history && data.history.length > 0) {
+      const box = document.getElementById('chat-box');
+      box.innerHTML = '';
+      data.history.forEach(item => {
+        appendMessage(item.sender, item.message, item.timestamp);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+  } catch (err) {
+    console.error('Failed to load chat history:', err);
+  }
+}
+
+function sendQuickPrompt(text) {
+  document.getElementById('chat-input').value = text;
+  document.getElementById('chat-form').requestSubmit();
+}
+
+async function handleSend(event) {
+  event.preventDefault();
+  const input = document.getElementById('chat-input');
+  const query = input.value.trim();
+  if (!query) return;
+
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true;
+  input.value = '';
+
+  appendMessage('user', query);
+
+  // Loading indicator
+  const loadingId = appendLoadingIndicator();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: query })
+    });
+
+    const data = await res.json();
+    removeLoadingIndicator(loadingId);
+
+    if (data.status === 'success') {
+      const resp = data.data;
+      appendMessage('assistant', resp.answer, null, resp.sources, resp.engine);
+    } else {
+      appendMessage('assistant', 'Sorry, I encountered an error: ' + (data.message || 'Unknown error'));
+    }
+  } catch (err) {
+    removeLoadingIndicator(loadingId);
+    appendMessage('assistant', 'Network error connecting to local RAG service.');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function appendMessage(sender, text, timestamp = null, sources = [], engine = null) {
+  const box = document.getElementById('chat-box');
+  const div = document.createElement('div');
+  div.style.display = 'flex';
+  div.style.gap = '12px';
+  div.style.justifyContent = sender === 'user' ? 'flex-end' : 'flex-start';
+
+  const isUser = sender === 'user';
+  
+  // Format text lines & bold markdown
+  let formattedText = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+
+  let sourcesHtml = '';
+  if (sources && sources.length > 0) {
+    sourcesHtml = `
+      <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-color); font-size: 11.5px; color: var(--text-muted);">
+        <strong style="color: var(--accent-electric);">Context Sources:</strong>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+          ${sources.map(s => `<span class="badge" style="font-size: 10px; background: rgba(56, 189, 248, 0.1); color: var(--text-secondary); border: 1px solid var(--border-color);">${s.source_type}: ${s.title}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  let engineHtml = '';
+  if (engine) {
+    engineHtml = `<div style="font-size: 10px; color: var(--text-muted); margin-top: 4px; font-style: italic;">Engine: ${engine}</div>`;
+  }
+
+  div.innerHTML = isUser ? `
+    <div style="background: var(--accent-electric); color: #0f172a; font-weight: 500; padding: 10px 16px; border-radius: 12px 12px 2px 12px; font-size: 13.5px; max-width: 80%; line-height: 1.5;">
+      ${formattedText}
+    </div>
+    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">You</div>
+  ` : `
+    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-electric); color: #000; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">AI</div>
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px 12px 12px 2px; font-size: 13.5px; line-height: 1.6; color: var(--text-primary); max-width: 85%;">
+      ${formattedText}
+      ${sourcesHtml}
+      ${engineHtml}
+    </div>
+  `;
+
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function appendLoadingIndicator() {
+  const box = document.getElementById('chat-box');
+  const id = 'loading-' + Date.now();
+  const div = document.createElement('div');
+  div.id = id;
+  div.style.display = 'flex';
+  div.style.gap = '12px';
+  div.innerHTML = `
+    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-electric); color: #000; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">AI</div>
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; font-size: 13.5px; color: var(--text-muted); font-style: italic;">
+      Searching local workshop vectorless database...
+    </div>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return id;
+}
+
+function removeLoadingIndicator(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Intelligent Electronics Assistant{% endblock %}
+{% block page_title %}Intelligent Electronics Project Assistant{% endblock %}
+{% block page_subtitle %}Turn your components into buildable projects.{% endblock %}
+
+{% block content %}
+<!-- Statistics Row -->
+<div class="stats-grid">
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Components Available</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </div>
+    <div class="stat-value">{{ stats.components_available }}</div>
+    <div class="stat-footer">✓ Ready in inventory</div>
+  </div>
+
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Recommended Projects</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m16 6 4 14M12 6v14M8 8v12M4 4v16"/></svg>
+    </div>
+    <div class="stat-value">{{ stats.recommended_projects }}</div>
+    <div class="stat-footer">★ High feasibility</div>
+  </div>
+
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Saved Projects</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
+    </div>
+    <div class="stat-value">{{ stats.saved_projects }}</div>
+    <div class="stat-footer">In your queue</div>
+  </div>
+
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Projects Completed</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div class="stat-value">{{ stats.projects_completed }}</div>
+    <div class="stat-footer">Great progress!</div>
+  </div>
+
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Potential Cost Saved</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </div>
+    <div class="stat-value">{{ stats.potential_cost_saved }}</div>
+    <div class="stat-footer">By reusing parts</div>
+  </div>
+
+  <div class="glass-card stat-card">
+    <div class="stat-header">
+      <span>Safety Issues</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="stat-value" style="color: var(--accent-success);">{{ stats.safety_issues_detected }}</div>
+    <div class="stat-footer" style="color: var(--accent-success);">All circuits safe</div>
+  </div>
+</div>
+
+<!-- Main Sections Grid -->
+<div class="dashboard-columns" style="display: grid; grid-template-columns: 2fr 1.2fr; gap: 24px;">
+  <!-- Left Column: Recommended Projects & Inventory -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <!-- Recommended Projects Section -->
+    <div class="glass-card" style="padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 17px; font-weight: 600;">Recommended Projects</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Computed dynamically from your active components</p>
+        </div>
+        <a href="{{ url_for('dashboard_views.projects_page') }}" class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">View All</a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        {% for item in recommended_projects %}
+        <div class="glass-card" style="padding: 16px; background: rgba(10, 13, 20, 0.4); border-color: rgba(255, 255, 255, 0.05);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <h3 style="font-size: 14.5px; font-weight: 600;">{{ item.project_name }}</h3>
+            <span class="badge {% if item.feasibility_score >= 80 %}badge-success{% else %}badge-warning{% endif %}">
+              {{ item.feasibility_score }}% Feasible
+            </span>
+          </div>
+          
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+            {{ item.description[:90] }}...
+          </p>
+
+          <div style="font-size: 11.5px; display: flex; flex-direction: column; gap: 4px; color: var(--text-dim); margin-bottom: 14px;">
+            <div>Components: <b style="color: var(--text-main);">{{ item.components_available_count }}/{{ item.components_required_total }}</b> available</div>
+            <div>Missing: <b style="color: var(--text-main);">{{ item.missing_components|length }} items</b> (₹{{ item.additional_cost }})</div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <a href="{{ url_for('dashboard_views.wiring_page', project_id=item.project_id) }}" class="btn btn-secondary" style="font-size: 11px; padding: 6px 10px; flex: 1; justify-content: center;">
+              Wiring
+            </a>
+            <a href="{{ url_for('dashboard_views.project_detail_page', project_id=item.project_id) }}" class="btn btn-primary" style="font-size: 11px; padding: 6px 10px; flex: 1; justify-content: center;">
+              Build Guide
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- My Components Section -->
+    <div class="glass-card" style="padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 17px; font-weight: 600;">My Components</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Recent parts stored in your inventory</p>
+        </div>
+        <a href="{{ url_for('dashboard_views.components_page') }}" class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">Manage All</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Voltage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for comp in components %}
+            <tr>
+              <td style="font-weight: 500; color: #fff;">{{ comp.name }}</td>
+              <td><span class="badge badge-info">{{ comp.category }}</span></td>
+              <td>{{ comp.quantity }}</td>
+              <td>{{ comp.voltage }}</td>
+              <td><span class="badge badge-success">{{ comp.availability }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Recent Activity & AI Preview -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <!-- Recent Activity -->
+    <div class="glass-card" style="padding: 24px;">
+      <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">Recent Activity</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Your workshop event log</p>
+
+      <div style="display:flex; flex-direction:column; gap: 14px;">
+        {% for act in recent_activity %}
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-electric); margin-top: 6px; box-shadow: 0 0 6px var(--accent-electric);"></div>
+          <div>
+            <div style="font-size: 13px; font-weight: 500;">{{ act.action|capitalize }} <b>{{ act.project_name }}</b></div>
+            <div style="font-size: 11px; color: var(--text-dim);">{{ act.timestamp }} {% if act.notes %}- {{ act.notes }}{% endif %}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- AI Assistant Interactive Preview Card -->
+    <div class="glass-card" style="padding: 24px; background: linear-gradient(180deg, rgba(16, 22, 34, 0.9), rgba(6, 182, 212, 0.05));">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+        <div style="width: 28px; height: 28px; border-radius: 6px; background: var(--accent-cyan); display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold;">
+          AI
+        </div>
+        <h3 style="font-size: 15px; font-weight: 600;">Electronics Co-Pilot</h3>
+      </div>
+      <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 16px;">
+        Ask anything about pinouts, circuit safety, or component replacements.
+      </p>
+      <div style="background: rgba(10, 13, 20, 0.6); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 16px; font-size: 12px; color: #cbd5e1;">
+        <i>"Why do I need a 220Ω resistor with an LED?"</i>
+      </div>
+      <a href="{{ url_for('dashboard_views.assistant_page') }}" class="btn btn-primary" style="width: 100%; justify-content: center;">
+        Open AI Assistant
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

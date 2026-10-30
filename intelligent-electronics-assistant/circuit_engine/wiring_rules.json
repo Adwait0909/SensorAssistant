@@ -1,0 +1,19 @@
+{"_doc":"pin -> target. Targets: VCC (rail chosen by voltage), GND, VIN, DIG/PWM/ADC/SDA/SCL (auto-assigned MCU pin), COMP:type.pin. 'series' inserts a resistor in-line; 'pull' adds GND|VCC pull resistor on the MCU pin.",
+"rules":{
+"led":[{"pin":"anode","to":"DIG","series":"220Ω"},{"pin":"cathode","to":"GND"}],
+"rgb_led":[{"pin":"R","to":"PWM","series":"220Ω"},{"pin":"G","to":"PWM","series":"220Ω"},{"pin":"B","to":"PWM","series":"220Ω"},{"pin":"CATHODE","to":"GND"}],
+"buzzer":[{"pin":"+","to":"DIG"},{"pin":"-","to":"GND"}],
+"ldr":[{"pin":"a","to":"VCC"},{"pin":"b","to":"ADC","pull":"GND:10kΩ"}],
+"pir":[{"pin":"VCC","to":"VCC"},{"pin":"OUT","to":"DIG"},{"pin":"GND","to":"GND"}],
+"hc_sr04":[{"pin":"VCC","to":"VCC"},{"pin":"TRIG","to":"DIG"},{"pin":"ECHO","to":"DIG"},{"pin":"GND","to":"GND"}],
+"dht11":[{"pin":"VCC","to":"VCC"},{"pin":"DATA","to":"DIG","pull":"VCC:10kΩ"},{"pin":"GND","to":"GND"}],
+"servo":[{"pin":"VCC","to":"VCC"},{"pin":"SIG","to":"PWM"},{"pin":"GND","to":"GND"}],
+"relay":[{"pin":"VCC","to":"VCC"},{"pin":"GND","to":"GND"},{"pin":"IN","to":"DIG"},{"pin":"COM","to":"COMP:battery.+"}],
+"dc_motor":[{"pin":"+","to":"COMP:relay.NO"},{"pin":"-","to":"GND"}],
+"oled":[{"pin":"VCC","to":"VCC"},{"pin":"GND","to":"GND"},{"pin":"SDA","to":"SDA"},{"pin":"SCL","to":"SCL"}],
+"lcd":[{"pin":"VCC","to":"VCC"},{"pin":"GND","to":"GND"},{"pin":"SDA","to":"SDA"},{"pin":"SCL","to":"SCL"}],
+"potentiometer":[{"pin":"1","to":"VCC"},{"pin":"2","to":"ADC"},{"pin":"3","to":"GND"}],
+"push_button":[{"pin":"a","to":"VCC"},{"pin":"b","to":"DIG","pull":"GND:10kΩ"}],
+"capacitor":[{"pin":"+","to":"VCC"},{"pin":"-","to":"GND"}],
+"battery":[{"pin":"+","to":"VIN"},{"pin":"-","to":"GND"}]
+}}

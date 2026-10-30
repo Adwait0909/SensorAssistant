@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+{% block title %}Project Recommendations - Intelligent Electronics Assistant{% endblock %}
+{% block page_title %}AI Project Recommendation Engine{% endblock %}
+{% block page_subtitle %}Enter your available components to get machine-learning ranked electronics projects.{% endblock %}
+
+{% block extra_css %}
+<style>
+.comp-pill-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 5px 12px;
+  border-radius: 18px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.comp-pill-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent-electric);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.15));
+  border: 1px solid var(--accent-cyan);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+.active-tag button {
+  background: none;
+  border: none;
+  color: var(--accent-electric);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.active-tag button:hover {
+  color: #ef4444;
+}
+.score-badge-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 13, 20, 0.8);
+  border: 2.5px solid var(--accent-electric);
+  box-shadow: 0 0 14px var(--accent-glow);
+}
+.toggle-btn-group {
+  display: inline-flex;
+  background: rgba(10, 13, 20, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 3px;
+}
+.toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #fff;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- STEP 1: Component Input & Selection Section -->
+  <div class="glass-card" style="padding: 24px; border: 1px solid rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(16, 22, 34, 0.95), rgba(6, 182, 212, 0.04));">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--accent-electric); padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; color: var(--accent-electric); margin-bottom: 8px;">
+          STEP 1: COMPONENT SELECTION
+        </div>
+        <h2 style="font-size: 18px; font-weight: 700; color: #fff;">Enter Your Available Hardware Components</h2>
+        <p style="font-size: 12.5px; color: var(--text-muted);">Type parts, click quick-add pills, or import from inventory/scanner to calculate ML project match scores.</p>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn btn-secondary" onclick="loadInventoryComponents()" style="font-size: 12px; padding: 7px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Import Inventory
+        </button>
+        <a href="{{ url_for('dashboard_views.scanner_page') }}" class="btn btn-secondary" style="font-size: 12px; padding: 7px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+          Scan Part Image
+        </a>
+        <button type="button" class="btn btn-secondary" onclick="clearComponents()" style="font-size: 12px; padding: 7px 12px; color: #fca5a5;">
+          Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- Interactive Component Input Field -->
+    <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+      <div style="position: relative; flex: 1;">
+        <input type="text" id="component-input-box" class="input-field" placeholder="Type component name (e.g. Arduino Uno, MQ-2, Buzzer, Ultrasonic Sensor) and press Enter..." onkeydown="handleInputKey(event)" style="padding-left: 36px; font-size: 14px;">
+        <svg style="position: absolute; left: 12px; top: 12px; width: 16px; height: 16px; stroke: var(--text-muted); fill: none;" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <button class="btn btn-secondary" onclick="addComponentFromInput()" style="padding: 0 18px;">+ Add</button>
+      <button class="btn btn-primary" onclick="loadRecommendations()" style="padding: 0 22px; font-weight: 600;">
+        ⚡ Recommend Projects
+      </button>
+    </div>
+
+    <!-- Active Selected Tags -->
+    <div style="margin-bottom: 16px;">
+      <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">
+        Active Component Set (<span id="active-count">0</span> items):
+      </div>
+      <div id="active-tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 36px; background: rgba(10, 13, 20, 0.4); padding: 10px; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+        <span style="font-size: 12px; color: var(--text-dim);">No components entered yet. Click the quick-add buttons below or type above.</span>
+      </div>
+    </div>
+
+    <!-- Quick Add Component Presets -->
+    <div>
+      <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">
+        Quick Add Common Parts:
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <button class="comp-pill-btn" onclick="addTag('Arduino Uno')">⚡ Arduino Uno</button>
+        <button class="comp-pill-btn" onclick="addTag('ESP32')">📶 ESP32</button>
+        <button class="comp-pill-btn" onclick="addTag('Raspberry Pi')">🍓 Raspberry Pi</button>
+        <button class="comp-pill-btn" onclick="addTag('MQ-2 Gas Sensor')">🔥 MQ-2 Gas Sensor</button>
+        <button class="comp-pill-btn" onclick="addTag('HC-SR04 Ultrasonic Sensor')">📏 Ultrasonic Sensor</button>
+        <button class="comp-pill-btn" onclick="addTag('PIR Motion Sensor')">🏃 PIR Sensor</button>
+        <button class="comp-pill-btn" onclick="addTag('LDR Light Sensor')">☀️ LDR Sensor</button>
+        <button class="comp-pill-btn" onclick="addTag('DHT11 Sensor')">🌡️ DHT11 Temp/Humidity</button>
+        <button class="comp-pill-btn" onclick="addTag('Buzzer')">🔊 Buzzer</button>
+        <button class="comp-pill-btn" onclick="addTag('Servo Motor')">⚙️ Servo Motor</button>
+        <button class="comp-pill-btn" onclick="addTag('DC Motor')">🔄 DC Motor</button>
+        <button class="comp-pill-btn" onclick="addTag('Relay Module')">🔌 Relay Module</button>
+        <button class="comp-pill-btn" onclick="addTag('16x2 LCD')">📟 16x2 LCD</button>
+        <button class="comp-pill-btn" onclick="addTag('LED')">💡 LED</button>
+        <button class="comp-pill-btn" onclick="addTag('Breadboard')">🔲 Breadboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Filter & Recommender Controls Bar -->
+  <div class="glass-card" style="padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+      <div style="font-size: 13px; font-weight: 600; color: #fff;">STEP 2: FILTER & RANKING</div>
+      <!-- Difficulty Filter -->
+      <select id="diff-filter" class="select-field" style="width: auto;" onchange="filterRecommendations()">
+        <option value="All">All Difficulties</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+
+      <!-- Category Filter -->
+      <select id="cat-filter" class="select-field" style="width: auto;" onchange="filterRecommendations()">
+        <option value="All">All Categories</option>
+        <option value="Home Automation">Home Automation</option>
+        <option value="Robotics & Automation">Robotics & Automation</option>
+        <option value="IoT & Monitoring">IoT & Monitoring</option>
+        <option value="Security">Security</option>
+        <option value="Safety & Industrial">Safety & Industrial</option>
+        <option value="Automotive & Prototyping">Automotive</option>
+      </select>
+    </div>
+
+    <!-- Optimization Mode Toggle -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 12px; color: var(--text-dim);">Optimization Mode:</span>
+      <div class="toggle-btn-group">
+        <button id="mode-proto-btn" class="toggle-btn active" onclick="switchMode('prototype')">Prototype Mode</button>
+        <button id="mode-prod-btn" class="toggle-btn" onclick="switchMode('production')">Production Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations Cards Grid -->
+  <div id="recommendations-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;">
+    <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-dim);">
+      Analyzing component inventory and ranking projects...
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let activeComponents = ["Arduino Uno", "MQ-2 Gas Sensor", "Buzzer", "Breadboard", "LED"];
+let allRecs = [];
+let currentMode = "prototype";
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderActiveTags();
+  loadRecommendations();
+});
+
+function handleInputKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addComponentFromInput();
+  }
+}
+
+function addComponentFromInput() {
+  const input = document.getElementById('component-input-box');
+  const val = input.value.replace(/,/g, '').trim();
+  if (val) {
+    addTag(val);
+    input.value = '';
+  }
+}
+
+function addTag(name) {
+  const clean = name.trim();
+  if (!clean) return;
+  if (!activeComponents.some(c => c.toLowerCase() === clean.toLowerCase())) {
+    activeComponents.push(clean);
+    renderActiveTags();
+    loadRecommendations();
+  }
+}
+
+function removeTag(index) {
+  activeComponents.splice(index, 1);
+  renderActiveTags();
+  loadRecommendations();
+}
+
+function clearComponents() {
+  activeComponents = [];
+  renderActiveTags();
+  loadRecommendations();
+}
+
+async function loadInventoryComponents() {
+  try {
+    const res = await fetch('/api/components');
+    const result = await res.json();
+    if (result.status === 'success' && result.data) {
+      result.data.forEach(c => {
+        if (!activeComponents.some(existing => existing.toLowerCase() === c.name.toLowerCase())) {
+          activeComponents.push(c.name);
+        }
+      });
+      renderActiveTags();
+      loadRecommendations();
+      showToast('Imported parts from workshop inventory!', 'success');
+    }
+  } catch (err) {
+    showToast('Failed to load inventory components', 'error');
+  }
+}
+
+function renderActiveTags() {
+  const container = document.getElementById('active-tags-container');
+  const countEl = document.getElementById('active-count');
+  countEl.innerText = activeComponents.length;
+
+  if (activeComponents.length === 0) {
+    container.innerHTML = '<span style="font-size: 12px; color: var(--text-dim);">No components entered yet. Click quick-add buttons above or type to add.</span>';
+    return;
+  }
+
+  container.innerHTML = activeComponents.map((c, idx) => `
+    <span class="active-tag">
+      <span>${escapeHtml(c)}</span>
+      <button type="button" onclick="removeTag(${idx})" title="Remove component">&times;</button>
+    </span>
+  `).join('');
+}
+
+async function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-proto-btn').classList.toggle('active', mode === 'prototype');
+  document.getElementById('mode-prod-btn').classList.toggle('active', mode === 'production');
+
+  fetch('/api/user-preference/mode', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode: mode })
+  }).catch(() => {});
+
+  loadRecommendations();
+}
+
+async function loadRecommendations() {
+  const grid = document.getElementById('recommendations-grid');
+  grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-dim);"><div class="scan-animation" style="padding: 20px;">Computing ML suitability score for entered components...</div></div>';
+
+  try {
+    const res = await fetch('/api/recommendations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        mode: currentMode,
+        components: activeComponents 
+      })
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      allRecs = result.data;
+      filterRecommendations();
+    } else {
+      showToast('Error: ' + result.message, 'error');
+    }
+  } catch (err) {
+    showToast('Failed to connect to recommendation service', 'error');
+  }
+}
+
+function filterRecommendations() {
+  const diffVal = document.getElementById('diff-filter').value;
+  const catVal = document.getElementById('cat-filter').value;
+
+  const filtered = allRecs.filter(r => {
+    const diffOk = diffVal === 'All' || r.difficulty === diffVal;
+    const catOk = catVal === 'All' || r.category === catVal;
+    return diffOk && catOk;
+  });
+
+  renderCards(filtered);
+}
+
+function renderCards(recs) {
+  const grid = document.getElementById('recommendations-grid');
+  grid.innerHTML = '';
+
+  if (recs.length === 0) {
+    grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-dim);">No projects match the selected filter.</div>';
+    return;
+  }
+
+  recs.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'glass-card';
+    card.style.padding = '20px';
+    card.style.display = 'flex';
+    card.style.flexDirection = 'column';
+    card.style.justifyContent = 'space-between';
+    card.style.border = r.ml_score >= 80 ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid var(--border-color)';
+
+    let safetyBadgeClass = 'badge-success';
+    if (r.highest_safety_severity === 'High') safetyBadgeClass = 'badge-warning';
+    if (r.highest_safety_severity === 'Critical') safetyBadgeClass = 'badge-danger';
+
+    let scoreColor = 'var(--accent-electric)';
+    if (r.ml_score >= 85) scoreColor = 'var(--accent-success)';
+    else if (r.ml_score < 50) scoreColor = 'var(--accent-warning)';
+
+    const availChips = (r.available_components || []).map(c => 
+      `<span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 7px; border-radius: 10px; font-size: 10.5px;">✓ ${escapeHtml(c)}</span>`
+    ).join(' ');
+
+    const missingChips = (r.missing_components || []).map(c => 
+      `<span style="background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.25); padding: 2px 7px; border-radius: 10px; font-size: 10.5px;">+ ${escapeHtml(c)}</span>`
+    ).join(' ');
+
+    card.innerHTML = `
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 12px; gap: 10px;">
+          <div style="flex: 1;">
+            <h3 style="font-size: 16px; font-weight: 700; color:#fff; margin-bottom: 4px;">${escapeHtml(r.project_name)}</h3>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <span class="badge badge-info">${escapeHtml(r.category)}</span>
+              <span class="badge badge-secondary" style="border:1px solid rgba(255,255,255,0.1);">${r.difficulty}</span>
+              <span class="badge ${safetyBadgeClass}">${r.safety_status}</span>
+            </div>
+          </div>
+
+          <!-- ML Score Circular Display -->
+          <div style="text-align: center;">
+            <div class="score-badge-circle" style="border-color: ${scoreColor};">
+              <span style="font-size: 15px; font-weight: 800; color: #fff;">${Math.round(r.ml_score)}%</span>
+              <span style="font-size: 8.5px; color: ${scoreColor}; font-weight: 700; text-transform: uppercase;">ML Match</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+          ${escapeHtml(r.description)}
+        </p>
+
+        <!-- Explanation of WHY it suits the entered components -->
+        <div style="background: rgba(6, 182, 212, 0.06); border-left: 3px solid var(--accent-cyan); padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 11.5px; color: #bae6fd;">
+          <b>Suitability Reason:</b> ${escapeHtml(r.explanation)}
+        </div>
+
+        <!-- Matched vs Missing Component Chips -->
+        <div style="margin-bottom: 14px; font-size: 11.5px;">
+          <div style="margin-bottom: 4px; color: var(--text-dim);">Component Match Breakdown:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+            ${availChips}
+            ${missingChips || '<span style="color: var(--accent-success); font-size: 11px;">✓ All required parts available!</span>'}
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 11.5px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px;">
+          <div>
+            <span style="color: var(--text-dim);">Readiness:</span>
+            <div style="font-weight: 600; color: #fff;">${r.components_available_count} / ${r.components_required_total} parts ready</div>
+          </div>
+          <div>
+            <span style="color: var(--text-dim);">Extra Cost:</span>
+            <div style="font-weight: 600; color: ${r.additional_cost === 0 ? 'var(--accent-success)' : 'var(--text-main)'};">
+              ${r.additional_cost === 0 ? '₹0 (Fully Owned)' : '₹' + r.additional_cost.toFixed(0)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 8px;">
+        <a href="/wiring/${r.project_id}" class="btn btn-secondary" style="font-size: 11.5px; padding: 7px 10px;">
+          ⚡ Wiring Diagram
+        </a>
+        <a href="/projects/${r.project_id}" class="btn btn-primary" style="flex:1; justify-content:center; font-size:11.5px;">
+          Build Guide & Code
+        </a>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+</script>
+{% endblock %}

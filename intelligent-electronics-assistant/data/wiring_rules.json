@@ -1,0 +1,329 @@
+[
+  {
+    "id": "wr-automatic-street-light",
+    "project_id": "proj-automatic-street-light",
+    "connections": [
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "Breadboard Power Rail",
+        "target_pin": "+ (Red Bus)",
+        "signal_type": "power",
+        "notes": "Main 5V DC supply rail",
+        "power_requirement": "5V 500mA max"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Breadboard Power Rail",
+        "target_pin": "- (Blue Bus)",
+        "signal_type": "ground",
+        "notes": "Common ground reference",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "LDR",
+        "source_pin": "Pin 1",
+        "target_component": "Breadboard Power Rail",
+        "target_pin": "+ (Red Bus)",
+        "signal_type": "power",
+        "notes": "Connect one side of photoresistor to 5V rail",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "LDR",
+        "source_pin": "Pin 2",
+        "target_component": "Arduino Uno",
+        "target_pin": "A0",
+        "signal_type": "analog",
+        "notes": "Analog light intensity node",
+        "power_requirement": "0-5V Analog"
+      },
+      {
+        "source_component": "10k Resistor",
+        "source_pin": "Pin 1",
+        "target_component": "Arduino Uno",
+        "target_pin": "A0",
+        "signal_type": "analog",
+        "notes": "Pull-down resistor tied to LDR Pin 2 node",
+        "power_requirement": "Passive"
+      },
+      {
+        "source_component": "10k Resistor",
+        "source_pin": "Pin 2",
+        "target_component": "Breadboard Power Rail",
+        "target_pin": "- (Blue Bus)",
+        "signal_type": "ground",
+        "notes": "Pull-down ground path",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 13",
+        "target_component": "220 ohm Resistor",
+        "target_pin": "Pin 1",
+        "signal_type": "digital",
+        "notes": "Digital output trigger",
+        "power_requirement": "5V Logic"
+      },
+      {
+        "source_component": "220 ohm Resistor",
+        "source_pin": "Pin 2",
+        "target_component": "LED",
+        "target_pin": "Anode (+)",
+        "signal_type": "digital",
+        "notes": "Current-limiting series resistor",
+        "power_requirement": "20mA max"
+      },
+      {
+        "source_component": "LED",
+        "source_pin": "Cathode (-)",
+        "target_component": "Breadboard Power Rail",
+        "target_pin": "- (Blue Bus)",
+        "signal_type": "ground",
+        "notes": "Ground return for light indicator",
+        "power_requirement": "GND"
+      }
+    ]
+  },
+  {
+    "id": "wr-smart-dustbin",
+    "project_id": "proj-smart-dustbin",
+    "connections": [
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "HC-SR04 Ultrasonic Sensor",
+        "target_pin": "VCC",
+        "signal_type": "power",
+        "notes": "5V VCC power",
+        "power_requirement": "5V 15mA"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "HC-SR04 Ultrasonic Sensor",
+        "target_pin": "GND",
+        "signal_type": "ground",
+        "notes": "Ground connection",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 9",
+        "target_component": "HC-SR04 Ultrasonic Sensor",
+        "target_pin": "Trig",
+        "signal_type": "digital",
+        "notes": "10us trigger pulse output",
+        "power_requirement": "5V Logic"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 10",
+        "target_component": "HC-SR04 Ultrasonic Sensor",
+        "target_pin": "Echo",
+        "signal_type": "digital",
+        "notes": "Echo pulse return input",
+        "power_requirement": "5V Logic"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "Servo Motor",
+        "target_pin": "VCC (Red)",
+        "signal_type": "power",
+        "notes": "Servo power",
+        "power_requirement": "5V 500mA peak"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Servo Motor",
+        "target_pin": "GND (Brown/Black)",
+        "signal_type": "ground",
+        "notes": "Common ground",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 6 (PWM)",
+        "target_component": "Servo Motor",
+        "target_pin": "PWM Signal (Orange/Yellow)",
+        "signal_type": "pwm",
+        "notes": "PWM position control",
+        "power_requirement": "PWM 50Hz"
+      }
+    ]
+  },
+  {
+    "id": "wr-temperature-monitoring-system",
+    "project_id": "proj-temperature-monitoring-system",
+    "connections": [
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "Temperature Sensor",
+        "target_pin": "VCC",
+        "signal_type": "power",
+        "notes": "DHT11 Power",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Temperature Sensor",
+        "target_pin": "GND",
+        "signal_type": "ground",
+        "notes": "DHT11 Ground",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 2",
+        "target_component": "Temperature Sensor",
+        "target_pin": "Data",
+        "signal_type": "digital",
+        "notes": "Single bus data line with 10k pull-up",
+        "power_requirement": "5V Data"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "OLED",
+        "target_pin": "VCC",
+        "signal_type": "power",
+        "notes": "OLED VCC",
+        "power_requirement": "3.3V-5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "OLED",
+        "target_pin": "GND",
+        "signal_type": "ground",
+        "notes": "OLED GND",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "A4",
+        "target_component": "OLED",
+        "target_pin": "SDA",
+        "signal_type": "i2c",
+        "notes": "I2C Serial Data",
+        "power_requirement": "5V I2C"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "A5",
+        "target_component": "OLED",
+        "target_pin": "SCL",
+        "signal_type": "i2c",
+        "notes": "I2C Serial Clock",
+        "power_requirement": "5V I2C"
+      }
+    ]
+  },
+  {
+    "id": "wr-smart-plant-monitor",
+    "project_id": "proj-smart-plant-monitor",
+    "connections": [
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "Soil Moisture Sensor",
+        "target_pin": "VCC",
+        "signal_type": "power",
+        "notes": "Sensor supply",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Soil Moisture Sensor",
+        "target_pin": "GND",
+        "signal_type": "ground",
+        "notes": "Common ground",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "A1",
+        "target_component": "Soil Moisture Sensor",
+        "target_pin": "AOUT",
+        "signal_type": "analog",
+        "notes": "Analog volumetric water content reading",
+        "power_requirement": "Analog 0-5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 8",
+        "target_component": "Buzzer",
+        "target_pin": "Positive (+)",
+        "signal_type": "digital",
+        "notes": "Acoustic alarm trigger",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Buzzer",
+        "target_pin": "Negative (-)",
+        "signal_type": "ground",
+        "notes": "Buzzer ground",
+        "power_requirement": "GND"
+      }
+    ]
+  },
+  {
+    "id": "wr-motion-detection-alarm",
+    "project_id": "proj-motion-detection-alarm",
+    "connections": [
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "5V",
+        "target_component": "PIR Sensor",
+        "target_pin": "VCC",
+        "signal_type": "power",
+        "notes": "PIR supply",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "PIR Sensor",
+        "target_pin": "GND",
+        "signal_type": "ground",
+        "notes": "PIR ground",
+        "power_requirement": "GND"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 2",
+        "target_component": "PIR Sensor",
+        "target_pin": "OUT",
+        "signal_type": "digital",
+        "notes": "Motion interrupt trigger output",
+        "power_requirement": "3.3V High Output"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "Pin 11",
+        "target_component": "Buzzer",
+        "target_pin": "Positive (+)",
+        "signal_type": "digital",
+        "notes": "High decibel siren",
+        "power_requirement": "5V"
+      },
+      {
+        "source_component": "Arduino Uno",
+        "source_pin": "GND",
+        "target_component": "Buzzer",
+        "target_pin": "Negative (-)",
+        "signal_type": "ground",
+        "notes": "Ground",
+        "power_requirement": "GND"
+      }
+    ]
+  }
+]

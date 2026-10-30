@@ -55,8 +55,14 @@ def predict_image():
         # Execute ML prediction pipeline
         prediction_result = ComponentScannerPredictor.predict(image_bytes)
         
+        result_status = "success"
+        if not prediction_result.get("model_available"):
+            result_status = "model_not_trained"
+        elif not prediction_result.get("component"):
+            result_status = "classification_failed"
+
         return jsonify({
-            "status": "success" if prediction_result.get("model_available") else "model_not_trained",
+            "status": result_status,
             "data": prediction_result
         }), 200
 

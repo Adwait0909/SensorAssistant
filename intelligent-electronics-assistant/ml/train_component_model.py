@@ -47,10 +47,17 @@ def train_component_model():
     print("TensorFlow Component Scanner Model Trainer")
     print("=" * 60)
 
-    if not DATASET_DIR.exists() or not any(DATASET_DIR.iterdir()):
+    class_dirs = [path for path in DATASET_DIR.iterdir() if path.is_dir()] if DATASET_DIR.exists() else []
+    image_count = sum(
+        1 for class_dir in class_dirs
+        for path in class_dir.iterdir()
+        if path.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
+    )
+    if len(class_dirs) < 2 or image_count < 40:
         print(f"\n[ERROR] Dataset directory not found or empty: {DATASET_DIR}")
-        print("\nPlease populate dataset directory following this structure:")
+        print("\nAdd at least two classes with a combined minimum of 40 labeled images:")
         print("data/dataset/<Class_Name>/<image_files.jpg>")
+        print("Use varied angles, backgrounds, lighting, and distances for each component.")
         print("\nClasses supported:")
         print(" - Arduino, ESP32, Raspberry Pi, LED, Resistor, Capacitor,")
         print(" - Ultrasonic Sensor, PIR Sensor, LDR, Buzzer, Servo Motor,")

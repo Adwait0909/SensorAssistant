@@ -33,6 +33,8 @@ class Config:
     
     # LLM Settings (optional)
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", None)
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", None)
+    GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
 class TestingConfig(Config):
     TESTING = True

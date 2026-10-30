@@ -14,6 +14,8 @@ except ImportError:
     cv2 = None
 
 from services.component_service import ComponentService
+from services.gemini_vision_service import GeminiVisionService
+from config import Config
 
 logger = logging.getLogger("ElectronicsAssistant")
 
@@ -23,12 +25,12 @@ MODEL_PKL_PATH = MODEL_DIR / "component_classifier.pkl"
 MODEL_KERAS_PATH = MODEL_DIR / "component_scanner.keras"
 CLASSES_PATH = MODEL_DIR / "classes.json"
 
-# Supported classes catalogue
+# Common local-model classes. Gemini is not restricted to this catalogue.
 SUPPORTED_CLASSES = [
     "Arduino Uno", "ESP32", "Raspberry Pi", "LED", "Resistor",
     "Capacitor", "Ultrasonic Sensor", "PIR Sensor", "LDR",
     "Buzzer", "Servo Motor", "DC Motor", "Relay", "Breadboard",
-    "MQ-2 Gas Sensor", "DHT11 Sensor", "LCD 16x2"
+    "MQ-2 Gas Sensor", "DHT11 Sensor", "LCD 16x2", "Push Button"
 ]
 
 CATEGORY_MAP = {
@@ -49,7 +51,8 @@ CATEGORY_MAP = {
     "DHT11 Sensor": "Sensors",
     "Resistor": "Supporting components",
     "Capacitor": "Supporting components",
-    "Breadboard": "Supporting components"
+    "Breadboard": "Supporting components",
+    "Push Button": "Input components"
 }
 
 class ComponentScannerPredictor:
@@ -64,40 +67,39 @@ class ComponentScannerPredictor:
         if cls._is_loaded:
             return cls._pkl_bundle is not None or cls._keras_model is not None
 
-        # 1. Load Scikit-Learn PKL Model
-        if MODEL_PKL_PATH.exists():
-            try:
-                with open(MODEL_PKL_PATH, "rb") as f:
-                    cls._pkl_bundle = pickle.load(f)
-                    cls._classes = cls._pkl_bundle.get("classes", SUPPORTED_CLASSES)
-                    cls._is_loaded = True
-                    logger.info(f"Loaded Scikit-Learn Component Classifier from {MODEL_PKL_PATH}")
-                    return True
-            except Exception as e:
-                logger.error(f"Failed to load PKL model: {e}")
-
-        # 2. Try Keras if TF is installed
+        # Prefer the image model. The PKL model uses generic color/edge features
+        # and cannot reliably identify components from photographs.
         if MODEL_KERAS_PATH.exists():
             try:
-                import tensorflow as tf
-                cls._keras_model = tf.keras.models.load_model(str(MODEL_KERAS_PATH))
-                if CLASSES_PATH.exists():
-                    with open(CLASSES_PATH, "r", encoding="utf-8") as f:
-                        cls._classes = json.load(f)
-                else:
-                    cls._classes = SUPPORTED_CLASSES
-                cls._is_loaded = True
-                logger.info(f"Loaded TensorFlow Component Scanner model from {MODEL_KERAS_PATH}")
-                return True
+                    import tensorflow as tf
+                    cls._keras_model = tf.keras.models.load_model(str(MODEL_KERAS_PATH))
+                    if CLASSES_PATH.exists():
+                        with open(CLASSES_PATH, "r", encoding="utf-8") as f:
+                            cls._classes = json.load(f)
+                    else:
+                        cls._classes = SUPPORTED_CLASSES
+                    cls._is_loaded = True
+                    logger.info(f"Loaded TensorFlow Component Scanner model from {MODEL_KERAS_PATH}")
+                    return True
             except Exception as e:
-                logger.error(f"Failed to load Keras model: {e}")
+                    logger.error(f"Failed to load Keras model: {e}")
+
+        # Do not use the legacy PKL model as an image classifier.
+        if MODEL_PKL_PATH.exists():
+            try:
+                    with open(MODEL_PKL_PATH, "rb") as f:
+                        bundle = pickle.load(f)
+                    if isinstance(bundle, dict) and "profiles" in bundle:
+                        logger.warning("Ignoring legacy feature-only component classifier; an image model is required.")
+            except Exception as e:
+                    logger.error(f"Failed to inspect legacy PKL model: {e}")
 
         cls._is_loaded = True
         return cls._pkl_bundle is not None or cls._keras_model is not None
 
     @classmethod
     def is_model_available(cls) -> bool:
-        return cls.load_model_if_exists()
+        return cls.load_model_if_exists() or GeminiVisionService.is_available()
 
     @classmethod
     def _extract_image_features(cls, image_bytes: bytes) -> np.ndarray:
@@ -151,33 +153,47 @@ class ComponentScannerPredictor:
         cls.load_model_if_exists()
 
         try:
+            if Config.GEMINI_API_KEY:
+                result = GeminiVisionService.identify_component(image_bytes)
+                component = result.get("component")
+                if component:
+                    normalized_name = ComponentService.normalize_name(component)
+                    result["normalized_name"] = normalized_name
+                    result["category"] = CATEGORY_MAP.get(
+                        component, CATEGORY_MAP.get(normalized_name, result.get("category", "Sensors"))
+                    )
+                else:
+                    result["normalized_name"] = None
+                return result
+
+            if cls._keras_model is None:
+                return {
+                    "model_available": False,
+                    "component": None,
+                    "normalized_name": None,
+                    "category": None,
+                    "confidence": 0.0,
+                    "message": "Model not trained. Upload a trained model or run the training script. Add labeled component images before training."
+                }
+
             feats = cls._extract_image_features(image_bytes)
 
-            if cls._pkl_bundle is not None:
-                clf = cls._pkl_bundle["model"]
-                classes = cls._pkl_bundle.get("classes", SUPPORTED_CLASSES)
-                probs = clf.predict_proba(feats)[0]
-                top_idx = int(np.argmax(probs))
-                raw_confidence = float(probs[top_idx])
-                # Calibrate confidence to realistic 85-98% range for confident detections
-                confidence = round(max(82.0, min(98.5, raw_confidence * 100.0)), 1)
-                detected_class = classes[top_idx] if top_idx < len(classes) else "Arduino Uno"
-
-            elif cls._keras_model is not None:
+            if cls._keras_model is not None:
                 from ml.preprocess import preprocess_image_bytes
                 processed_img = preprocess_image_bytes(image_bytes)
                 preds = cls._keras_model.predict(processed_img, verbose=0)[0]
                 top_idx = int(preds.argmax())
                 confidence = round(float(preds[top_idx]) * 100.0, 1)
                 classes = cls._classes or SUPPORTED_CLASSES
-                detected_class = classes[top_idx] if top_idx < len(classes) else "Arduino Uno"
-
-            else:
-                detected_class = "Arduino Uno"
-                confidence = 88.5
+                if top_idx >= len(classes):
+                    raise ValueError("Image model output does not match the stored class labels.")
+                detected_class = classes[top_idx]
 
             normalized_name = ComponentService.normalize_name(detected_class)
-            category = CATEGORY_MAP.get(detected_class, CATEGORY_MAP.get(normalized_name, "Sensors"))
+            category = CATEGORY_MAP.get(
+                detected_class,
+                CATEGORY_MAP.get(normalized_name, "Electronic component")
+            )
 
             return {
                 "model_available": True,
@@ -185,16 +201,18 @@ class ComponentScannerPredictor:
                 "normalized_name": normalized_name,
                 "category": category,
                 "confidence": confidence,
+                "is_sensor": category == "Sensors",
                 "message": f"Successfully identified {normalized_name} ({category}) with {confidence}% AI confidence."
             }
 
-        except Exception as e:
+        except (ValueError, OSError, TypeError, KeyError, IndexError) as e:
             logger.error(f"Prediction error: {e}")
             return {
-                "model_available": True,
-                "component": "Arduino Uno",
-                "normalized_name": "Arduino Uno",
-                "category": "Controllers",
-                "confidence": 85.0,
-                "message": f"Detected Arduino Uno based on board contour features."
+                "model_available": cls._keras_model is not None,
+                "component": None,
+                "normalized_name": None,
+                "category": None,
+                "confidence": 0.0,
+                "is_sensor": False,
+                "message": "The image could not be classified. Use a clear, well-lit image showing one component and try again."
             }

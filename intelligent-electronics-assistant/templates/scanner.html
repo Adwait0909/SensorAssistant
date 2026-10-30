@@ -285,7 +285,10 @@ async function runScanner() {
     } else {
       document.getElementById('result-card').style.display = 'none';
       document.getElementById('not-trained-box').style.display = 'block';
-      document.getElementById('not-trained-msg').innerText = result.data ? result.data.message : "Model not trained. Upload a trained model or run the training script.";
+      const scanData = result.data || {};
+      const reason = scanData.reason ? ` Reason: ${scanData.reason}` : '';
+      document.getElementById('not-trained-msg').innerText =
+        (scanData.message || "Model not trained. Upload a trained model or run the training script.") + reason;
     }
   } catch (err) {
     showToast('Failed to process image scan', 'error');

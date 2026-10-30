@@ -12,8 +12,8 @@ def preprocess_image_bytes(image_bytes: bytes) -> np.ndarray:
     2. Convert to RGB
     3. Resize to 224x224
     4. Convert to NumPy array
-    5. Apply OpenCV Gaussian blurring & histogram normalization
-    6. Normalize pixel values to [0.0, 1.0] for TensorFlow model input
+    5. Keep pixels in the same [0, 255] range used by the training pipeline.
+       MobileNetV2 preprocessing is applied inside the Keras model.
     """
     # Load via Pillow
     pil_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
@@ -25,14 +25,8 @@ def preprocess_image_bytes(image_bytes: bytes) -> np.ndarray:
     # OpenCV Resize
     resized = cv2.resize(open_cv_image, IMAGE_SIZE, interpolation=cv2.INTER_AREA)
 
-    # OpenCV Denoising / Gaussian Blur
-    blurred = cv2.GaussianBlur(resized, (3, 3), 0)
+    # Convert back to RGB for Keras/TensorFlow model.
+    rgb_img = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
-    # Convert back to RGB for Keras/TensorFlow model
-    rgb_img = cv2.cvtColor(blurred, cv2.COLOR_BGR2RGB)
-
-    # Normalize pixels [0, 1]
-    normalized = rgb_img.astype(np.float32) / 255.0
-    
     # Expand dims to shape (1, 224, 224, 3)
-    return np.expand_dims(normalized, axis=0)
+    return np.expand_dims(rgb_img.astype(np.float32), axis=0)

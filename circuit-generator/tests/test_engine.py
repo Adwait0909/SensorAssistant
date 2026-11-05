@@ -3,7 +3,7 @@ os.environ["CIRCUIT_DB"] = os.path.join(tempfile.mkdtemp(), "t.db")
 from app import app
 from diagram import render
 from engine.examples import EXAMPLES
-from engine.generator import generate_random
+from engine.generator import generate_random, build_steps
 from engine.validator import validate
 from engine.wiring import build
 
@@ -72,6 +72,13 @@ class Engine(unittest.TestCase):
         self.assertTrue(cl.post("/api/validate", json={"circuit": d["circuit"]}).get_json()["valid"])
         self.assertEqual(cl.get("/api/example/servo").status_code, 200)
         self.assertTrue(cl.get("/api/history").get_json())
+
+    def test_build_steps_include_connections_and_safety_guidance(self):
+        c = build(["arduino_uno", "led"])
+        steps = build_steps(c)
+        self.assertGreaterEqual(len(steps), 4)
+        self.assertTrue(any(step["connections"] for step in steps))
+        self.assertTrue(all(step["expected_output"] and step["warnings"] for step in steps))
 
 
 if __name__ == "__main__":

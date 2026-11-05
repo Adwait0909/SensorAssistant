@@ -8,7 +8,7 @@ async function api(url, body) {
   if (!r.ok) { alert(j.error || 'Request failed'); throw new Error(j.error); }
   return j;
 }
-function show(d) { S.data = d; $('#title').textContent = d.name; drawSvg(); drawTable(); drawChecks(d.validation); }
+function show(d) { S.data = d; $('#title').textContent = d.name; drawSvg(); drawTable(); drawChecks(d.validation); drawBuildSteps(); }
 function drawSvg() { $('#canvas').innerHTML = S.data.svg[S.view]; }
 function label(id) {
   const i = S.data.circuit.instances.find(x => x.id === id);
@@ -23,6 +23,16 @@ function drawChecks(v) {
   $('#badge').textContent = v.valid ? 'VALID' : 'ISSUES FOUND';
   $('#checks').innerHTML = v.checks.map(c => `<div class="chk"><b><span>${esc(c.name)}</span><span class="${c.passed ? 'pass' : 'fail'}">${c.passed ? '✔ pass' : '✖ fail'}</span></b>` +
     c.messages.map(m => `<div class="msg ${m.level}">${esc(m.msg)}</div>`).join('') + '</div>').join('');
+}
+function drawBuildSteps() {
+  $('#buildSteps').innerHTML = S.data.build_steps.map(step =>
+    `<article class="build-step"><h4>Step ${step.step_number}: ${esc(step.title)}</h4>` +
+    `<p><b>Components:</b> ${step.components.map(esc).join(', ') || 'None'}</p>` +
+    (step.connections.length ? `<p><b>Connect:</b></p><ul>${step.connections.map(c => `<li>${esc(c.instruction)} <small>(${esc(c.kind)})</small></li>`).join('')}</ul>` : '') +
+    `<p><b>How:</b> ${esc(step.how_to_connect)}</p>` +
+    `<p class="expected"><b>Expected output:</b> ${esc(step.expected_output)}</p>` +
+    step.warnings.map(w => `<p class="warning"><b>Warning:</b> ${esc(w)}</p>`).join('') +
+    `</article>`).join('');
 }
 function download(href, name) { const a = document.createElement('a'); a.href = href; a.download = name; a.click(); }
 const fname = ext => `${(S.data.name || 'circuit').toLowerCase().replace(/\W+/g, '-')}-${S.view}.${ext}`;

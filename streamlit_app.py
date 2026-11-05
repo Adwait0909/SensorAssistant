@@ -117,6 +117,22 @@ if component_input:
                         f"**Components Used:** {', '.join(project['components_used'])}"
                     )
 
+                st.markdown("#### Step-by-step build")
+                for step in project.get("build_steps", []):
+                    with st.expander(f"Step {step['step_number']}: {step['title']}"):
+                        st.markdown(f"**Components:** {', '.join(step['components'])}")
+                        if step["connections"]:
+                            st.markdown("**Connect:**")
+                            for connection in step["connections"]:
+                                st.write(
+                                    f"- `{connection['from']}` → `{connection['to']}` "
+                                    f"({connection['where']})"
+                                )
+                        st.markdown(f"**How:** {step['how_to_connect']}")
+                        st.success(f"Expected output: {step['expected_output']}")
+                        for warning in step["warnings"]:
+                            st.warning(f"Warning: {warning}")
+
     else:
         st.warning("No projects could be generated")
 

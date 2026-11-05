@@ -3,7 +3,7 @@ from flask import Flask, jsonify, render_template, request
 from engine import db
 from engine.catalog import COMPONENTS
 from engine.examples import EXAMPLES
-from engine.generator import generate_random
+from engine.generator import generate_random, build_steps
 from engine.validator import validate
 from engine.wiring import build
 from diagram import render
@@ -13,7 +13,8 @@ app = Flask(__name__)
 
 def payload(circuit, name):
     return {"name": name, "circuit": circuit, "validation": validate(circuit),
-            "svg": {v: render(circuit, v, name) for v in ("schematic", "breadboard")}}
+            "svg": {v: render(circuit, v, name) for v in ("schematic", "breadboard")},
+            "build_steps": build_steps(circuit)}
 
 
 def finish(circuit, sel, name):

@@ -141,6 +141,76 @@ def generate_system_flow(user_components):
 
     return flow
 
+def generate_build_steps(user_components):
+    """Create a simple, beginner-friendly wiring checklist for a generated project."""
+    comp_map = _component_lookup()
+    controller = next((name for name in user_components
+                       if comp_map.get(name, {}).get("role") == "controller"), None)
+    sensors = [name for name in user_components if comp_map.get(name, {}).get("role") == "input"]
+    outputs = [name for name in user_components if comp_map.get(name, {}).get("role") == "output"]
+    communications = [name for name in user_components
+                      if comp_map.get(name, {}).get("role") == "communication"]
+
+    steps = [{
+        "step_number": 1,
+        "title": "Prepare the components",
+        "components": user_components,
+        "connections": [],
+        "how_to_connect": "Place the controller, sensors, and output parts where you can see their labels. Keep the power disconnected until all wiring is checked.",
+        "expected_output": "All selected components are identified and ready to wire.",
+        "warnings": ["Do not power the circuit while changing wires."]
+    }]
+    if controller:
+        steps.append({
+            "step_number": 2,
+            "title": "Connect power and common ground",
+            "components": [controller] + [name for name in user_components if name != controller],
+            "connections": [
+                {"from": f"{controller} 5V/VCC", "to": "Component VCC pins", "where": "power rail"},
+                {"from": f"{controller} GND", "to": "All component GND pins", "where": "common ground rail"},
+            ],
+            "how_to_connect": f"Connect {controller} VCC/5V to the positive power rail. Connect its GND to the ground rail. Connect every sensor and module ground to that same ground rail.",
+            "expected_output": "Every component has the correct supply and shares one common ground.",
+            "warnings": ["Check the required voltage before connecting a module; never connect a 3.3V-only pin to 5V."]
+        })
+    if sensors:
+        steps.append({
+            "step_number": len(steps) + 1,
+            "title": "Connect the sensor inputs",
+            "components": sensors + ([controller] if controller else []),
+            "connections": [
+                {"from": sensor, "to": f"{controller or 'controller'} input pin", "where": "signal wire"}
+                for sensor in sensors
+            ],
+            "how_to_connect": "Connect each sensor signal pin to a separate controller input pin. Keep signal wires away from high-current motor or relay wires.",
+            "expected_output": "The controller can receive a changing reading from each sensor.",
+            "warnings": ["Do not guess pin names; check the sensor label or datasheet before applying power."]
+        })
+    if outputs or communications:
+        targets = outputs + communications
+        steps.append({
+            "step_number": len(steps) + 1,
+            "title": "Connect outputs and communication modules",
+            "components": targets + ([controller] if controller else []),
+            "connections": [
+                {"from": f"{controller or 'controller'} output pin", "to": target, "where": "control/signal wire"}
+                for target in targets
+            ],
+            "how_to_connect": "Connect each output or communication signal pin to a separate controller pin. Add the required resistor, driver, level shifter, or external supply before connecting high-current loads.",
+            "expected_output": "The controller can operate the output and send any required notification.",
+            "warnings": ["Never drive a motor, relay coil, or high-current module directly from a controller GPIO pin."]
+        })
+    steps.append({
+        "step_number": len(steps) + 1,
+        "title": "Power on and test",
+        "components": [controller] if controller else user_components,
+        "connections": [],
+        "how_to_connect": "Inspect every connection, then power the controller. Upload the smallest test program and observe one input and one output at a time.",
+        "expected_output": "Sensor readings change when the environment changes and the output responds as expected.",
+        "warnings": ["Disconnect power immediately if a component becomes hot, smells unusual, or behaves unexpectedly."]
+    })
+    return steps
+
 def get_feasibility_issues(roles, user_components=None):
     issues = []
     role_set = set(roles)
@@ -403,6 +473,7 @@ def generate_projects(user_components, roles, ml_category=None):
                 "core_score": scored["core_score"],
                 "has_communication": scored["has_communication"],
                 "label": get_score_label(scored["score"]),
+                "build_steps": generate_build_steps(used),
             })
 
     # Tie-breaker priority:
